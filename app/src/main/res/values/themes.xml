@@ -6,4 +6,7 @@
     </style>
 
     <style name="Theme.JavaApplication" parent="Base.Theme.JavaApplication" />
+    <style name="BottomNavActiveText" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
