@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 꾸미기: 상단 바와 하단 네비 없이 위 35% 망고 미리보기, 아래 65% 부위 탭 + 보유 아이템 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sky"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/customize_scene"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="35"
+        android:background="@color/sky">
+
+        <include layout="@layout/view_forest_scene" />
+
+        <ImageButton
+            android:id="@+id/customize_close"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="top|start"
+            android:layout_margin="12dp"
+            android:background="@drawable/bg_circle_white"
+            android:contentDescription="@string/close"
+            android:src="@drawable/ic_close" />
+
+        <TextView
+            style="@style/CardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginTop="26dp"
+            android:text="@string/customize_title" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/customize_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="65"
+        android:background="@drawable/bg_sheet_top"
+        android:orientation="vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tab_hat"
+                style="@style/SegmentTab"
+                android:layout_height="52dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/bg_tab_dark"
+                android:text="@string/slot_hat"
+                android:textColor="@color/tab_dark_text" />
+
+            <TextView
+                android:id="@+id/tab_top"
+                style="@style/SegmentTab"
+                android:layout_height="52dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/bg_tab_dark"
+                android:text="@string/slot_top"
+                android:textColor="@color/tab_dark_text" />
+
+            <TextView
+                android:id="@+id/tab_hand"
+                style="@style/SegmentTab"
+                android:layout_height="52dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_tab_dark"
+                android:text="@string/slot_hand"
+                android:textColor="@color/tab_dark_text" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 첫 칸은 "해제", 그다음 보유 아이템 (코드에서 채움) -->
+                <GridLayout
+                    android:id="@+id/customize_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3" />
+
+                <TextView
+                    android:id="@+id/customize_empty"
+                    style="@style/SubText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center" />
+            </LinearLayout>
+        </ScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/border" />
+
+        <TextView
+            android:id="@+id/customize_apply"
+            style="@style/PrimaryButton"
+            android:text="@string/customize_apply" />
+    </LinearLayout>
+</LinearLayout>

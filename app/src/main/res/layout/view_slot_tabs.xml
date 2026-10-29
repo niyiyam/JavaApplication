@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 부위 탭: 모자 / 상의 / 손. 상점에서 쓴다 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_segment"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tab_hat"
+        style="@style/SegmentTab"
+        android:text="@string/slot_hat" />
+
+    <TextView
+        android:id="@+id/tab_top"
+        style="@style/SegmentTab"
+        android:text="@string/slot_top" />
+
+    <TextView
+        android:id="@+id/tab_hand"
+        style="@style/SegmentTab"
+        android:text="@string/slot_hand" />
+</LinearLayout>
