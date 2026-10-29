@@ -63,16 +63,27 @@ public class CustomizeActivity extends AppCompatActivity {
         Slot[] slots = Slot.values();
         for (int i = 0; i < tabs.length; i++) {
             Slot s = slots[i];
-            tabs[i].setOnClickListener(v -> {
-                slot = s;
-                render();
+            tabs[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    slot = s;
+                    render();
+                }
             });
         }
 
-        findViewById(R.id.customize_close).setOnClickListener(v -> finish());
-        findViewById(R.id.customize_apply).setOnClickListener(v -> {
-            repo.setEquipment(draft);
-            finish();
+        findViewById(R.id.customize_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        findViewById(R.id.customize_apply).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                repo.setEquipment(draft);
+                finish();
+            }
         });
 
         fitMangoToScene();
@@ -91,15 +102,18 @@ public class CustomizeActivity extends AppCompatActivity {
     /** 화면이 작아 미리보기 칸(위 35%)이 낮으면 망고를 줄여서 제목과 겹치지 않게 한다 */
     private void fitMangoToScene() {
         View scene = findViewById(R.id.customize_scene);
-        scene.post(() -> {
-            float density = getResources().getDisplayMetrics().density;
-            float available = scene.getHeight() - scene.getPaddingTop() - 70 * density - 64 * density;
-            float scale = Math.min(1f, available / preview.getHeight());
-            if (scale <= 0) return;
-            preview.setPivotX(preview.getWidth() / 2f);
-            preview.setPivotY(preview.getHeight());
-            preview.setScaleX(scale);
-            preview.setScaleY(scale);
+        scene.post(new Runnable() {
+            @Override
+            public void run() {
+                float density = getResources().getDisplayMetrics().density;
+                float available = scene.getHeight() - scene.getPaddingTop() - 70 * density - 64 * density;
+                float scale = Math.min(1f, available / preview.getHeight());
+                if (scale <= 0) return;
+                preview.setPivotX(preview.getWidth() / 2f);
+                preview.setPivotY(preview.getHeight());
+                preview.setScaleX(scale);
+                preview.setScaleY(scale);
+            }
         });
     }
 
@@ -143,9 +157,12 @@ public class CustomizeActivity extends AppCompatActivity {
             name.setText(ItemArt.displayName(this, item));
             cell.setSelected(item.id.equals(current));
         }
-        cell.setOnClickListener(v -> {
-            draft = draft.with(slot, item == null ? null : item.id);
-            render();
+        cell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                draft = draft.with(slot, item == null ? null : item.id);
+                render();
+            }
         });
 
         grid.addView(cell, cellParams());

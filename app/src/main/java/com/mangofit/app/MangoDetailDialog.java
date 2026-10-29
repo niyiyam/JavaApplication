@@ -35,7 +35,12 @@ public class MangoDetailDialog extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.detail_close).setOnClickListener(v -> dismiss());
+        view.findViewById(R.id.detail_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         if (savedInstanceState == null) {
             getChildFragmentManager()
                     .beginTransaction()

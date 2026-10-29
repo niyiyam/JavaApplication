@@ -1,5 +1,6 @@
 package com.mangofit.app;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -40,7 +41,12 @@ public class HomeFragment extends Fragment {
     private DayProgressBar dayBar;
     private TextView todayLeaves;
     private TextView todayExp;
-    private final GameRepository.Listener listener = this::refresh;
+    private final GameRepository.Listener listener = new GameRepository.Listener() {
+        @Override
+        public void onDataChanged() {
+            refresh();
+        }
+    };
 
     @Nullable
     @Override
@@ -57,7 +63,12 @@ public class HomeFragment extends Fragment {
         View scene = view.findViewById(R.id.home_scene);
         scene.setClipToOutline(true);
         mango = view.findViewById(R.id.scene_mango);
-        mango.setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomizeActivity.class)));
+        mango.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(requireContext(), CustomizeActivity.class));
+            }
+        });
 
         title = view.findViewById(R.id.home_mango_title);
         days = view.findViewById(R.id.home_mango_days);
@@ -69,7 +80,12 @@ public class HomeFragment extends Fragment {
         todayLeaves = view.findViewById(R.id.home_today_leaves);
         todayExp = view.findViewById(R.id.home_today_exp);
 
-        view.findViewById(R.id.home_temp_archive).setOnClickListener(v -> confirmTempArchive());
+        view.findViewById(R.id.home_temp_archive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmTempArchive();
+            }
+        });
     }
 
     @Override
@@ -117,10 +133,13 @@ public class HomeFragment extends Fragment {
                 .setTitle(R.string.archive_confirm_title)
                 .setMessage(getString(R.string.archive_confirm_msg, repo.getMangoNo()))
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, (d, w) -> {
-                    ArchivedMango archived = repo.tempArchiveNow(LocalDate.now());
-                    Toast.makeText(requireContext(), getString(R.string.archive_done, archived.no),
-                            Toast.LENGTH_SHORT).show();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        ArchivedMango archived = repo.tempArchiveNow(LocalDate.now());
+                        Toast.makeText(requireContext(), getString(R.string.archive_done, archived.no),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .show();
     }

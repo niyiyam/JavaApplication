@@ -24,6 +24,7 @@ import com.mangofit.app.view.MangoView;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,12 @@ public class DetailBlockFragment extends Fragment {
     private static final String MODE_USER = "user";
 
     private GameRepository repo;
-    private final GameRepository.Listener listener = this::refresh;
+    private final GameRepository.Listener listener = new GameRepository.Listener() {
+        @Override
+        public void onDataChanged() {
+            refresh();
+        }
+    };
 
     /** 망고 모드. 지금 망고 번호를 주면 진행 중인 망고로 보여준다. */
     public static DetailBlockFragment forMango(int mangoNo) {
@@ -156,7 +162,12 @@ public class DetailBlockFragment extends Fragment {
     private void bindDonut(View view, Map<ExerciseType, Integer> minutesByType) {
         // 많이 한 운동부터
         List<Map.Entry<ExerciseType, Integer>> entries = new ArrayList<>(minutesByType.entrySet());
-        entries.sort((a, b) -> b.getValue() - a.getValue());
+        entries.sort(new Comparator<Map.Entry<ExerciseType, Integer>>() {
+            @Override
+            public int compare(Map.Entry<ExerciseType, Integer> a, Map.Entry<ExerciseType, Integer> b) {
+                return b.getValue() - a.getValue();
+            }
+        });
         int total = 0;
         for (Map.Entry<ExerciseType, Integer> e : entries) total += e.getValue();
 

@@ -2,14 +2,17 @@ package com.mangofit.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.mangofit.app.data.ArchivedMango;
 import com.mangofit.app.data.GameRepository;
 import com.mangofit.app.logic.Levels;
@@ -27,7 +30,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView levelText;
     private ProgressBar expBar;
     private TextView leavesText;
-    private final GameRepository.Listener topBarListener = this::refreshTopBar;
+    private final GameRepository.Listener topBarListener = new GameRepository.Listener() {
+        @Override
+        public void onDataChanged() {
+            refreshTopBar();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,30 +66,37 @@ public class MainActivity extends AppCompatActivity {
             bottomNav.setSelectedItemId(R.id.nav_home);
         }
 
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            Fragment fragment;
+        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                Fragment fragment;
 
-            if (id == R.id.nav_home) {
-                fragment = new HomeFragment();
-            } else if (id == R.id.nav_mango_house) {
-                fragment = new MangoHouseFragment();
-            } else if (id == R.id.nav_exercise) {
-                fragment = new ExerciseFragment();
-            } else if (id == R.id.nav_record) {
-                fragment = new RecordFragment();
-            } else if (id == R.id.nav_shop) {
-                fragment = new ShopFragment();
-            } else {
-                return false;
+                if (id == R.id.nav_home) {
+                    fragment = new HomeFragment();
+                } else if (id == R.id.nav_mango_house) {
+                    fragment = new MangoHouseFragment();
+                } else if (id == R.id.nav_exercise) {
+                    fragment = new ExerciseFragment();
+                } else if (id == R.id.nav_record) {
+                    fragment = new RecordFragment();
+                } else if (id == R.id.nav_shop) {
+                    fragment = new ShopFragment();
+                } else {
+                    return false;
+                }
+
+                replaceFragment(fragment);
+                return true; // true를 반환해야 탭이 선택 상태(초록색)로 바뀜
             }
-
-            replaceFragment(fragment);
-            return true; // true를 반환해야 탭이 선택 상태(초록색)로 바뀜
         });
 
         // 이미 선택된 탭을 다시 눌렀을 때 화면을 새로 만들지 않도록
-        bottomNav.setOnItemReselectedListener(item -> { });
+        bottomNav.setOnItemReselectedListener(new NavigationBarView.OnItemReselectedListener() {
+            @Override
+            public void onNavigationItemReselected(@NonNull MenuItem item) {
+            }
+        });
     }
 
     @Override

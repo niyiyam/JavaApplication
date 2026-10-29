@@ -27,7 +27,12 @@ public class MangoHouseFragment extends Fragment {
     private GridLayout grid;
     private TextView count;
     private TextView empty;
-    private final GameRepository.Listener listener = this::render;
+    private final GameRepository.Listener listener = new GameRepository.Listener() {
+        @Override
+        public void onDataChanged() {
+            render();
+        }
+    };
 
     @Nullable
     @Override
@@ -80,8 +85,12 @@ public class MangoHouseFragment extends Fragment {
                     .setText(getString(R.string.house_level, Levels.levelForExp(m.getExp())));
             ((TextView) cell.findViewById(R.id.house_period))
                     .setText(getString(R.string.house_period, Fmt.shortDate(m.startDate), Fmt.shortDate(m.endDate)));
-            cell.setOnClickListener(v -> MangoDetailDialog.newInstance(m.no)
-                    .show(getChildFragmentManager(), "mango_detail"));
+            cell.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MangoDetailDialog.newInstance(m.no).show(getChildFragmentManager(), "mango_detail");
+                }
+            });
 
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
                     GridLayout.spec(GridLayout.UNDEFINED),

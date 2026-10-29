@@ -3,8 +3,10 @@ package com.mangofit.app.ui;
 import android.view.View;
 
 import androidx.activity.ComponentActivity;
+import androidx.annotation.NonNull;
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
+import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -44,10 +46,14 @@ public final class SystemBars {
         final int baseTop = view.getPaddingTop();
         final int right = view.getPaddingRight();
         final int baseBottom = view.getPaddingBottom();
-        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
-            v.setPadding(left, baseTop + (top ? bars.top : 0), right, baseBottom + (bottom ? bars.bottom : 0));
-            return insets;
+        ViewCompat.setOnApplyWindowInsetsListener(view, new OnApplyWindowInsetsListener() {
+            @NonNull
+            @Override
+            public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
+                Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.ime());
+                v.setPadding(left, baseTop + (top ? bars.top : 0), right, baseBottom + (bottom ? bars.bottom : 0));
+                return insets;
+            }
         });
         ViewCompat.requestApplyInsets(view);
     }

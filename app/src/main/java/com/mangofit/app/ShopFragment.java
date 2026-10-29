@@ -1,5 +1,6 @@
 package com.mangofit.app;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,12 @@ public class ShopFragment extends Fragment {
     private GridLayout grid;
     private TextView[] tabs;
     private Slot slot = Slot.HAT;
-    private final GameRepository.Listener listener = this::render;
+    private final GameRepository.Listener listener = new GameRepository.Listener() {
+        @Override
+        public void onDataChanged() {
+            render();
+        }
+    };
 
     @Nullable
     @Override
@@ -52,9 +58,12 @@ public class ShopFragment extends Fragment {
         Slot[] slots = Slot.values();
         for (int i = 0; i < tabs.length; i++) {
             Slot s = slots[i];
-            tabs[i].setOnClickListener(v -> {
-                slot = s;
-                render();
+            tabs[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    slot = s;
+                    render();
+                }
             });
         }
     }
@@ -107,7 +116,12 @@ public class ShopFragment extends Fragment {
                     button.setBackgroundResource(R.drawable.bg_btn_muted);
                     price.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
                 }
-                button.setOnClickListener(v -> confirmBuy(item));
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmBuy(item);
+                    }
+                });
             }
 
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
@@ -128,12 +142,15 @@ public class ShopFragment extends Fragment {
         new AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.buy_confirm, name, Fmt.num(item.price)))
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, (d, w) -> {
-                    GameRepository.BuyResult result = repo.buy(item.id);
-                    if (result == GameRepository.BuyResult.OK) {
-                        Toast.makeText(requireContext(), R.string.buy_done, Toast.LENGTH_SHORT).show();
-                    } else if (result == GameRepository.BuyResult.NOT_ENOUGH_LEAVES) {
-                        Toast.makeText(requireContext(), R.string.buy_not_enough, Toast.LENGTH_SHORT).show();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        GameRepository.BuyResult result = repo.buy(item.id);
+                        if (result == GameRepository.BuyResult.OK) {
+                            Toast.makeText(requireContext(), R.string.buy_done, Toast.LENGTH_SHORT).show();
+                        } else if (result == GameRepository.BuyResult.NOT_ENOUGH_LEAVES) {
+                            Toast.makeText(requireContext(), R.string.buy_not_enough, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .show();

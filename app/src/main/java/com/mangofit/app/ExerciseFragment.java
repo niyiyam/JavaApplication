@@ -1,5 +1,6 @@
 package com.mangofit.app;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -54,7 +55,12 @@ public class ExerciseFragment extends Fragment {
     private TextView preview;
     private TextView addButton;
     private ExerciseType selectedType = ExerciseType.WALK;
-    private final GameRepository.Listener listener = this::refresh;
+    private final GameRepository.Listener listener = new GameRepository.Listener() {
+        @Override
+        public void onDataChanged() {
+            refresh();
+        }
+    };
 
     @Nullable
     @Override
@@ -90,15 +96,40 @@ public class ExerciseFragment extends Fragment {
                 updatePreview();
             }
         });
-        view.findViewById(R.id.exercise_minus).setOnClickListener(v -> stepMinutes(-STEP_MINUTES));
-        view.findViewById(R.id.exercise_plus).setOnClickListener(v -> stepMinutes(STEP_MINUTES));
+        view.findViewById(R.id.exercise_minus).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stepMinutes(-STEP_MINUTES);
+            }
+        });
+        view.findViewById(R.id.exercise_plus).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stepMinutes(STEP_MINUTES);
+            }
+        });
 
         preview = view.findViewById(R.id.exercise_preview);
         addButton = view.findViewById(R.id.exercise_add);
-        addButton.setOnClickListener(v -> confirmAdd());
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmAdd();
+            }
+        });
 
-        view.findViewById(R.id.exercise_temp_reset).setOnClickListener(v -> confirmTempReset());
-        view.findViewById(R.id.exercise_temp_dummy).setOnClickListener(v -> confirmTempDummy());
+        view.findViewById(R.id.exercise_temp_reset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmTempReset();
+            }
+        });
+        view.findViewById(R.id.exercise_temp_dummy).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmTempDummy();
+            }
+        });
     }
 
     @Override
@@ -135,7 +166,12 @@ public class ExerciseFragment extends Fragment {
             button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
             button.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.chip_text));
             button.setBackgroundResource(R.drawable.bg_chip);
-            button.setOnClickListener(v -> selectType(type));
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selectType(type);
+                }
+            });
 
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
                     GridLayout.spec(GridLayout.UNDEFINED),
@@ -237,7 +273,12 @@ public class ExerciseFragment extends Fragment {
         new AlertDialog.Builder(requireContext())
                 .setMessage(getString(R.string.add_confirm, getString(type.labelRes), minutes))
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, (d, w) -> addWorkout(type, minutes))
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        addWorkout(type, minutes);
+                    }
+                })
                 .show();
     }
 
@@ -251,7 +292,12 @@ public class ExerciseFragment extends Fragment {
                 ? getString(R.string.levelup_user, result.userLevelBefore, result.userLevelAfter) : null;
         if (result.mangoLevelAfter > result.mangoLevelBefore) {
             showLevelUp(getString(R.string.levelup_mango, result.mangoLevelBefore, result.mangoLevelAfter),
-                    () -> { if (userMsg != null) showLevelUp(userMsg, null); });
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if (userMsg != null) showLevelUp(userMsg, null);
+                        }
+                    });
         } else if (userMsg != null) {
             showLevelUp(userMsg, null);
         }
@@ -263,7 +309,12 @@ public class ExerciseFragment extends Fragment {
                 .setTitle(R.string.levelup_title)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)
-                .setOnDismissListener(d -> { if (onClosed != null) onClosed.run(); })
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface d) {
+                        if (onClosed != null) onClosed.run();
+                    }
+                })
                 .show();
     }
 
@@ -272,9 +323,12 @@ public class ExerciseFragment extends Fragment {
         new AlertDialog.Builder(requireContext())
                 .setMessage(R.string.reset_confirm)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, (d, w) -> {
-                    repo.tempResetToday(LocalDate.now());
-                    Toast.makeText(requireContext(), R.string.reset_done, Toast.LENGTH_SHORT).show();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        repo.tempResetToday(LocalDate.now());
+                        Toast.makeText(requireContext(), R.string.reset_done, Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .show();
     }
@@ -284,10 +338,13 @@ public class ExerciseFragment extends Fragment {
         new AlertDialog.Builder(requireContext())
                 .setMessage(R.string.dummy_confirm)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, (d, w) -> {
-                    boolean ok = TempTools.loadDummyData(requireContext(), LocalDate.now());
-                    Toast.makeText(requireContext(), ok ? R.string.dummy_done : R.string.dummy_failed,
-                            Toast.LENGTH_SHORT).show();
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        boolean ok = TempTools.loadDummyData(requireContext(), LocalDate.now());
+                        Toast.makeText(requireContext(), ok ? R.string.dummy_done : R.string.dummy_failed,
+                                Toast.LENGTH_SHORT).show();
+                    }
                 })
                 .show();
     }

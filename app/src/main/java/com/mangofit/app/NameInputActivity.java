@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,14 +42,22 @@ public class NameInputActivity extends AppCompatActivity {
                 confirm.setEnabled(!trimmedName().isEmpty());
             }
         });
-        input.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE && !trimmedName().isEmpty()) {
-                start();
-                return true;
+        input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE && !trimmedName().isEmpty()) {
+                    start();
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
-        confirm.setOnClickListener(v -> start());
+        confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start();
+            }
+        });
     }
 
     private String trimmedName() {

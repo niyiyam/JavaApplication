@@ -3,8 +3,6 @@ package com.mangofit.app.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -15,7 +13,7 @@ import com.mangofit.app.logic.RewardCalc;
 
 /**
  * 오늘 진행 막대. 구간 길이 비율은 보너스 25 : 일반 75 : 무리 50 (할당량의 0~25% / 25~100% / 100~150%).
- * 바탕은 어두운 색이고, 운동한 만큼 해당 구간이 밝게 채워진다. 홈과 운동 탭이 같이 쓴다.
+ * 바탕은 연한 색이고, 운동한 만큼 해당 구간이 진한 색으로 채워진다. 홈과 운동 탭이 같이 쓴다.
  */
 public class DayProgressBar extends View {
 
@@ -27,8 +25,6 @@ public class DayProgressBar extends View {
     };
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private final Path clip = new Path();
-    private final RectF rect = new RectF();
     private final int[] fillColors;
     private final int[] emptyColors;
     private final float gap;
@@ -64,12 +60,6 @@ public class DayProgressBar extends View {
         float left = getPaddingLeft();
         float top = getPaddingTop();
 
-        clip.reset();
-        rect.set(left, top, left + w, top + h);
-        clip.addRoundRect(rect, h / 2, h / 2, Path.Direction.CW);
-        canvas.save();
-        canvas.clipPath(clip);
-
         double total = RewardCalc.OVER_END;
         float usable = w - gap * (ZONES.length - 1);
         float x = left;
@@ -89,6 +79,5 @@ public class DayProgressBar extends View {
             }
             x += segW + gap;
         }
-        canvas.restore();
     }
 }

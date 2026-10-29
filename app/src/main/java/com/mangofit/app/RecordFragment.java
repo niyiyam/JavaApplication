@@ -34,8 +34,18 @@ public class RecordFragment extends Fragment {
         if (savedInstanceState != null) showAll = savedInstanceState.getBoolean(STATE_ALL);
         tabCurrent = view.findViewById(R.id.record_tab_current);
         tabAll = view.findViewById(R.id.record_tab_all);
-        tabCurrent.setOnClickListener(v -> show(false));
-        tabAll.setOnClickListener(v -> show(true));
+        tabCurrent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show(false);
+            }
+        });
+        tabAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show(true);
+            }
+        });
     }
 
     @Override
