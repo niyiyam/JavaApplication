@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/cream_bg"
     android:orientation="vertical">
+
+    <include layout="@layout/view_top_bar" />
 
     <!-- 프래그먼트가 들어갈 자리 -->
     <androidx.fragment.app.FragmentContainerView

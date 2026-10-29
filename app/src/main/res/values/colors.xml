@@ -2,4 +2,43 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- [임시] 앱 색상 톤: 숲 초록 + 크림 + 망고 주황. 디자인 확정 후 바뀜 -->
+    <color name="forest_dark">#2E4A33</color>
+    <color name="forest_darker">#1E2E22</color>
+    <color name="green_primary">#2E6B3E</color>
+    <color name="cream_bg">#F6F0E4</color>
+    <color name="card_bg">#FFFDF7</color>
+    <color name="tile_bg">#F6F0E4</color>
+    <color name="beige">#EAE0CA</color>
+    <color name="border">#E6DCC6</color>
+    <color name="text_primary">#2B2B26</color>
+    <color name="text_secondary">#6B675C</color>
+    <color name="text_on_dark_sub">#DDE5D8</color>
+    <color name="mango_orange">#F0A93B</color>
+    <color name="level_brown">#9A5A12</color>
+    <color name="avatar_bg">#A9C79A</color>
+    <color name="thumb_bg">#EEF3E8</color>
+
+    <color name="zone_bonus">#4A8BD6</color>
+    <color name="zone_normal">#4EA35A</color>
+    <color name="zone_over">#C0392B</color>
+    <color name="zone_empty">#3B4038</color>
+    <color name="zone_empty_over">#463C3A</color>
+
+    <color name="temp_border">#D49A2A</color>
+    <color name="temp_bg">#FBE3C3</color>
+    <color name="temp_text">#8A5A10</color>
+
+    <color name="sky">#DCE7D2</color>
+    <color name="hill">#8FB27E</color>
+    <color name="ground">#6E9A5E</color>
+    <color name="stump">#8B6440</color>
+    <color name="stump_top">#B08455</color>
+    <color name="roof">#9A5A30</color>
+    <color name="house_bg">#E9DFC8</color>
+
+    <color name="item_red">#C0392B</color>
+    <color name="item_blue">#2E6DB4</color>
+    <color name="item_green">#2E7D3E</color>
 </resources>
