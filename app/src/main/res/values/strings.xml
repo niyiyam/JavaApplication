@@ -126,8 +126,8 @@
     <string name="detail_period_done">%1$s ~ %2$s (%3$d일)</string>
     <string name="detail_period_user">%1$s ~ 오늘 (%2$d일)</string>
     <string name="detail_level">Lv.%1$d</string>
-    <string name="detail_exp"> · 경험치 %1$s / %2$s</string>
-    <string name="detail_leaves">모은 이파리 </string>
+    <string name="detail_exp">\u0020· 경험치 %1$s / %2$s</string>
+    <string name="detail_leaves">모은 이파리\u0020</string>
     <string name="donut_title">운동 종류별 비율</string>
     <string name="donut_center">총 운동</string>
     <string name="donut_legend">%1$s분 · %2$d%%</string>

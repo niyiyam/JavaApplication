@@ -113,6 +113,12 @@ public class CustomizeActivity extends AppCompatActivity {
         addCell(null);
         List<Item> owned = repo.getOwnedItems(slot);
         for (Item item : owned) addCell(item);
+        // 마지막 줄이 덜 차면 칸이 옆으로 늘어나므로 빈칸으로 채운다
+        int columns = grid.getColumnCount();
+        while (grid.getChildCount() % columns != 0) {
+            View spacer = new View(this);
+            grid.addView(spacer, cellParams());
+        }
         if (owned.isEmpty()) {
             empty.setText(getString(R.string.customize_empty, getString(slot.labelRes)));
             empty.setVisibility(View.VISIBLE);
@@ -142,12 +148,16 @@ public class CustomizeActivity extends AppCompatActivity {
             render();
         });
 
+        grid.addView(cell, cellParams());
+    }
+
+    private GridLayout.LayoutParams cellParams() {
         int margin = Math.round(5 * getResources().getDisplayMetrics().density);
         GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
                 GridLayout.spec(GridLayout.UNDEFINED),
                 GridLayout.spec(GridLayout.UNDEFINED, 1f));
         lp.width = 0;
         lp.setMargins(margin, margin, margin, margin);
-        grid.addView(cell, lp);
+        return lp;
     }
 }

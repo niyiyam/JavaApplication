@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 하단 탭 아이콘 크기가 40dp라서, 다른 탭과 그림 크기를 맞추려고 24 그림을 40 칸 가운데에 둔다 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path
-        android:strokeColor="#FF000000"
-        android:strokeWidth="1.8"
-        android:strokeLineCap="round"
-        android:pathData="M4,20L20,20M7,20L7,13M12,20L12,5M17,20L17,10" />
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <group
+        android:translateX="8"
+        android:translateY="8">
+        <path
+            android:strokeColor="#FF000000"
+            android:strokeWidth="1.8"
+            android:strokeLineCap="round"
+            android:pathData="M4,20L20,20M7,20L7,13M12,20L12,5M17,20L17,10" />
+    </group>
 </vector>

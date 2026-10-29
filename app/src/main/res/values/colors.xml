@@ -23,8 +23,8 @@
     <color name="zone_bonus">#4A8BD6</color>
     <color name="zone_normal">#4EA35A</color>
     <color name="zone_over">#C0392B</color>
-    <color name="zone_empty">#3B4038</color>
-    <color name="zone_empty_over">#463C3A</color>
+    <color name="zone_empty">#E3E8DC</color>
+    <color name="zone_empty_over">#F0DAD5</color>
 
     <color name="temp_border">#D49A2A</color>
     <color name="temp_bg">#FBE3C3</color>
