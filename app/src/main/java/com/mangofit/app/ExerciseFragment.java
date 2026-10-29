@@ -246,21 +246,25 @@ public class ExerciseFragment extends Fragment {
         Toast.makeText(requireContext(), getString(R.string.reward_toast,
                 Fmt.num(result.reward.leaves), Fmt.num(result.reward.exp)), Toast.LENGTH_SHORT).show();
 
-        if (result.leveledUp()) {
-            StringBuilder msg = new StringBuilder();
-            if (result.mangoLevelAfter > result.mangoLevelBefore) {
-                msg.append(getString(R.string.levelup_mango, result.mangoLevelBefore, result.mangoLevelAfter));
-            }
-            if (result.userLevelAfter > result.userLevelBefore) {
-                if (msg.length() > 0) msg.append('\n');
-                msg.append(getString(R.string.levelup_user, result.userLevelBefore, result.userLevelAfter));
-            }
-            new AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.levelup_title)
-                    .setMessage(msg.toString())
-                    .setPositiveButton(R.string.ok, null)
-                    .show();
+        // 망고와 유저가 같이 레벨업하면 팝업 2개: 망고 먼저, 닫으면 유저
+        String userMsg = result.userLevelAfter > result.userLevelBefore
+                ? getString(R.string.levelup_user, result.userLevelBefore, result.userLevelAfter) : null;
+        if (result.mangoLevelAfter > result.mangoLevelBefore) {
+            showLevelUp(getString(R.string.levelup_mango, result.mangoLevelBefore, result.mangoLevelAfter),
+                    () -> { if (userMsg != null) showLevelUp(userMsg, null); });
+        } else if (userMsg != null) {
+            showLevelUp(userMsg, null);
         }
+    }
+
+    private void showLevelUp(String message, @Nullable Runnable onClosed) {
+        if (!isAdded()) return;
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.levelup_title)
+                .setMessage(message)
+                .setPositiveButton(R.string.ok, null)
+                .setOnDismissListener(d -> { if (onClosed != null) onClosed.run(); })
+                .show();
     }
 
     /** [임시] 오늘 기록 초기화 */
