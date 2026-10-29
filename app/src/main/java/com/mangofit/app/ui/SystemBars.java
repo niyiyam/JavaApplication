@@ -1,8 +1,9 @@
 package com.mangofit.app.ui;
 
-import android.app.Activity;
 import android.view.View;
 
+import androidx.activity.ComponentActivity;
+import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -16,8 +17,12 @@ public final class SystemBars {
 
     private SystemBars() { }
 
-    /** 상태 바 아이콘 색. 배경이 밝으면 true(어두운 아이콘) */
-    public static void setLightStatusBar(Activity activity, boolean light) {
+    /**
+     * 모든 안드로이드 버전에서 화면을 시스템 바 아래까지 그리고, 상태 바 아이콘 색을 정한다.
+     * 배경이 밝으면 light = true(어두운 아이콘).
+     */
+    public static void setLightStatusBar(ComponentActivity activity, boolean light) {
+        EdgeToEdge.enable(activity);
         WindowCompat.getInsetsController(activity.getWindow(), activity.getWindow().getDecorView())
                 .setAppearanceLightStatusBars(light);
     }

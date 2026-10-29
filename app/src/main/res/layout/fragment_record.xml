@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".RecordFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <!-- 상단 탭 [이번 망고] / [전체 기록] -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="record fragment" />
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_segment"
+        android:orientation="horizontal">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/record_tab_current"
+            style="@style/SegmentTab"
+            android:text="@string/record_tab_current" />
+
+        <TextView
+            android:id="@+id/record_tab_all"
+            style="@style/SegmentTab"
+            android:text="@string/record_tab_all" />
+    </LinearLayout>
+
+    <!-- 공용 상세 블록이 들어갈 자리 -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/record_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>
