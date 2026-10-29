@@ -1,0 +1,642 @@
+{
+  "base_date": "2026-10-28",
+  "prefs": {
+    "user_name": "망고 주인",
+    "first_start_date": "2026-07-25",
+    "leaves": 13348,
+    "mango_no": 4,
+    "mango_start_date": "2026-10-17",
+    "mango_exp": 1540,
+    "mango_leaves_earned": 2653,
+    "equip_hat": "hat_a_red",
+    "equip_top": "",
+    "equip_hand": "",
+    "owned_items": [
+      "hat_a_red",
+      "top_b_green"
+    ]
+  },
+  "workouts": [
+    {
+      "id": 1,
+      "created_at": "2026-07-26T20:15:00",
+      "date": "2026-07-26",
+      "type": "walk",
+      "minutes": 45,
+      "score": 158,
+      "leaves": 208,
+      "exp": 158,
+      "mango_no": 1
+    },
+    {
+      "id": 2,
+      "created_at": "2026-07-26T19:15:00",
+      "date": "2026-07-26",
+      "type": "walk",
+      "minutes": 40,
+      "score": 140,
+      "leaves": 42,
+      "exp": 91,
+      "mango_no": 1
+    },
+    {
+      "id": 3,
+      "created_at": "2026-07-28T20:00:00",
+      "date": "2026-07-28",
+      "type": "walk",
+      "minutes": 45,
+      "score": 158,
+      "leaves": 208,
+      "exp": 158,
+      "mango_no": 1
+    },
+    {
+      "id": 4,
+      "created_at": "2026-07-29T18:30:00",
+      "date": "2026-07-29",
+      "type": "walk",
+      "minutes": 40,
+      "score": 140,
+      "leaves": 203,
+      "exp": 140,
+      "mango_no": 1
+    },
+    {
+      "id": 5,
+      "created_at": "2026-07-31T21:15:00",
+      "date": "2026-07-31",
+      "type": "walk",
+      "minutes": 45,
+      "score": 158,
+      "leaves": 220,
+      "exp": 158,
+      "mango_no": 1
+    },
+    {
+      "id": 6,
+      "created_at": "2026-08-03T08:15:00",
+      "date": "2026-08-03",
+      "type": "run",
+      "minutes": 30,
+      "score": 294,
+      "leaves": 313,
+      "exp": 272,
+      "mango_no": 1
+    },
+    {
+      "id": 7,
+      "created_at": "2026-08-05T08:15:00",
+      "date": "2026-08-05",
+      "type": "walk",
+      "minutes": 40,
+      "score": 140,
+      "leaves": 215,
+      "exp": 140,
+      "mango_no": 1
+    },
+    {
+      "id": 8,
+      "created_at": "2026-08-06T20:30:00",
+      "date": "2026-08-06",
+      "type": "yoga",
+      "minutes": 30,
+      "score": 75,
+      "leaves": 150,
+      "exp": 75,
+      "mango_no": 1
+    },
+    {
+      "id": 9,
+      "created_at": "2026-08-06T12:00:00",
+      "date": "2026-08-06",
+      "type": "walk",
+      "minutes": 30,
+      "score": 105,
+      "leaves": 105,
+      "exp": 105,
+      "mango_no": 1
+    },
+    {
+      "id": 10,
+      "created_at": "2026-08-07T18:30:00",
+      "date": "2026-08-07",
+      "type": "walk",
+      "minutes": 20,
+      "score": 70,
+      "leaves": 140,
+      "exp": 70,
+      "mango_no": 1
+    },
+    {
+      "id": 11,
+      "created_at": "2026-08-11T12:15:00",
+      "date": "2026-08-11",
+      "type": "walk",
+      "minutes": 45,
+      "score": 158,
+      "leaves": 233,
+      "exp": 158,
+      "mango_no": 1
+    },
+    {
+      "id": 12,
+      "created_at": "2026-08-13T20:45:00",
+      "date": "2026-08-13",
+      "type": "run",
+      "minutes": 40,
+      "score": 392,
+      "leaves": 438,
+      "exp": 371,
+      "mango_no": 1
+    },
+    {
+      "id": 13,
+      "created_at": "2026-08-16T12:15:00",
+      "date": "2026-08-16",
+      "type": "yoga",
+      "minutes": 45,
+      "score": 113,
+      "leaves": 200,
+      "exp": 113,
+      "mango_no": 1
+    },
+    {
+      "id": 14,
+      "created_at": "2026-08-16T21:15:00",
+      "date": "2026-08-16",
+      "type": "run",
+      "minutes": 45,
+      "score": 441,
+      "leaves": 237,
+      "exp": 325,
+      "mango_no": 1
+    },
+    {
+      "id": 15,
+      "created_at": "2026-08-17T21:45:00",
+      "date": "2026-08-17",
+      "type": "yoga",
+      "minutes": 60,
+      "score": 150,
+      "leaves": 250,
+      "exp": 150,
+      "mango_no": 1
+    },
+    {
+      "id": 16,
+      "created_at": "2026-08-18T20:00:00",
+      "date": "2026-08-18",
+      "type": "walk",
+      "minutes": 20,
+      "score": 70,
+      "leaves": 140,
+      "exp": 70,
+      "mango_no": 1
+    },
+    {
+      "id": 17,
+      "created_at": "2026-08-18T19:45:00",
+      "date": "2026-08-18",
+      "type": "walk",
+      "minutes": 30,
+      "score": 105,
+      "leaves": 135,
+      "exp": 105,
+      "mango_no": 1
+    },
+    {
+      "id": 18,
+      "created_at": "2026-08-19T12:45:00",
+      "date": "2026-08-19",
+      "type": "run",
+      "minutes": 40,
+      "score": 392,
+      "leaves": 492,
+      "exp": 392,
+      "mango_no": 1
+    },
+    {
+      "id": 19,
+      "created_at": "2026-08-20T08:00:00",
+      "date": "2026-08-20",
+      "type": "yoga",
+      "minutes": 30,
+      "score": 75,
+      "leaves": 150,
+      "exp": 75,
+      "mango_no": 1
+    },
+    {
+      "id": 20,
+      "created_at": "2026-09-19T20:45:00",
+      "date": "2026-09-19",
+      "type": "rope",
+      "minutes": 20,
+      "score": 236,
+      "leaves": 349,
+      "exp": 236,
+      "mango_no": 3
+    },
+    {
+      "id": 21,
+      "created_at": "2026-09-19T08:15:00",
+      "date": "2026-09-19",
+      "type": "gym",
+      "minutes": 30,
+      "score": 150,
+      "leaves": 150,
+      "exp": 150,
+      "mango_no": 3
+    },
+    {
+      "id": 22,
+      "created_at": "2026-09-20T21:00:00",
+      "date": "2026-09-20",
+      "type": "gym",
+      "minutes": 20,
+      "score": 100,
+      "leaves": 200,
+      "exp": 100,
+      "mango_no": 3
+    },
+    {
+      "id": 23,
+      "created_at": "2026-09-21T18:45:00",
+      "date": "2026-09-21",
+      "type": "gym",
+      "minutes": 45,
+      "score": 225,
+      "leaves": 338,
+      "exp": 225,
+      "mango_no": 3
+    },
+    {
+      "id": 24,
+      "created_at": "2026-09-23T08:00:00",
+      "date": "2026-09-23",
+      "type": "gym",
+      "minutes": 60,
+      "score": 300,
+      "leaves": 413,
+      "exp": 300,
+      "mango_no": 3
+    },
+    {
+      "id": 25,
+      "created_at": "2026-09-23T12:45:00",
+      "date": "2026-09-23",
+      "type": "gym",
+      "minutes": 45,
+      "score": 225,
+      "leaves": 150,
+      "exp": 188,
+      "mango_no": 3
+    },
+    {
+      "id": 26,
+      "created_at": "2026-09-24T12:45:00",
+      "date": "2026-09-24",
+      "type": "gym",
+      "minutes": 20,
+      "score": 100,
+      "leaves": 200,
+      "exp": 100,
+      "mango_no": 3
+    },
+    {
+      "id": 27,
+      "created_at": "2026-09-26T18:30:00",
+      "date": "2026-09-26",
+      "type": "run",
+      "minutes": 30,
+      "score": 294,
+      "leaves": 419,
+      "exp": 294,
+      "mango_no": 3
+    },
+    {
+      "id": 28,
+      "created_at": "2026-09-26T19:00:00",
+      "date": "2026-09-26",
+      "type": "gym",
+      "minutes": 40,
+      "score": 200,
+      "leaves": 200,
+      "exp": 200,
+      "mango_no": 3
+    },
+    {
+      "id": 29,
+      "created_at": "2026-09-28T21:45:00",
+      "date": "2026-09-28",
+      "type": "run",
+      "minutes": 30,
+      "score": 294,
+      "leaves": 432,
+      "exp": 294,
+      "mango_no": 3
+    },
+    {
+      "id": 30,
+      "created_at": "2026-09-29T12:45:00",
+      "date": "2026-09-29",
+      "type": "rope",
+      "minutes": 30,
+      "score": 354,
+      "leaves": 492,
+      "exp": 354,
+      "mango_no": 3
+    },
+    {
+      "id": 31,
+      "created_at": "2026-09-30T07:15:00",
+      "date": "2026-09-30",
+      "type": "walk",
+      "minutes": 60,
+      "score": 210,
+      "leaves": 348,
+      "exp": 210,
+      "mango_no": 3
+    },
+    {
+      "id": 32,
+      "created_at": "2026-10-01T18:30:00",
+      "date": "2026-10-01",
+      "type": "run",
+      "minutes": 40,
+      "score": 392,
+      "leaves": 530,
+      "exp": 392,
+      "mango_no": 3
+    },
+    {
+      "id": 33,
+      "created_at": "2026-10-02T12:15:00",
+      "date": "2026-10-02",
+      "type": "gym",
+      "minutes": 20,
+      "score": 100,
+      "leaves": 200,
+      "exp": 100,
+      "mango_no": 3
+    },
+    {
+      "id": 34,
+      "created_at": "2026-10-03T18:00:00",
+      "date": "2026-10-03",
+      "type": "walk",
+      "minutes": 30,
+      "score": 105,
+      "leaves": 210,
+      "exp": 105,
+      "mango_no": 3
+    },
+    {
+      "id": 35,
+      "created_at": "2026-10-04T12:00:00",
+      "date": "2026-10-04",
+      "type": "rope",
+      "minutes": 60,
+      "score": 708,
+      "leaves": 750,
+      "exp": 654,
+      "mango_no": 3
+    },
+    {
+      "id": 36,
+      "created_at": "2026-10-06T21:30:00",
+      "date": "2026-10-06",
+      "type": "walk",
+      "minutes": 40,
+      "score": 140,
+      "leaves": 280,
+      "exp": 140,
+      "mango_no": 3
+    },
+    {
+      "id": 37,
+      "created_at": "2026-10-07T20:15:00",
+      "date": "2026-10-07",
+      "type": "walk",
+      "minutes": 30,
+      "score": 105,
+      "leaves": 210,
+      "exp": 105,
+      "mango_no": 3
+    },
+    {
+      "id": 38,
+      "created_at": "2026-10-09T12:15:00",
+      "date": "2026-10-09",
+      "type": "walk",
+      "minutes": 30,
+      "score": 105,
+      "leaves": 210,
+      "exp": 105,
+      "mango_no": 3
+    },
+    {
+      "id": 39,
+      "created_at": "2026-10-10T12:15:00",
+      "date": "2026-10-10",
+      "type": "rope",
+      "minutes": 20,
+      "score": 236,
+      "leaves": 399,
+      "exp": 236,
+      "mango_no": 3
+    },
+    {
+      "id": 40,
+      "created_at": "2026-10-10T18:30:00",
+      "date": "2026-10-10",
+      "type": "gym",
+      "minutes": 45,
+      "score": 225,
+      "leaves": 225,
+      "exp": 225,
+      "mango_no": 3
+    },
+    {
+      "id": 41,
+      "created_at": "2026-10-13T20:15:00",
+      "date": "2026-10-13",
+      "type": "rope",
+      "minutes": 30,
+      "score": 354,
+      "leaves": 517,
+      "exp": 354,
+      "mango_no": 3
+    },
+    {
+      "id": 42,
+      "created_at": "2026-10-15T18:00:00",
+      "date": "2026-10-15",
+      "type": "rope",
+      "minutes": 45,
+      "score": 531,
+      "leaves": 694,
+      "exp": 531,
+      "mango_no": 3
+    },
+    {
+      "id": 43,
+      "created_at": "2026-10-18T21:45:00",
+      "date": "2026-10-18",
+      "type": "hike",
+      "minutes": 30,
+      "score": 180,
+      "leaves": 355,
+      "exp": 180,
+      "mango_no": 4
+    },
+    {
+      "id": 44,
+      "created_at": "2026-10-18T18:15:00",
+      "date": "2026-10-18",
+      "type": "walk",
+      "minutes": 60,
+      "score": 210,
+      "leaves": 210,
+      "exp": 210,
+      "mango_no": 4
+    },
+    {
+      "id": 45,
+      "created_at": "2026-10-19T20:45:00",
+      "date": "2026-10-19",
+      "type": "hike",
+      "minutes": 20,
+      "score": 120,
+      "leaves": 240,
+      "exp": 120,
+      "mango_no": 4
+    },
+    {
+      "id": 46,
+      "created_at": "2026-10-21T20:15:00",
+      "date": "2026-10-21",
+      "type": "walk",
+      "minutes": 30,
+      "score": 105,
+      "leaves": 210,
+      "exp": 105,
+      "mango_no": 4
+    },
+    {
+      "id": 47,
+      "created_at": "2026-10-22T08:45:00",
+      "date": "2026-10-22",
+      "type": "hike",
+      "minutes": 30,
+      "score": 180,
+      "leaves": 355,
+      "exp": 180,
+      "mango_no": 4
+    },
+    {
+      "id": 48,
+      "created_at": "2026-10-24T07:00:00",
+      "date": "2026-10-24",
+      "type": "yoga",
+      "minutes": 30,
+      "score": 75,
+      "leaves": 150,
+      "exp": 75,
+      "mango_no": 4
+    },
+    {
+      "id": 49,
+      "created_at": "2026-10-24T12:15:00",
+      "date": "2026-10-24",
+      "type": "yoga",
+      "minutes": 40,
+      "score": 100,
+      "leaves": 200,
+      "exp": 100,
+      "mango_no": 4
+    },
+    {
+      "id": 50,
+      "created_at": "2026-10-26T12:30:00",
+      "date": "2026-10-26",
+      "type": "walk",
+      "minutes": 30,
+      "score": 105,
+      "leaves": 210,
+      "exp": 105,
+      "mango_no": 4
+    },
+    {
+      "id": 51,
+      "created_at": "2026-10-26T21:45:00",
+      "date": "2026-10-26",
+      "type": "hike",
+      "minutes": 30,
+      "score": 180,
+      "leaves": 250,
+      "exp": 180,
+      "mango_no": 4
+    },
+    {
+      "id": 52,
+      "created_at": "2026-10-27T20:15:00",
+      "date": "2026-10-27",
+      "type": "walk",
+      "minutes": 60,
+      "score": 210,
+      "leaves": 398,
+      "exp": 210,
+      "mango_no": 4
+    },
+    {
+      "id": 53,
+      "created_at": "2026-10-27T07:15:00",
+      "date": "2026-10-27",
+      "type": "yoga",
+      "minutes": 30,
+      "score": 75,
+      "leaves": 75,
+      "exp": 75,
+      "mango_no": 4
+    }
+  ],
+  "mangos": [
+    {
+      "no": 1,
+      "start_date": "2026-07-25",
+      "end_date": "2026-08-21",
+      "exp": 3126,
+      "leaves_earned": 4079,
+      "equipped": {
+        "hat": "hat_a_green",
+        "top": null,
+        "hand": null
+      }
+    },
+    {
+      "no": 2,
+      "start_date": "2026-08-22",
+      "end_date": "2026-09-18",
+      "exp": 0,
+      "leaves_earned": 0,
+      "equipped": {
+        "hat": null,
+        "top": null,
+        "hand": null
+      }
+    },
+    {
+      "no": 3,
+      "start_date": "2026-09-19",
+      "end_date": "2026-10-16",
+      "exp": 5598,
+      "leaves_earned": 7916,
+      "equipped": {
+        "hat": null,
+        "top": "top_a_blue",
+        "hand": "hand_a_red"
+      }
+    }
+  ]
+}

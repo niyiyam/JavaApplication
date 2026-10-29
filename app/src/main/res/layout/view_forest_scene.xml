@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 숲 배경 + 그루터기 + 망고. 홈과 꾸미기 화면이 같이 쓴다. 부모 FrameLayout 안에 merge 된다 -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <View
+        android:layout_width="150dp"
+        android:layout_height="220dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="-30dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/bg_hill" />
+
+    <View
+        android:layout_width="160dp"
+        android:layout_height="260dp"
+        android:layout_gravity="bottom|start"
+        android:layout_marginStart="60dp"
+        android:layout_marginBottom="70dp"
+        android:background="@drawable/bg_hill" />
+
+    <View
+        android:layout_width="200dp"
+        android:layout_height="250dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="-40dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/bg_hill" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        android:background="@color/ground" />
+
+    <View
+        android:layout_width="130dp"
+        android:layout_height="46dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/bg_stump" />
+
+    <View
+        android:layout_width="140dp"
+        android:layout_height="20dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="64dp"
+        android:background="@drawable/bg_stump_top" />
+
+    <com.mangofit.app.view.MangoView
+        android:id="@+id/scene_mango"
+        android:layout_width="150dp"
+        android:layout_height="215dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="70dp" />
+</merge>
