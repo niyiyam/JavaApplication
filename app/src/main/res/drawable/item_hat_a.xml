@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- [임시] 아이템 그림. 망고 이미지와 같은 캔버스(301×432)에 실제 위치로 그린다.
+<!-- [임시] 아이템 그림. 아이템 크기만큼만 그리고, 위치·크기는 ItemCatalog의 Placement가 정한다.
      흰 부분에 MULTIPLY 틴트로 색이 입혀진다. 실제 에셋(item_hat_a.png)이 나오면 이 파일을 지운다. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="301dp"
-    android:height="432dp"
-    android:viewportWidth="301"
-    android:viewportHeight="432">
+    android:width="212dp"
+    android:height="83dp"
+    android:viewportWidth="212"
+    android:viewportHeight="83">
     <!-- 둥근 모자 -->
     <path
         android:fillColor="#FFFFFFFF"
         android:strokeColor="#FF000000"
         android:strokeWidth="5"
-        android:pathData="M70,150C70,80 230,80 230,150L246,150Q252,150 252,158L252,164Q252,170 246,170L54,170Q48,170 48,164L48,158Q48,150 54,150Z" />
+        android:pathData="M26,59C26,-11 186,-11 186,59L202,59Q208,59 208,67L208,73Q208,79 202,79L10,79Q4,79 4,73L4,67Q4,59 10,59Z" />
 </vector>

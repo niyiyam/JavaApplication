@@ -13,11 +13,14 @@
         android:layout_height="120dp"
         android:background="@drawable/bg_thumb">
 
-        <com.mangofit.app.view.MangoView
+        <!-- 아이템 그림만 그대로 보여준다 -->
+        <ImageView
             android:id="@+id/shop_item_art"
-            android:layout_width="80dp"
-            android:layout_height="115dp"
-            android:layout_gravity="center" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:padding="18dp"
+            android:scaleType="fitCenter" />
     </FrameLayout>
 
     <TextView

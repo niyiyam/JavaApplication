@@ -20,7 +20,7 @@ public final class ItemCatalog {
         for (Slot slot : Slot.values()) {
             for (String shape : SHAPES) {
                 for (String color : COLORS) {
-                    items.add(new Item(slot, shape, color, priceFor(shape)));
+                    items.add(new Item(slot, shape, color, priceFor(shape), placementFor(slot, shape)));
                 }
             }
         }
@@ -31,6 +31,19 @@ public final class ItemCatalog {
 
     private static int priceFor(String shape) {
         return "a".equals(shape) ? 200 : 500;
+    }
+
+    /**
+     * 모양별 위치·크기. 망고 이미지 정중앙 (0, 0), 아래쪽 +y, 망고 너비 = 1.0.
+     * [임시] 값은 임시 아이템 그림에 맞춘 것이라 실제 에셋이 나오면 다시 맞춘다.
+     */
+    private static Placement placementFor(Slot slot, String shape) {
+        boolean a = "a".equals(shape);
+        switch (slot) {
+            case HAT: return a ? new Placement(0f, -0.277f, 0.704f) : new Placement(0f, -0.206f, 0.694f);
+            case TOP: return a ? new Placement(0f, 0.349f, 0.767f) : new Placement(0f, 0.266f, 0.701f);
+            default: return a ? new Placement(0.417f, 0.279f, 0.159f) : new Placement(-0.390f, 0.312f, 0.219f);
+        }
     }
 
     public static List<Item> all() {

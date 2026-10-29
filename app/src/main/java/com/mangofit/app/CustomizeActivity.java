@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -123,7 +124,7 @@ public class CustomizeActivity extends AppCompatActivity {
     /** item이 null이면 "해제" 칸 */
     private void addCell(Item item) {
         View cell = LayoutInflater.from(this).inflate(R.layout.item_customize, grid, false);
-        MangoView art = cell.findViewById(R.id.cell_art);
+        ImageView art = cell.findViewById(R.id.cell_art);
         TextView name = cell.findViewById(R.id.cell_name);
         String current = draft.get(slot);
         if (item == null) {
@@ -132,8 +133,7 @@ public class CustomizeActivity extends AppCompatActivity {
             name.setText(R.string.customize_none);
             cell.setSelected(current == null);
         } else {
-            art.setBaseAlpha(0.25f);
-            art.setItem(item.slot, item.id);
+            ItemArt.apply(art, item);
             name.setText(ItemArt.displayName(this, item));
             cell.setSelected(item.id.equals(current));
         }

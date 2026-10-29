@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- [임시] 아이템 그림. item_hat_a.xml 주석 참고 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="301dp"
-    android:height="432dp"
-    android:viewportWidth="301"
-    android:viewportHeight="432">
+    android:width="231dp"
+    android:height="70dp"
+    android:viewportWidth="231"
+    android:viewportHeight="70">
     <!-- 배 두르개 -->
     <path
         android:fillColor="#FFFFFFFF"
         android:strokeColor="#FF000000"
         android:strokeWidth="5"
-        android:pathData="M48,290L253,290Q262,290 262,300L262,342Q262,352 253,352L48,352Q39,352 39,342L39,300Q39,290 48,290Z" />
+        android:pathData="M13,4L218,4Q227,4 227,14L227,56Q227,66 218,66L13,66Q4,66 4,56L4,14Q4,4 13,4Z" />
 </vector>

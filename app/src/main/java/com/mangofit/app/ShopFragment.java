@@ -20,7 +20,6 @@ import com.mangofit.app.logic.ItemCatalog;
 import com.mangofit.app.logic.Slot;
 import com.mangofit.app.ui.Fmt;
 import com.mangofit.app.ui.ItemArt;
-import com.mangofit.app.view.MangoView;
 
 /**
  * 상점: 부위별 탭 → 아이템 그리드(그림 + 가격).
@@ -89,9 +88,7 @@ public class ShopFragment extends Fragment {
         int leaves = repo.getLeaves();
         for (Item item : ItemCatalog.bySlot(slot)) {
             View card = inflater.inflate(R.layout.item_shop, grid, false);
-            MangoView art = card.findViewById(R.id.shop_item_art);
-            art.setBaseAlpha(0.25f);
-            art.setItem(item.slot, item.id);
+            ItemArt.apply(card.findViewById(R.id.shop_item_art), item);
             ((TextView) card.findViewById(R.id.shop_item_name)).setText(ItemArt.displayName(requireContext(), item));
 
             View button = card.findViewById(R.id.shop_item_button);
