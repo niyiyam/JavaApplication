@@ -1,4 +1,4 @@
-package com.example.javaapplication;
+package com.mangofit.app;
 
 import org.junit.Test;
 

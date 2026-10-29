@@ -1,4 +1,4 @@
-package com.example.javaapplication;
+package com.mangofit.app;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
