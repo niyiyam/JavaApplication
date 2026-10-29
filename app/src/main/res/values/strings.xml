@@ -82,7 +82,7 @@
     <string name="minutes_unit">분</string>
     <string name="minus">−</string>
     <string name="plus">+</string>
-    <string name="add_preview">강도 %1$s × %2$d분 = %3$s점 → 이파리 +%4$s, 경험치 +%5$s</string>
+    <string name="add_preview">강도 %1$s × %2$d분 = %3$s점\n→ 이파리 +%4$s, 경험치 +%5$s</string>
     <string name="add_button">기록 추가</string>
     <string name="add_confirm">%1$s %2$d분을 추가할까요?</string>
     <string name="add_minutes_invalid">시간은 1~600분 사이로 입력해 주세요</string>
@@ -122,9 +122,9 @@
     <!-- 기록, 공용 상세 블록 -->
     <string name="record_tab_current">이번 망고</string>
     <string name="record_tab_all">전체 기록</string>
-    <string name="detail_period_current">%1$s ~ 진행 중 (%2$d일째 / %3$d일)</string>
-    <string name="detail_period_done">%1$s ~ %2$s (%3$d일)</string>
-    <string name="detail_period_user">%1$s ~ 오늘 (%2$d일)</string>
+    <string name="detail_period_current">%1$s ~ 진행 중\n(%2$d일째 / %3$d일)</string>
+    <string name="detail_period_done">%1$s ~ %2$s\n(%3$d일)</string>
+    <string name="detail_period_user">%1$s ~ 오늘\n(%2$d일)</string>
     <string name="detail_level">Lv.%1$d</string>
     <string name="detail_exp">\u0020- 경험치 %1$s / %2$s</string>
     <string name="detail_leaves">모은 이파리\u0020</string>
