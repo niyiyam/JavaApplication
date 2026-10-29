@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JavaApplication</string>
+    <string name="app_name">망고핏</string>
     <string name="bottom_nav_home">홈</string>
     <string name="bottom_nav_mango_house">망고집</string>
     <string name="bottom_nav_exercise">운동</string>
