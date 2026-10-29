@@ -131,7 +131,7 @@ public class ShopFragment extends Fragment {
                 .setPositiveButton(R.string.ok, (d, w) -> {
                     GameRepository.BuyResult result = repo.buy(item.id);
                     if (result == GameRepository.BuyResult.OK) {
-                        Toast.makeText(requireContext(), getString(R.string.buy_done, name), Toast.LENGTH_LONG).show();
+                        Toast.makeText(requireContext(), R.string.buy_done, Toast.LENGTH_SHORT).show();
                     } else if (result == GameRepository.BuyResult.NOT_ENOUGH_LEAVES) {
                         Toast.makeText(requireContext(), R.string.buy_not_enough, Toast.LENGTH_SHORT).show();
                     }

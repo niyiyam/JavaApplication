@@ -77,7 +77,7 @@
     <string name="workout_row_detail">%1$s점 | 이파리 +%2$s, 경험치 +%3$s</string>
     <string name="today_empty">아직 오늘 운동 기록이 없어요</string>
     <string name="add_title">운동 기록 추가</string>
-    <string name="add_temp_chip">임시 · 직접 입력</string>
+    <string name="add_temp_chip">임시 - 직접 입력</string>
     <string name="add_time">시간</string>
     <string name="minutes_unit">분</string>
     <string name="minus">−</string>
@@ -101,7 +101,7 @@
     <!-- 상점 -->
     <string name="shop_owned">보유 중</string>
     <string name="buy_confirm">%1$s을(를) 이파리 %2$s개로 살까요?</string>
-    <string name="buy_done">%1$s을(를) 샀어요. 홈에서 망고를 눌러 꾸며 보세요.</string>
+    <string name="buy_done">구매완료!</string>
     <string name="buy_not_enough">이파리가 부족해요</string>
 
     <!-- 꾸미기 -->
