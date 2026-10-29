@@ -45,7 +45,7 @@ public final class ItemArt {
         }
     }
 
-    /** "모자 A · 빨강" */
+    /** "모자 A - 빨강" */
     public static String displayName(Context context, Item item) {
         return context.getString(R.string.item_name,
                 context.getString(item.slot.labelRes),

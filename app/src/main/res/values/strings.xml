@@ -17,7 +17,7 @@
     <string name="user_icon">유저 아이콘</string>
     <string name="mango_image">망고</string>
     <string name="exp_progress">경험치 %1$s / %2$s</string>
-    <string name="top_bar_level">Lv.%1$d · %2$s / %3$s</string>
+    <string name="top_bar_level">Lv.%1$d - %2$s / %3$s</string>
 
     <!-- 운동 종류 -->
     <string name="exercise_walk">걷기</string>
@@ -35,7 +35,7 @@
     <string name="color_red">빨강</string>
     <string name="color_blue">파랑</string>
     <string name="color_green">초록</string>
-    <string name="item_name">%1$s %2$s · %3$s</string>
+    <string name="item_name">%1$s %2$s - %3$s</string>
 
     <!-- 첫 실행 -->
     <string name="name_title">망고핏에 오신 걸 환영해요</string>
@@ -74,7 +74,7 @@
     <string name="value_minutes">%1$s분</string>
     <string name="value_plus">+%1$s</string>
     <string name="workout_row_title">%1$s %2$d분</string>
-    <string name="workout_row_detail">%1$s점 · 이파리 +%2$s · 경험치 +%3$s</string>
+    <string name="workout_row_detail">%1$s점 | 이파리 +%2$s, 경험치 +%3$s</string>
     <string name="today_empty">아직 오늘 운동 기록이 없어요</string>
     <string name="add_title">운동 기록 추가</string>
     <string name="add_temp_chip">임시 · 직접 입력</string>
@@ -82,11 +82,11 @@
     <string name="minutes_unit">분</string>
     <string name="minus">−</string>
     <string name="plus">+</string>
-    <string name="add_preview">강도 %1$s × %2$d분 = %3$s점 → 이파리 +%4$s · 경험치 +%5$s</string>
+    <string name="add_preview">강도 %1$s × %2$d분 = %3$s점 → 이파리 +%4$s, 경험치 +%5$s</string>
     <string name="add_button">기록 추가</string>
     <string name="add_confirm">%1$s %2$d분을 추가할까요?</string>
     <string name="add_minutes_invalid">시간은 1~600분 사이로 입력해 주세요</string>
-    <string name="reward_toast">이파리 +%1$s · 경험치 +%2$s</string>
+    <string name="reward_toast">이파리 +%1$s, 경험치 +%2$s</string>
     <string name="levelup_title">레벨 업!</string>
     <string name="levelup_mango">망고 Lv.%1$d → Lv.%2$d</string>
     <string name="levelup_user">유저 Lv.%1$d → Lv.%2$d</string>
@@ -126,10 +126,10 @@
     <string name="detail_period_done">%1$s ~ %2$s (%3$d일)</string>
     <string name="detail_period_user">%1$s ~ 오늘 (%2$d일)</string>
     <string name="detail_level">Lv.%1$d</string>
-    <string name="detail_exp">\u0020· 경험치 %1$s / %2$s</string>
+    <string name="detail_exp">\u0020- 경험치 %1$s / %2$s</string>
     <string name="detail_leaves">모은 이파리\u0020</string>
     <string name="donut_title">운동 종류별 비율</string>
     <string name="donut_center">총 운동</string>
-    <string name="donut_legend">%1$s분 · %2$d%%</string>
+    <string name="donut_legend">%1$s분 | %2$d%%</string>
     <string name="donut_empty">아직 운동 기록이 없어요</string>
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 도넛 범례 한 줄: 색 점, 운동 이름, "N분 · P%" -->
+<!-- 도넛 범례 한 줄: 색 점, 운동 이름, "N분 | P%" -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
