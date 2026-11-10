@@ -55,13 +55,13 @@ public class ShopFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         repo = GameRepository.get(requireContext());
         if (savedInstanceState != null) slot = Slot.valueOf(savedInstanceState.getString("shop_slot", Slot.TOP.name()));
+        if (slot == Slot.HAT) slot = Slot.TOP;
         grid = view.findViewById(R.id.shop_grid);
         tabs = new TextView[]{
-                view.findViewById(R.id.tab_hat),
                 view.findViewById(R.id.tab_top),
                 view.findViewById(R.id.tab_hand),
                 view.findViewById(R.id.tab_left_hand)};
-        Slot[] slots = Slot.values();
+        Slot[] slots = Slot.visibleSlots();
         for (int i = 0; i < tabs.length; i++) {
             Slot s = slots[i];
             tabs[i].setOnClickListener(new View.OnClickListener() {
@@ -94,7 +94,7 @@ public class ShopFragment extends Fragment {
 
     private void render() {
         if (getView() == null) return;
-        Slot[] slots = Slot.values();
+        Slot[] slots = Slot.visibleSlots();
         for (int i = 0; i < tabs.length; i++) tabs[i].setSelected(slots[i] == slot);
 
         grid.removeAllViews();

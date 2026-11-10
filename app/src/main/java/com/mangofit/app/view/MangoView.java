@@ -65,7 +65,8 @@ public class MangoView extends ViewGroup {
 
     /** itemId가 null이면 그 부위를 비운다 */
     public void setItem(Slot slot, String itemId) {
-        Item item = ItemCatalog.get(itemId);
+        // 모자 데이터가 남아 있어도 홈·보관함·미리보기에서 표시하지 않는다.
+        Item item = slot == Slot.HAT ? null : ItemCatalog.get(itemId);
         switch (slot) {
             case HAT: hatItem = item; break;
             case TOP:

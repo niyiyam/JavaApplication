@@ -109,6 +109,7 @@ public final class ItemCatalog {
     /** 기존 상의·손 아이템은 보유 목록에서 유지하고 새 판매 목록에서는 제외한다. */
     public static List<Item> shopItems(Slot slot) {
         List<Item> result = new ArrayList<>();
+        if (slot == Slot.HAT) return result;
         for (Item item : bySlot(slot)) {
             if (item.artwork != 0 || slot == Slot.HAT) result.add(item);
         }

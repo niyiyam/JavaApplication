@@ -19,6 +19,11 @@ public enum Slot {
         this.labelRes = labelRes;
     }
 
+    /** 모자는 저장 데이터 호환용으로만 남긴다. */
+    public static Slot[] visibleSlots() {
+        return new Slot[]{TOP, HAND, LEFT_HAND};
+    }
+
     public static Slot fromCode(String code) {
         for (Slot slot : values()) {
             if (slot.code.equals(code)) return slot;

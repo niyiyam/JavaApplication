@@ -56,11 +56,12 @@ public class CustomizeActivity extends AppCompatActivity {
             draft = repo.getEquipment();
         }
 
+        if (slot == Slot.HAT) slot = Slot.TOP;
         preview = findViewById(R.id.scene_mango);
         grid = findViewById(R.id.customize_grid);
         empty = findViewById(R.id.customize_empty);
-        tabs = new TextView[]{findViewById(R.id.tab_hat), findViewById(R.id.tab_top), findViewById(R.id.tab_hand), findViewById(R.id.tab_left_hand)};
-        Slot[] slots = Slot.values();
+        tabs = new TextView[]{findViewById(R.id.tab_top), findViewById(R.id.tab_hand), findViewById(R.id.tab_left_hand)};
+        Slot[] slots = Slot.visibleSlots();
         for (int i = 0; i < tabs.length; i++) {
             Slot s = slots[i];
             tabs[i].setOnClickListener(new View.OnClickListener() {
@@ -121,7 +122,7 @@ public class CustomizeActivity extends AppCompatActivity {
     private void render() {
         preview.setEquipment(draft);
 
-        Slot[] slots = Slot.values();
+        Slot[] slots = Slot.visibleSlots();
         for (int i = 0; i < tabs.length; i++) tabs[i].setSelected(slots[i] == slot);
 
         grid.removeAllViews();
