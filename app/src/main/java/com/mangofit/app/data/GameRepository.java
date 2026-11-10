@@ -269,7 +269,8 @@ public final class GameRepository {
         Equipment safe = Equipment.empty();
         for (Slot slot : Slot.values()) {
             String id = equipment.get(slot);
-            if (id != null && owned.contains(id)) safe = safe.with(slot, id);
+            Item item = ItemCatalog.get(id);
+            if (item != null && item.slot == slot && owned.contains(id)) safe = safe.with(slot, id);
         }
         prefs.setEquipment(safe);
         notifyChanged();

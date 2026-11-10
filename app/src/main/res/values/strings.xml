@@ -30,8 +30,8 @@
 
     <!-- 꾸미기 부위, 아이템 색 -->
     <string name="slot_hat">모자</string>
-    <string name="slot_top">상의</string>
-    <string name="slot_hand">손</string>
+    <string name="slot_top">의상</string>
+    <string name="slot_hand">오른손</string>
     <string name="color_red">빨강</string>
     <string name="color_blue">파랑</string>
     <string name="color_green">초록</string>
@@ -132,4 +132,38 @@
     <string name="donut_center">총 운동</string>
     <string name="donut_legend">%1$s분 | %2$d%%</string>
     <string name="donut_empty">아직 운동 기록이 없어요</string>
+
+    <string name="slot_left_hand">왼손</string>
+    <string name="shop_title">망고 옷장 상점</string>
+    <string name="shop_hint">아이템 그림을 눌러 착용한 모습을 미리 보세요.</string>
+    <string name="shop_preview">착용 미리보기</string>
+    <string name="shop_buy">구매하기</string>
+    <string name="art_army">군복</string>
+    <string name="art_baseball">야구 유니폼</string>
+    <string name="art_basketball">농구공</string>
+    <string name="art_casual">후드 운동복</string>
+    <string name="art_king">왕의 곤룡포</string>
+    <string name="art_marathon">마라톤복</string>
+    <string name="art_onepiece">모험가 의상</string>
+    <string name="art_soccer">축구 유니폼</string>
+    <string name="art_student">교복</string>
+    <string name="art_suit">정장</string>
+    <string name="art_ak47">AK-47</string>
+    <string name="art_balloon">풍선</string>
+    <string name="art_briefcase">서류가방</string>
+    <string name="art_broom">빗자루</string>
+    <string name="art_bubble_tea">버블티</string>
+    <string name="art_camera">카메라</string>
+    <string name="art_cane">지팡이</string>
+    <string name="art_chicken_leg">치킨</string>
+    <string name="art_dumbbell">덤벨</string>
+    <string name="art_fishing_rod">낚싯대</string>
+    <string name="art_gamepad">게임패드</string>
+    <string name="art_golf_club">골프채</string>
+    <string name="art_lollipop">막대사탕</string>
+    <string name="art_magic_wand">마법 지팡이</string>
+    <string name="art_pistol">권총</string>
+    <string name="art_sword">검</string>
+    <string name="art_tennis_racket">테니스 라켓</string>
+    <string name="art_basketball_outfit">농구 유니폼</string>
 </resources>

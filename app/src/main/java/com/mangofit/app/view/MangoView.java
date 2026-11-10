@@ -21,6 +21,9 @@ import com.mangofit.app.ui.ItemArt;
 public class MangoView extends ViewGroup {
 
     private final ImageView base;
+    private final ImageView face;
+    private final ImageView leftHand;
+    private Item leftHandItem;
     // 아래에서 위로: 본체 → 상의 → 모자 → 손
     private final ImageView top;
     private final ImageView hat;
@@ -36,11 +39,14 @@ public class MangoView extends ViewGroup {
     public MangoView(Context context, AttributeSet attrs) {
         super(context, attrs);
         base = addLayer();
-        base.setImageResource(R.drawable.mango_base);
+        base.setImageResource(R.drawable.mangofit_yellow);
         base.setScaleType(ImageView.ScaleType.FIT_CENTER);
         base.setContentDescription(context.getString(R.string.mango_image));
         top = addLayer();
+        face = addLayer();
+        face.setImageResource(R.drawable.mangofit_face_01_smile);
         hat = addLayer();
+        leftHand = addLayer();
         hand = addLayer();
     }
 
@@ -62,12 +68,17 @@ public class MangoView extends ViewGroup {
         Item item = ItemCatalog.get(itemId);
         switch (slot) {
             case HAT: hatItem = item; break;
-            case TOP: topItem = item; break;
+            case TOP:
+                topItem = item;
+                base.setImageResource(item != null && item.fullBody
+                        ? item.artwork : R.drawable.mangofit_yellow);
+                break;
+            case LEFT_HAND: leftHandItem = item; break;
             default: handItem = item; break;
         }
         ImageView layer = layerFor(slot);
         ItemArt.apply(layer, item);
-        layer.setVisibility(item == null ? View.GONE : View.VISIBLE);
+        layer.setVisibility(item == null || item.fullBody ? View.GONE : View.VISIBLE);
         requestLayout();
     }
 
@@ -75,6 +86,7 @@ public class MangoView extends ViewGroup {
         switch (slot) {
             case HAT: return hat;
             case TOP: return top;
+            case LEFT_HAND: return leftHand;
             default: return hand;
         }
     }
@@ -88,6 +100,8 @@ public class MangoView extends ViewGroup {
 
         base.measure(exactly(w), exactly(h));
         float[] mango = mangoRect(w, h);
+        face.measure(exactly(Math.round(mango[2])), exactly(Math.round(mango[3])));
+        measureItem(leftHand, leftHandItem, mango);
         measureItem(top, topItem, mango);
         measureItem(hat, hatItem, mango);
         measureItem(hand, handItem, mango);
@@ -99,6 +113,10 @@ public class MangoView extends ViewGroup {
         int h = b - t;
         base.layout(0, 0, w, h);
         float[] mango = mangoRect(w, h);
+        int faceLeft = Math.round(mango[0]);
+        int faceTop = Math.round(mango[1] - mango[2] * 0.125f);
+        face.layout(faceLeft, faceTop, faceLeft + face.getMeasuredWidth(), faceTop + face.getMeasuredHeight());
+        layoutItem(leftHand, leftHandItem, mango);
         layoutItem(top, topItem, mango);
         layoutItem(hat, hatItem, mango);
         layoutItem(hand, handItem, mango);
@@ -122,13 +140,13 @@ public class MangoView extends ViewGroup {
     }
 
     private void measureItem(ImageView view, Item item, float[] mango) {
-        if (item == null) return;
+        if (item == null || item.fullBody) return;
         float[] r = itemRect(view, item, mango);
         view.measure(exactly(Math.round(r[2])), exactly(Math.round(r[3])));
     }
 
     private void layoutItem(ImageView view, Item item, float[] mango) {
-        if (item == null) return;
+        if (item == null || item.fullBody) return;
         float[] r = itemRect(view, item, mango);
         int left = Math.round(r[0]);
         int topPx = Math.round(r[1]);

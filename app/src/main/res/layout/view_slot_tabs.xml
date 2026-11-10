@@ -20,4 +20,8 @@
         android:id="@+id/tab_hand"
         style="@style/SegmentTab"
         android:text="@string/slot_hand" />
+    <TextView
+        android:id="@+id/tab_left_hand"
+        style="@style/SegmentTab"
+        android:text="@string/slot_left_hand" />
 </LinearLayout>

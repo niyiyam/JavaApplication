@@ -26,6 +26,7 @@ final class Prefs {
     static final String EQUIP_HAT = "equip_hat";
     static final String EQUIP_TOP = "equip_top";
     static final String EQUIP_HAND = "equip_hand";
+    static final String EQUIP_LEFT_HAND = "equip_left_hand";
     static final String OWNED_ITEMS = "owned_items";
     static final String QUOTA_DATE = "quota_date";
     static final String QUOTA_VALUE = "quota_value";
@@ -86,7 +87,7 @@ final class Prefs {
         return new Equipment(
                 sp.getString(EQUIP_HAT, ""),
                 sp.getString(EQUIP_TOP, ""),
-                sp.getString(EQUIP_HAND, ""));
+                sp.getString(EQUIP_HAND, ""), sp.getString(EQUIP_LEFT_HAND, ""));
     }
 
     void setEquipment(Equipment e) {
@@ -94,6 +95,7 @@ final class Prefs {
                 .putString(EQUIP_HAT, e.hat == null ? "" : e.hat)
                 .putString(EQUIP_TOP, e.top == null ? "" : e.top)
                 .putString(EQUIP_HAND, e.hand == null ? "" : e.hand)
+                .putString(EQUIP_LEFT_HAND, e.leftHand == null ? "" : e.leftHand)
                 .apply();
     }
 
@@ -137,6 +139,7 @@ final class Prefs {
                 .putString(EQUIP_HAT, "")
                 .putString(EQUIP_TOP, "")
                 .putString(EQUIP_HAND, "")
+                .putString(EQUIP_LEFT_HAND, "")
                 .putString(OWNED_ITEMS, "[]")
                 .apply();
     }
@@ -155,6 +158,7 @@ final class Prefs {
                 .putString(EQUIP_HAT, o.optString(EQUIP_HAT, ""))
                 .putString(EQUIP_TOP, o.optString(EQUIP_TOP, ""))
                 .putString(EQUIP_HAND, o.optString(EQUIP_HAND, ""))
+                .putString(EQUIP_LEFT_HAND, o.optString(EQUIP_LEFT_HAND, ""))
                 .putString(OWNED_ITEMS, owned == null ? "[]" : owned.toString())
                 .apply();
     }

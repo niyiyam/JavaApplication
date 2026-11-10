@@ -10,10 +10,17 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="156dp"
         android:background="@drawable/bg_thumb">
 
         <!-- 아이템 그림만 그대로 보여준다 -->
+        <com.mangofit.app.view.MangoView
+            android:id="@+id/shop_mango_art"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            android:visibility="gone" />
+
         <ImageView
             android:id="@+id/shop_item_art"
             android:layout_width="match_parent"
@@ -28,6 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:minLines="2"
+        android:maxLines="2"
         android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:textStyle="bold" />

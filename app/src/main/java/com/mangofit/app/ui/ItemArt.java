@@ -12,13 +12,14 @@ import androidx.core.content.ContextCompat;
 import com.mangofit.app.R;
 import com.mangofit.app.logic.Item;
 
-/** 아이템 그림과 이름. 모양 이미지 하나를 색 3개가 같이 쓰고 틴트(MULTIPLY)만 바꾼다. */
+/** 원본 PNG는 원래 색으로 표시하고, 기존 벡터 아이템에만 틴트를 적용한다. */
 public final class ItemArt {
 
     private ItemArt() { }
 
     @DrawableRes
     public static int drawableFor(Item item) {
+        if (item.artwork != 0) return item.artwork;
         boolean a = "a".equals(item.shape);
         switch (item.slot) {
             case HAT: return a ? R.drawable.item_hat_a : R.drawable.item_hat_b;
@@ -47,6 +48,7 @@ public final class ItemArt {
 
     /** "모자 A - 빨강" */
     public static String displayName(Context context, Item item) {
+        if (item.label != 0) return context.getString(item.label);
         return context.getString(R.string.item_name,
                 context.getString(item.slot.labelRes),
                 item.shape.toUpperCase(),
@@ -61,6 +63,10 @@ public final class ItemArt {
             return;
         }
         view.setImageResource(drawableFor(item));
+        if (item.artwork != 0) {
+            view.clearColorFilter();
+            return;
+        }
         view.setColorFilter(ContextCompat.getColor(view.getContext(), colorRes(item)), PorterDuff.Mode.MULTIPLY);
     }
 }

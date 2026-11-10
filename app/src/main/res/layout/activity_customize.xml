@@ -78,6 +78,14 @@
                 android:background="@drawable/bg_tab_dark"
                 android:text="@string/slot_hand"
                 android:textColor="@color/tab_dark_text" />
+            <TextView
+                android:id="@+id/tab_left_hand"
+                style="@style/SegmentTab"
+                android:layout_height="52dp"
+                android:layout_marginStart="4dp"
+                android:background="@drawable/bg_tab_dark"
+                android:text="@string/slot_left_hand"
+                android:textColor="@color/tab_dark_text" />
         </LinearLayout>
 
         <ScrollView

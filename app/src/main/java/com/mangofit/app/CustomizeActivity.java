@@ -36,7 +36,7 @@ public class CustomizeActivity extends AppCompatActivity {
     private TextView empty;
     private TextView[] tabs;
     private Equipment draft;
-    private Slot slot = Slot.HAT;
+    private Slot slot = Slot.TOP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +50,8 @@ public class CustomizeActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             draft = new Equipment(savedInstanceState.getString(STATE_HAT),
                     savedInstanceState.getString(STATE_TOP),
-                    savedInstanceState.getString(STATE_HAND));
-            slot = Slot.valueOf(savedInstanceState.getString(STATE_SLOT, Slot.HAT.name()));
+                    savedInstanceState.getString(STATE_HAND), savedInstanceState.getString("left_hand"));
+            slot = Slot.valueOf(savedInstanceState.getString(STATE_SLOT, Slot.TOP.name()));
         } else {
             draft = repo.getEquipment();
         }
@@ -59,7 +59,7 @@ public class CustomizeActivity extends AppCompatActivity {
         preview = findViewById(R.id.scene_mango);
         grid = findViewById(R.id.customize_grid);
         empty = findViewById(R.id.customize_empty);
-        tabs = new TextView[]{findViewById(R.id.tab_hat), findViewById(R.id.tab_top), findViewById(R.id.tab_hand)};
+        tabs = new TextView[]{findViewById(R.id.tab_hat), findViewById(R.id.tab_top), findViewById(R.id.tab_hand), findViewById(R.id.tab_left_hand)};
         Slot[] slots = Slot.values();
         for (int i = 0; i < tabs.length; i++) {
             Slot s = slots[i];
@@ -96,6 +96,7 @@ public class CustomizeActivity extends AppCompatActivity {
         outState.putString(STATE_HAT, draft.hat);
         outState.putString(STATE_TOP, draft.top);
         outState.putString(STATE_HAND, draft.hand);
+        outState.putString("left_hand", draft.leftHand);
         outState.putString(STATE_SLOT, slot.name());
     }
 
@@ -154,6 +155,12 @@ public class CustomizeActivity extends AppCompatActivity {
             cell.setSelected(current == null);
         } else {
             ItemArt.apply(art, item);
+            if (item.fullBody) {
+                art.setVisibility(View.GONE);
+                MangoView mangoArt = cell.findViewById(R.id.cell_mango_art);
+                mangoArt.setVisibility(View.VISIBLE);
+                mangoArt.setEquipment(Equipment.empty().with(item.slot, item.id));
+            }
             name.setText(ItemArt.displayName(this, item));
             cell.setSelected(item.id.equals(current));
         }
