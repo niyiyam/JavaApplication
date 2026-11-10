@@ -12,6 +12,8 @@ import com.mangofit.app.data.Equipment;
 import com.mangofit.app.view.MangoView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.drawable.GradientDrawable;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +38,7 @@ public class ShopFragment extends Fragment {
     private GridLayout grid;
     private TextView[] tabs;
     private Slot slot = Slot.TOP;
+    private Bundle colorChoices = new Bundle();
     private final GameRepository.Listener listener = new GameRepository.Listener() {
         @Override
         public void onDataChanged() {
@@ -55,6 +58,17 @@ public class ShopFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         repo = GameRepository.get(requireContext());
         if (savedInstanceState != null) slot = Slot.valueOf(savedInstanceState.getString("shop_slot", Slot.TOP.name()));
+        if (savedInstanceState != null && savedInstanceState.getBundle("colors") != null) {
+            colorChoices = savedInstanceState.getBundle("colors");
+        }
+        getParentFragmentManager().setFragmentResultListener(ItemColorDialog.RESULT, getViewLifecycleOwner(),
+                (key, result) -> {
+                    Item selected = ItemCatalog.get(result.getString("item"));
+                    if (selected == null) return;
+                    colorChoices.putString(selected.baseId, selected.id);
+                    repo.changeItemColor(selected.id);
+                    render();
+                });
         if (slot == Slot.HAT) slot = Slot.TOP;
         grid = view.findViewById(R.id.shop_grid);
         tabs = new TextView[]{
@@ -101,10 +115,15 @@ public class ShopFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         int margin = dp(6);
         int leaves = repo.getLeaves();
-        for (Item item : ItemCatalog.shopItems(slot)) {
+        for (Item baseItem : ItemCatalog.shopItems(slot)) {
+            Item owned = repo.getOwnedVariant(baseItem.id);
+            String selectedId = colorChoices.getString(baseItem.id,
+                    owned == null ? baseItem.id : owned.id);
+            Item chosen = ItemCatalog.get(selectedId);
+            final Item item = chosen == null ? baseItem : chosen;
             View card = inflater.inflate(R.layout.item_shop, grid, false);
             ItemArt.apply(card.findViewById(R.id.shop_item_art), item);
-            ((TextView) card.findViewById(R.id.shop_item_name)).setText(ItemArt.displayName(requireContext(), item));
+            ((TextView) card.findViewById(R.id.shop_item_name)).setText(getString(baseItem.label));
 
             if (item.fullBody) {
                 card.findViewById(R.id.shop_item_art).setVisibility(View.GONE);
@@ -112,6 +131,20 @@ public class ShopFragment extends Fragment {
                 art.setEquipment(Equipment.empty().with(item.slot, item.id));
                 art.setVisibility(View.VISIBLE);
             }
+            ((TextView) card.findViewById(R.id.shop_color_name)).setText(
+                    item.tint == null ? R.string.tint_original : item.tint.label);
+            ImageButton colorButton = card.findViewById(R.id.shop_color_button);
+            GradientDrawable swatch = new GradientDrawable();
+            swatch.setShape(GradientDrawable.OVAL);
+            swatch.setColor(item.tint == null ? 0xFFFFFCF4 : item.tint.argb);
+            swatch.setStroke(dp(1), 0xFFC4D1BC);
+            colorButton.setBackground(swatch);
+            colorButton.setContentDescription(getString(R.string.tint_choose, getString(item.label)));
+            colorButton.setOnClickListener(v -> {
+                if (getParentFragmentManager().findFragmentByTag("item_palette") == null) {
+                    ItemColorDialog.create(item).show(getParentFragmentManager(), "item_palette");
+                }
+            });
             card.setContentDescription(ItemArt.displayName(requireContext(), item)
                     + ", " + getString(R.string.shop_preview));
             card.setOnClickListener(v -> showPreview(item));
@@ -153,6 +186,7 @@ public class ShopFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("shop_slot", slot.name());
+        outState.putBundle("colors", colorChoices);
     }
 
     private void showPreview(Item item) {

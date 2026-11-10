@@ -166,4 +166,23 @@
     <string name="art_sword">검</string>
     <string name="art_tennis_racket">테니스 라켓</string>
     <string name="art_basketball_outfit">농구 유니폼</string>
+    <string name="tint_rose">로즈 밀크</string>
+    <string name="tint_mint">민트 크림</string>
+    <string name="tint_lavender">라벤더</string>
+    <string name="tint_sky">파우더 블루</string>
+    <string name="tint_peach">피치 크림</string>
+    <string name="tint_cream">바닐라 크림</string>
+    <string name="tint_sage">세이지</string>
+    <string name="tint_cocoa">밀크 코코아</string>
+    <string name="tint_matcha">말차 라떼</string>
+    <string name="tint_taro">타로 밀크</string>
+    <string name="tint_honey">허니 버터</string>
+    <string name="tint_roast">로스트 브라운</string>
+    <string name="tint_original">원본</string>
+    <string name="tint_choose">%1$s 색상 선택</string>
+    <string name="tint_title">어울리는 색 고르기</string>
+    <string name="tint_hint">색을 누르면 미리 볼 수 있어요. 보유 아이템의 색 변경은 무료예요.</string>
+    <string name="tint_apply">이 색으로 선택</string>
+    <string name="tint_named_item">%1$s · %2$s</string>
+    <string name="tint_selected">%1$s 선택됨</string>
 </resources>

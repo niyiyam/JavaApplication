@@ -12,7 +12,7 @@ import androidx.core.content.ContextCompat;
 import com.mangofit.app.R;
 import com.mangofit.app.logic.Item;
 
-/** 원본 PNG는 원래 색으로 표시하고, 기존 벡터 아이템에만 틴트를 적용한다. */
+/** 원본·색상별 아이템을 공통으로 표시한다. 마스크 tint와 고정 디테일을 합성한다. */
 public final class ItemArt {
 
     private ItemArt() { }
@@ -48,7 +48,11 @@ public final class ItemArt {
 
     /** "모자 A - 빨강" */
     public static String displayName(Context context, Item item) {
-        if (item.label != 0) return context.getString(item.label);
+        if (item.label != 0) {
+            String name = context.getString(item.label);
+            return item.tint == null ? name : context.getString(R.string.tint_named_item,
+                    name, context.getString(item.tint.label));
+        }
         return context.getString(R.string.item_name,
                 context.getString(item.slot.labelRes),
                 item.shape.toUpperCase(),
@@ -60,6 +64,11 @@ public final class ItemArt {
         if (item == null) {
             view.setImageDrawable(null);
             view.clearColorFilter();
+            return;
+        }
+        view.clearColorFilter();
+        if (item.tint != null) {
+            view.setImageBitmap(MaterialTint.bitmap(view.getResources(), item));
             return;
         }
         view.setImageResource(drawableFor(item));

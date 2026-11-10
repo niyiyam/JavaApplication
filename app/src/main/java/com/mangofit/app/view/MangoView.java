@@ -71,8 +71,8 @@ public class MangoView extends ViewGroup {
             case HAT: hatItem = item; break;
             case TOP:
                 topItem = item;
-                base.setImageResource(item != null && item.fullBody
-                        ? item.artwork : R.drawable.mangofit_yellow);
+                if (item != null && item.fullBody) ItemArt.apply(base, item);
+                else base.setImageResource(R.drawable.mangofit_yellow);
                 break;
             case LEFT_HAND: leftHandItem = item; break;
             default: handItem = item; break;

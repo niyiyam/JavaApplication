@@ -233,7 +233,35 @@ public final class GameRepository {
     // ---------- 상점, 꾸미기 ----------
 
     public boolean isOwned(String itemId) {
-        return prefs.getOwnedItems().contains(itemId);
+        return getOwnedVariant(itemId) != null;
+    }
+
+    /** 색상을 바꿔도 동일한 상품 하나를 보유한다. 기존 원본 ID도 그대로 읽는다. */
+    public Item getOwnedVariant(String itemId) {
+        Item requested = ItemCatalog.get(itemId);
+        if (requested == null) return null;
+        for (String id : prefs.getOwnedItems()) {
+            Item owned = ItemCatalog.get(id);
+            if (owned != null && owned.baseId.equals(requested.baseId)) return owned;
+        }
+        return null;
+    }
+
+    /** 보유 상품의 색을 무료로 변경한다. 이미 장착한 상품이면 장착 색도 갱신한다. */
+    public boolean changeItemColor(String itemId) {
+        Item selected = ItemCatalog.get(itemId);
+        Item before = getOwnedVariant(itemId);
+        if (selected == null || before == null) return false;
+        if (before.id.equals(itemId)) return true;
+        List<String> owned = prefs.getOwnedItems();
+        owned.set(owned.indexOf(before.id), itemId);
+        prefs.setOwnedItems(owned);
+        Equipment equipped = prefs.getEquipment();
+        if (before.id.equals(equipped.get(selected.slot))) {
+            prefs.setEquipment(equipped.with(selected.slot, itemId));
+        }
+        notifyChanged();
+        return true;
     }
 
     /** 그 부위의 보유 아이템 (상점 목록 순서) */
@@ -250,7 +278,7 @@ public final class GameRepository {
         Item item = ItemCatalog.get(itemId);
         if (item == null) return BuyResult.UNKNOWN_ITEM;
         List<String> owned = prefs.getOwnedItems();
-        if (owned.contains(itemId)) return BuyResult.ALREADY_OWNED;
+        if (isOwned(itemId)) return BuyResult.ALREADY_OWNED;
         if (prefs.getLeaves() < item.price) return BuyResult.NOT_ENOUGH_LEAVES;
         prefs.setLeaves(prefs.getLeaves() - item.price);
         owned.add(itemId);

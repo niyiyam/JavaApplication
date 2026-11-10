@@ -72,6 +72,12 @@ public final class ItemCatalog {
         items.add(new Item("right_sword", Slot.HAND, R.drawable.mangofit_item_sword_right_preview, R.string.art_sword, 300, new Placement(0.30f, 0.17f, 0.46875f), false));
         items.add(new Item("left_tennis_racket", Slot.LEFT_HAND, R.drawable.mangofit_item_tennis_racket_left_preview, R.string.art_tennis_racket, 300, new Placement(-0.30f, 0.17f, 0.46875f), false));
         items.add(new Item("right_tennis_racket", Slot.HAND, R.drawable.mangofit_item_tennis_racket_right_preview, R.string.art_tennis_racket, 300, new Placement(0.30f, 0.17f, 0.46875f), false));
+        List<Item> originals = new ArrayList<>(items);
+        for (Item item : originals) {
+            for (ItemPalette.ColorOption color : ItemPalette.colors(item)) {
+                items.add(new Item(item, color));
+            }
+        }
         ALL = Collections.unmodifiableList(items);
     }
 
@@ -111,7 +117,7 @@ public final class ItemCatalog {
         List<Item> result = new ArrayList<>();
         if (slot == Slot.HAT) return result;
         for (Item item : bySlot(slot)) {
-            if (item.artwork != 0 || slot == Slot.HAT) result.add(item);
+            if (item.artwork != 0 && item.tint == null) result.add(item);
         }
         return result;
     }
