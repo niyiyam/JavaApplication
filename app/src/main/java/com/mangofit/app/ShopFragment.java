@@ -128,7 +128,7 @@ public class ShopFragment extends Fragment {
             if (item.fullBody) {
                 card.findViewById(R.id.shop_item_art).setVisibility(View.GONE);
                 MangoView art = card.findViewById(R.id.shop_mango_art);
-                art.setEquipment(Equipment.empty().with(item.slot, item.id));
+                art.setAppearance(Equipment.empty().with(item.slot, item.id), repo.getMangoProgress().level);
                 art.setVisibility(View.VISIBLE);
             }
             ((TextView) card.findViewById(R.id.shop_color_name)).setText(
@@ -194,7 +194,7 @@ public class ShopFragment extends Fragment {
         content.setOrientation(LinearLayout.VERTICAL);
         content.setPadding(dp(20), dp(12), dp(20), dp(12));
         MangoView mango = new MangoView(requireContext());
-        mango.setEquipment(repo.getEquipment().with(item.slot, item.id));
+        mango.setAppearance(repo.getEquipment().with(item.slot, item.id), repo.getMangoProgress().level);
         content.addView(mango, new LinearLayout.LayoutParams(-1, dp(240)));
         TextView description = new TextView(requireContext());
         description.setGravity(android.view.Gravity.CENTER);

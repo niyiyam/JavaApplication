@@ -22,9 +22,14 @@ final class MaterialTint {
     private MaterialTint() { }
 
     static Bitmap bitmap(Resources resources, Item item) {
-        Bitmap cached = CACHE.get(item.id);
+        return bitmap(resources, item, item.artwork);
+    }
+
+    static Bitmap bitmap(Resources resources, Item item, int artwork) {
+        String key = item.id + ":" + artwork;
+        Bitmap cached = CACHE.get(key);
         if (cached != null) return cached;
-        Bitmap source = BitmapFactory.decodeResource(resources, item.artwork);
+        Bitmap source = BitmapFactory.decodeResource(resources, artwork);
         int width = source.getWidth(), height = source.getHeight();
         int[] pixels = new int[width * height];
         source.getPixels(pixels, 0, width, 0, 0, width, height);
@@ -71,7 +76,7 @@ final class MaterialTint {
         }
         mask.recycle();
         source.recycle();
-        CACHE.put(item.id, result);
+        CACHE.put(key, result);
         return result;
     }
 
@@ -87,13 +92,15 @@ final class MaterialTint {
 
     private static boolean fabric(String id, float y, float[] hsv) {
         float hue = hsv[0], saturation = hsv[1], value = hsv[2];
-        // 검정 외곽선, 흰 장식, 노란 피부와 초록 잎을 보호한다.
+        // 검정 외곽선, 흰 장식, 밝은 피부와 초록 잎을 보호한다.
         if (value < 0.20f || saturation < 0.18f) return false;
         switch (id) {
             case "outfit_army":
-                return y > 0.48f && hue >= 45 && hue <= 105 && saturation < 0.70f;
+                return y > 0.48f && hue >= 45 && hue <= 105 && saturation < 0.70f
+                        && !(hue <= 92 && value > 0.76f);
             case "outfit_casual":
-                return y > 0.48f && hue >= 80 && hue <= 175;
+                return y > 0.48f && hue >= 80 && hue <= 175
+                        && !(hue <= 98 && value > 0.72f);
             case "outfit_king":
             case "outfit_onepiece":
                 return hue < 22 || hue > 340;

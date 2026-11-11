@@ -11,6 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.FrameLayout;
+import com.mangofit.app.logic.MangoStage;
+import com.mangofit.app.data.Equipment;
+import com.mangofit.app.view.MangoView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -297,15 +301,20 @@ public class ExerciseFragment extends Fragment {
                         public void run() {
                             if (userMsg != null) showLevelUp(userMsg, null);
                         }
-                    });
+                    }, result);
         } else if (userMsg != null) {
             showLevelUp(userMsg, null);
         }
     }
 
     private void showLevelUp(String message, @Nullable Runnable onClosed) {
+        showLevelUp(message, onClosed, null);
+    }
+
+    private void showLevelUp(String message, @Nullable Runnable onClosed,
+                             @Nullable GameRepository.AddResult growth) {
         if (!isAdded()) return;
-        new AlertDialog.Builder(requireContext())
+        AlertDialog.Builder dialog = new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.levelup_title)
                 .setMessage(message)
                 .setPositiveButton(R.string.ok, null)
@@ -314,8 +323,20 @@ public class ExerciseFragment extends Fragment {
                     public void onDismiss(DialogInterface d) {
                         if (onClosed != null) onClosed.run();
                     }
-                })
-                .show();
+                });
+        if (growth != null && MangoStage.forLevel(growth.mangoLevelBefore)
+                != MangoStage.forLevel(growth.mangoLevelAfter)) {
+            Equipment equipped = repo.getEquipment();
+            FrameLayout panel = new FrameLayout(requireContext());
+            MangoView preview = new MangoView(requireContext());
+            panel.addView(preview, new FrameLayout.LayoutParams(-1, dp(180)));
+            preview.setAppearance(equipped, growth.mangoLevelBefore);
+            preview.postDelayed(() -> {
+                if (preview.isShown()) preview.setAppearance(equipped, growth.mangoLevelAfter);
+            }, 250);
+            dialog.setView(panel);
+        }
+        dialog.show();
     }
 
     /** [임시] 오늘 기록 초기화 */

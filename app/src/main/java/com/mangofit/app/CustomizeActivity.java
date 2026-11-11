@@ -120,7 +120,7 @@ public class CustomizeActivity extends AppCompatActivity {
     }
 
     private void render() {
-        preview.setEquipment(draft);
+        preview.setAppearance(draft, repo.getMangoProgress().level);
 
         Slot[] slots = Slot.visibleSlots();
         for (int i = 0; i < tabs.length; i++) tabs[i].setSelected(slots[i] == slot);
@@ -160,7 +160,7 @@ public class CustomizeActivity extends AppCompatActivity {
                 art.setVisibility(View.GONE);
                 MangoView mangoArt = cell.findViewById(R.id.cell_mango_art);
                 mangoArt.setVisibility(View.VISIBLE);
-                mangoArt.setEquipment(Equipment.empty().with(item.slot, item.id));
+                mangoArt.setAppearance(Equipment.empty().with(item.slot, item.id), repo.getMangoProgress().level);
             }
             name.setText(ItemArt.displayName(this, item));
             cell.setSelected(item.id.equals(current));

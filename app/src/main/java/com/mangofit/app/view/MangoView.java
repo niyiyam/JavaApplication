@@ -2,6 +2,7 @@ package com.mangofit.app.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,9 @@ import com.mangofit.app.data.Equipment;
 import com.mangofit.app.logic.Item;
 import com.mangofit.app.logic.ItemCatalog;
 import com.mangofit.app.logic.Slot;
+import com.mangofit.app.logic.MangoStage;
 import com.mangofit.app.ui.ItemArt;
+import com.mangofit.app.ui.MangoArt;
 
 /**
  * 망고 본체 위에 장착 아이템을 겹쳐 그린다.
@@ -24,12 +27,12 @@ public class MangoView extends ViewGroup {
     private final ImageView face;
     private final ImageView leftHand;
     private Item leftHandItem;
-    // 아래에서 위로: 본체 → 상의 → 모자 → 손
     private final ImageView top;
-    private final ImageView hat;
     private final ImageView hand;
     private Item topItem;
-    private Item hatItem;
+    private MangoStage stage = MangoStage.GREEN;
+    private Drawable bodyDrawable;
+    private boolean hasAppearance;
     private Item handItem;
 
     public MangoView(Context context) {
@@ -39,13 +42,13 @@ public class MangoView extends ViewGroup {
     public MangoView(Context context, AttributeSet attrs) {
         super(context, attrs);
         base = addLayer();
-        base.setImageResource(R.drawable.mangofit_yellow);
+        bodyDrawable = MangoArt.body(context, stage, null);
+        base.setImageDrawable(bodyDrawable);
         base.setScaleType(ImageView.ScaleType.FIT_CENTER);
         base.setContentDescription(context.getString(R.string.mango_image));
         top = addLayer();
         face = addLayer();
         face.setImageResource(R.drawable.mangofit_face_01_smile);
-        hat = addLayer();
         leftHand = addLayer();
         hand = addLayer();
     }
@@ -57,39 +60,38 @@ public class MangoView extends ViewGroup {
         return iv;
     }
 
-    public void setEquipment(Equipment equipment) {
-        for (Slot slot : Slot.values()) {
-            setItem(slot, equipment.get(slot));
+    public void setAppearance(Equipment equipment, int mangoLevel) {
+        MangoStage nextStage = MangoStage.forLevel(mangoLevel);
+        Item nextTop = ItemCatalog.get(equipment.get(Slot.TOP));
+        if (stage != nextStage || topItem != nextTop) {
+            Drawable next = MangoArt.body(getContext(), nextStage, nextTop);
+            if (hasAppearance && stage != nextStage && isShown() && isLaidOut()) {
+                TransitionDrawable transition = new TransitionDrawable(new Drawable[]{bodyDrawable, next});
+                transition.setCrossFadeEnabled(true);
+                base.setImageDrawable(transition);
+                transition.startTransition(320);
+                base.postDelayed(() -> {
+                    if (base.getDrawable() == transition) base.setImageDrawable(next);
+                }, 320);
+            } else {
+                base.setImageDrawable(next);
+            }
+            bodyDrawable = next;
         }
-    }
-
-    /** itemId가 null이면 그 부위를 비운다 */
-    public void setItem(Slot slot, String itemId) {
-        // 모자 데이터가 남아 있어도 홈·보관함·미리보기에서 표시하지 않는다.
-        Item item = slot == Slot.HAT ? null : ItemCatalog.get(itemId);
-        switch (slot) {
-            case HAT: hatItem = item; break;
-            case TOP:
-                topItem = item;
-                if (item != null && item.fullBody) ItemArt.apply(base, item);
-                else base.setImageResource(R.drawable.mangofit_yellow);
-                break;
-            case LEFT_HAND: leftHandItem = item; break;
-            default: handItem = item; break;
-        }
-        ImageView layer = layerFor(slot);
-        ItemArt.apply(layer, item);
-        layer.setVisibility(item == null || item.fullBody ? View.GONE : View.VISIBLE);
+        stage = nextStage;
+        hasAppearance = true;
+        topItem = nextTop;
+        leftHandItem = ItemCatalog.get(equipment.get(Slot.LEFT_HAND));
+        handItem = ItemCatalog.get(equipment.get(Slot.HAND));
+        bindLayer(top, topItem != null && !topItem.fullBody ? topItem : null);
+        bindLayer(leftHand, leftHandItem);
+        bindLayer(hand, handItem);
         requestLayout();
     }
 
-    private ImageView layerFor(Slot slot) {
-        switch (slot) {
-            case HAT: return hat;
-            case TOP: return top;
-            case LEFT_HAND: return leftHand;
-            default: return hand;
-        }
+    private void bindLayer(ImageView layer, Item item) {
+        ItemArt.apply(layer, item);
+        layer.setVisibility(item == null ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -104,7 +106,6 @@ public class MangoView extends ViewGroup {
         face.measure(exactly(Math.round(mango[2])), exactly(Math.round(mango[3])));
         measureItem(leftHand, leftHandItem, mango);
         measureItem(top, topItem, mango);
-        measureItem(hat, hatItem, mango);
         measureItem(hand, handItem, mango);
     }
 
@@ -119,7 +120,6 @@ public class MangoView extends ViewGroup {
         face.layout(faceLeft, faceTop, faceLeft + face.getMeasuredWidth(), faceTop + face.getMeasuredHeight());
         layoutItem(leftHand, leftHandItem, mango);
         layoutItem(top, topItem, mango);
-        layoutItem(hat, hatItem, mango);
         layoutItem(hand, handItem, mango);
     }
 

@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.mangofit.app.data.Equipment;
+import com.mangofit.app.data.GameRepository;
 import com.mangofit.app.logic.Item;
 import com.mangofit.app.logic.ItemCatalog;
 import com.mangofit.app.logic.ItemPalette;
@@ -122,7 +123,8 @@ public class ItemColorDialog extends DialogFragment {
     }
 
     private void refresh() {
-        if (mango != null) mango.setEquipment(Equipment.empty().with(selected.slot, selected.id));
+        if (mango != null) mango.setAppearance(Equipment.empty().with(selected.slot, selected.id),
+                GameRepository.get(requireContext()).getMangoProgress().level);
         else ItemArt.apply(art, selected);
         colorName.setText(selected.tint == null ? R.string.tint_original : selected.tint.label);
         for (int i = 0; i < swatches.size(); i++) {

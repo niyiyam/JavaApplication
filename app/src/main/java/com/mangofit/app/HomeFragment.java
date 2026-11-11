@@ -110,9 +110,8 @@ public class HomeFragment extends Fragment {
         if (getView() == null) return;
         LocalDate today = LocalDate.now();
 
-        mango.setEquipment(repo.getEquipment());
-
         Levels.Progress p = repo.getMangoProgress();
+        mango.setAppearance(repo.getEquipment(), p.level);
         title.setText(getString(R.string.mango_title, repo.getMangoNo()));
         days.setText(getString(R.string.mango_days, repo.getMangoDay(today), MangoCycle.DAYS));
         level.setText(getString(R.string.mango_level, p.level));

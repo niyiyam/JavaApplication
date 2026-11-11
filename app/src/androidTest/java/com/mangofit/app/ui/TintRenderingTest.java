@@ -11,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 import com.mangofit.app.logic.Item;
 import com.mangofit.app.logic.ItemCatalog;
+import com.mangofit.app.logic.MangoStage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.*;
@@ -27,6 +28,22 @@ public class TintRenderingTest {
             assertEquals(0, after.getPixel(0, 0));
             assertTrue(base.id + " fabric should change", difference(before, after) > 1000);
             before.recycle(); after.recycle();
+        }
+    }
+
+    @Test public void outfitTintUsesTheCurrentGrowthArtwork() {
+        Item outfit = ItemCatalog.get("outfit_army__sky");
+        int previousSkin = 0;
+        for (MangoStage stage : MangoStage.values()) {
+            int resource = MangoArt.bodyResource(stage, outfit);
+            Bitmap original = BitmapFactory.decodeResource(context().getResources(), resource);
+            Bitmap tinted = MaterialTint.bitmap(context().getResources(), outfit, resource);
+            int skin = original.getPixel(620, 460);
+            assertNotEquals(previousSkin, skin);
+            assertEquals(skin, tinted.getPixel(620, 460));
+            assertTrue(stage.name(), difference(original, tinted) > 1000);
+            previousSkin = skin;
+            original.recycle();
         }
     }
 

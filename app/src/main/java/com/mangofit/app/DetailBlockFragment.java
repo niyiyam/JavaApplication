@@ -123,7 +123,7 @@ public class DetailBlockFragment extends Fragment {
         int leaves;
         if (no == repo.getMangoNo()) {
             LocalDate start = repo.getMangoStartDate();
-            mango.setEquipment(repo.getEquipment());
+            mango.setAppearance(repo.getEquipment(), repo.getMangoProgress().level);
             period = getString(R.string.detail_period_current, Fmt.dotDate(start),
                     MangoCycle.dayNumber(start, today), MangoCycle.DAYS);
             exp = repo.getMangoExp();
@@ -131,7 +131,7 @@ public class DetailBlockFragment extends Fragment {
         } else {
             ArchivedMango m = repo.getArchivedMango(no);
             if (m == null) return;
-            mango.setEquipment(m.equipped);
+            mango.setAppearance(m.equipped, Levels.levelForExp(m.getExp()));
             period = getString(R.string.detail_period_done, Fmt.dotDate(m.startDate), Fmt.dotDate(m.endDate),
                     MangoCycle.lengthDays(m.startDate, m.endDate));
             exp = m.getExp();

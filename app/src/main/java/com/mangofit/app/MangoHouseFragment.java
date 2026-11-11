@@ -79,7 +79,7 @@ public class MangoHouseFragment extends Fragment {
         int margin = Math.round(6 * getResources().getDisplayMetrics().density);
         for (ArchivedMango m : mangos) {
             View cell = inflater.inflate(R.layout.item_house_mango, grid, false);
-            ((MangoView) cell.findViewById(R.id.house_mango)).setEquipment(m.equipped);
+            ((MangoView) cell.findViewById(R.id.house_mango)).setAppearance(m.equipped, Levels.levelForExp(m.getExp()));
             ((TextView) cell.findViewById(R.id.house_no)).setText(getString(R.string.house_no, m.no));
             ((TextView) cell.findViewById(R.id.house_level))
                     .setText(getString(R.string.house_level, Levels.levelForExp(m.getExp())));
