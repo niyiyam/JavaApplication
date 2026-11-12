@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import com.mangofit.app.logic.MangoStage;
 import com.mangofit.app.data.Equipment;
 import com.mangofit.app.view.MangoView;
+import com.mangofit.app.ui.MangoFace;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +59,19 @@ public class ExerciseFragment extends Fragment {
     private EditText minutesInput;
     private TextView preview;
     private TextView addButton;
+    private MangoView workoutMango;
+    private final Runnable updateWorkoutFace = this::refreshWorkoutFace;
+
+    private void refreshWorkoutFace() {
+        workoutMango.removeCallbacks(updateWorkoutFace);
+        long remaining = repo.workoutGrinRemaining();
+        workoutMango.setVisibility(remaining > 0 ? View.VISIBLE : View.GONE);
+        if (remaining > 0) {
+            workoutMango.setAppearance(repo.getEquipment(), repo.getMangoProgress().level);
+            workoutMango.setFace(MangoFace.GRIN);
+            workoutMango.postDelayed(updateWorkoutFace, remaining);
+        }
+    }
     private ExerciseType selectedType = ExerciseType.WALK;
     private final GameRepository.Listener listener = new GameRepository.Listener() {
         @Override
@@ -78,6 +92,7 @@ public class ExerciseFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         repo = GameRepository.get(requireContext());
 
+        workoutMango = view.findViewById(R.id.exercise_mango);
         zone = view.findViewById(R.id.exercise_zone);
         dayBar = view.findViewById(R.id.day_progress_bar);
         scoreValue = setupTile(view, R.id.tile_score, R.string.tile_score);
@@ -145,7 +160,14 @@ public class ExerciseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        refreshWorkoutFace();
         refresh();
+    }
+
+    @Override
+    public void onPause() {
+        workoutMango.removeCallbacks(updateWorkoutFace);
+        super.onPause();
     }
 
     @Override
@@ -304,6 +326,11 @@ public class ExerciseFragment extends Fragment {
                     }, result);
         } else if (userMsg != null) {
             showLevelUp(userMsg, null);
+        } else {
+            repo.startWorkoutGrin();
+            refreshWorkoutFace();
+            workoutMango.post(() -> workoutMango.requestRectangleOnScreen(
+                    new android.graphics.Rect(0, 0, workoutMango.getWidth(), workoutMango.getHeight())));
         }
     }
 
@@ -324,18 +351,21 @@ public class ExerciseFragment extends Fragment {
                         if (onClosed != null) onClosed.run();
                     }
                 });
-        if (growth != null && MangoStage.forLevel(growth.mangoLevelBefore)
-                != MangoStage.forLevel(growth.mangoLevelAfter)) {
-            Equipment equipped = repo.getEquipment();
-            FrameLayout panel = new FrameLayout(requireContext());
-            MangoView preview = new MangoView(requireContext());
-            panel.addView(preview, new FrameLayout.LayoutParams(-1, dp(180)));
-            preview.setAppearance(equipped, growth.mangoLevelBefore);
+        int level = repo.getMangoProgress().level;
+        boolean changesColor = growth != null && MangoStage.forLevel(growth.mangoLevelBefore)
+                != MangoStage.forLevel(growth.mangoLevelAfter);
+        Equipment equipped = repo.getEquipment();
+        FrameLayout panel = new FrameLayout(requireContext());
+        MangoView preview = new MangoView(requireContext());
+        panel.addView(preview, new FrameLayout.LayoutParams(-1, dp(180)));
+        preview.setFace(growth == null ? MangoFace.HAPPY_TEARS : MangoFace.PARTY);
+        preview.setAppearance(equipped, changesColor ? growth.mangoLevelBefore : level);
+        if (changesColor) {
             preview.postDelayed(() -> {
-                if (preview.isShown()) preview.setAppearance(equipped, growth.mangoLevelAfter);
+                if (preview.isShown()) preview.setAppearance(equipped, level);
             }, 250);
-            dialog.setView(panel);
         }
+        dialog.setView(panel);
         dialog.show();
     }
 

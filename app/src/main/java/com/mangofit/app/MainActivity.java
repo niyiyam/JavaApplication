@@ -100,6 +100,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (current instanceof HomeFragment) ((HomeFragment) current).onUserInteraction();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (repo != null) repo.addListener(topBarListener);

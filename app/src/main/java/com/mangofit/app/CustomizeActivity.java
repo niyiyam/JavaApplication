@@ -16,6 +16,7 @@ import com.mangofit.app.logic.Slot;
 import com.mangofit.app.ui.ItemArt;
 import com.mangofit.app.ui.SystemBars;
 import com.mangofit.app.view.MangoView;
+import com.mangofit.app.ui.MangoFace;
 
 import java.util.List;
 
@@ -83,12 +84,15 @@ public class CustomizeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 repo.setEquipment(draft);
+                repo.startCustomizeLove();
                 finish();
             }
         });
 
         fitMangoToScene();
         render();
+        preview.setFace(MangoFace.LOVE);
+        preview.postDelayed(() -> preview.setFace(MangoFace.SMILE), 1_000);
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.mangofit.app.logic.RewardCalc;
 import com.mangofit.app.ui.Fmt;
 import com.mangofit.app.view.DayProgressBar;
 import com.mangofit.app.view.MangoView;
+import com.mangofit.app.ui.MangoFace;
 
 import java.time.LocalDate;
 
@@ -32,6 +33,35 @@ public class HomeFragment extends Fragment {
 
     private GameRepository repo;
     private MangoView mango;
+    private long lastInteraction;
+    private final Runnable updateFace = this::refreshFace;
+
+    void onUserInteraction() {
+        lastInteraction = android.os.SystemClock.elapsedRealtime();
+        if (isResumed()) refreshFace();
+    }
+
+    private void refreshFace() {
+        mango.removeCallbacks(updateFace);
+        long love = repo.customizeLoveRemaining();
+        long grin = repo.workoutGrinRemaining();
+        long idle = android.os.SystemClock.elapsedRealtime() - lastInteraction;
+        if (love > 0) {
+            mango.setFace(MangoFace.LOVE);
+            mango.postDelayed(updateFace, love);
+        } else if (grin > 0) {
+            mango.setFace(MangoFace.GRIN);
+            mango.postDelayed(updateFace, grin);
+        } else if (idle < 120_000) {
+            mango.setFace(MangoFace.SMILE);
+            mango.postDelayed(updateFace, 120_000 - idle);
+        } else if (idle < 122_000) {
+            mango.setFace(MangoFace.YAWN);
+            mango.postDelayed(updateFace, 122_000 - idle);
+        } else {
+            mango.setFace(MangoFace.NEUTRAL);
+        }
+    }
     private TextView title;
     private TextView days;
     private TextView level;
@@ -98,6 +128,13 @@ public class HomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         refresh();
+        onUserInteraction();
+    }
+
+    @Override
+    public void onPause() {
+        mango.removeCallbacks(updateFace);
+        super.onPause();
     }
 
     @Override

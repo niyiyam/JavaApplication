@@ -1,6 +1,7 @@
 package com.mangofit.app.data;
 
 import android.content.Context;
+import android.os.SystemClock;
 
 import com.mangofit.app.logic.ExerciseType;
 import com.mangofit.app.logic.Item;
@@ -52,6 +53,29 @@ public final class GameRepository {
     private final List<Listener> listeners = new ArrayList<>();
     private List<WorkoutRecord> workouts;
     private List<ArchivedMango> mangos;
+    private int reactionMango;
+    private long grinUntil;
+    private long loveUntil;
+
+    public void startWorkoutGrin() {
+        reactionMango = getMangoNo();
+        grinUntil = SystemClock.elapsedRealtime() + 60_000;
+        loveUntil = 0;
+    }
+
+    public void startCustomizeLove() {
+        if (reactionMango != getMangoNo()) grinUntil = 0;
+        reactionMango = getMangoNo();
+        loveUntil = SystemClock.elapsedRealtime() + 1_000;
+    }
+
+    public long workoutGrinRemaining() {
+        return reactionMango == getMangoNo() ? Math.max(0, grinUntil - SystemClock.elapsedRealtime()) : 0;
+    }
+
+    public long customizeLoveRemaining() {
+        return reactionMango == getMangoNo() ? Math.max(0, loveUntil - SystemClock.elapsedRealtime()) : 0;
+    }
 
     private GameRepository(Context app) {
         this.app = app;

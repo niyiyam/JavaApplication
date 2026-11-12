@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.content.Intent;
 import com.mangofit.app.data.Equipment;
 import com.mangofit.app.view.MangoView;
+import com.mangofit.app.ui.MangoFace;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.drawable.GradientDrawable;
@@ -227,7 +228,17 @@ public class ShopFragment extends Fragment {
                     public void onClick(DialogInterface d, int w) {
                         GameRepository.BuyResult result = repo.buy(item.id);
                         if (result == GameRepository.BuyResult.OK) {
-                            Toast.makeText(requireContext(), R.string.buy_done, Toast.LENGTH_SHORT).show();
+                            MangoView reaction = new MangoView(requireContext());
+                            reaction.setAppearance(repo.getEquipment().with(item.slot, item.id),
+                                    repo.getMangoProgress().level);
+                            reaction.setFace(MangoFace.GRIN);
+                            android.widget.FrameLayout panel = new android.widget.FrameLayout(requireContext());
+                            panel.addView(reaction, new android.widget.FrameLayout.LayoutParams(-1, dp(180)));
+                            new AlertDialog.Builder(requireContext())
+                                    .setTitle(R.string.buy_done)
+                                    .setView(panel)
+                                    .setPositiveButton(R.string.ok, null)
+                                    .show();
                         } else if (result == GameRepository.BuyResult.NOT_ENOUGH_LEAVES) {
                             Toast.makeText(requireContext(), R.string.buy_not_enough, Toast.LENGTH_SHORT).show();
                         }

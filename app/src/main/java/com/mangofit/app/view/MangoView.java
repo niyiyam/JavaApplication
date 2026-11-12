@@ -16,6 +16,7 @@ import com.mangofit.app.logic.Slot;
 import com.mangofit.app.logic.MangoStage;
 import com.mangofit.app.ui.ItemArt;
 import com.mangofit.app.ui.MangoArt;
+import com.mangofit.app.ui.MangoFace;
 
 /**
  * 망고 본체 위에 장착 아이템을 겹쳐 그린다.
@@ -58,6 +59,10 @@ public class MangoView extends ViewGroup {
         iv.setScaleType(ImageView.ScaleType.FIT_XY);
         addView(iv);
         return iv;
+    }
+
+    public void setFace(MangoFace expression) {
+        face.setImageResource(expression.drawable);
     }
 
     public void setAppearance(Equipment equipment, int mangoLevel) {
