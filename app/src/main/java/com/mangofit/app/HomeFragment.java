@@ -11,6 +11,10 @@ import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.animation.ValueAnimator;
+import android.graphics.PointF;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,7 +47,7 @@ public class HomeFragment extends Fragment {
 
     private void refreshFace() {
         mango.removeCallbacks(updateFace);
-        long love = repo.customizeLoveRemaining();
+        long love = repo.loveRemaining();
         long grin = repo.workoutGrinRemaining();
         long idle = android.os.SystemClock.elapsedRealtime() - lastInteraction;
         if (love > 0) {
@@ -62,6 +66,46 @@ public class HomeFragment extends Fragment {
             mango.setFace(MangoFace.NEUTRAL);
         }
     }
+    private void reactWithLove() {
+        repo.startLove();
+        onUserInteraction();
+    }
+
+    private void popHearts(FrameLayout scene) {
+        PointF leaf = mango.leafAnchor();
+        float density = getResources().getDisplayMetrics().density;
+        int size = Math.round(22 * density);
+        for (int i = 0; i < 3; i++) {
+            ImageView heart = new ImageView(requireContext());
+            heart.setImageResource(R.drawable.ic_mango_heart);
+            heart.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(size, size);
+            params.leftMargin = Math.round(mango.getX() + leaf.x - size / 2f);
+            params.topMargin = Math.round(mango.getY() + leaf.y - size / 2f);
+            scene.addView(heart, params);
+            heart.setAlpha(0f);
+            float drift = (i - 1) * 16 * density;
+            ValueAnimator pop = ValueAnimator.ofFloat(0f, 1f);
+            pop.setStartDelay(i * 95L);
+            pop.setDuration(560);
+            pop.setInterpolator(new android.view.animation.LinearInterpolator());
+            pop.addUpdateListener(animation -> {
+                float t = (float) animation.getAnimatedValue();
+                heart.setTranslationX(drift * t);
+                heart.setTranslationY(-52 * density * (2 * t - t * t));
+                heart.setScaleX(Math.min(1f, 0.35f + t * 5f));
+                heart.setScaleY(heart.getScaleX());
+                heart.setAlpha(Math.min(t * 12f, Math.min(1f, (1f - t) * 3f)));
+            });
+            pop.addListener(new android.animation.AnimatorListenerAdapter() {
+                @Override public void onAnimationEnd(android.animation.Animator animation) {
+                    scene.removeView(heart);
+                }
+            });
+            pop.start();
+        }
+    }
+
     private TextView title;
     private TextView days;
     private TextView level;
@@ -90,15 +134,16 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         repo = GameRepository.get(requireContext());
 
-        View scene = view.findViewById(R.id.home_scene);
+        FrameLayout scene = view.findViewById(R.id.home_scene);
         scene.setClipToOutline(true);
         mango = view.findViewById(R.id.scene_mango);
-        mango.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(requireContext(), CustomizeActivity.class));
-            }
+        mango.setOnClickListener(v -> reactWithLove());
+        view.findViewById(R.id.home_heart).setOnClickListener(v -> {
+            reactWithLove();
+            popHearts(scene);
         });
+        view.findViewById(R.id.home_customize).setOnClickListener(v ->
+                startActivity(new Intent(requireContext(), CustomizeActivity.class)));
 
         title = view.findViewById(R.id.home_mango_title);
         days = view.findViewById(R.id.home_mango_days);

@@ -20,7 +20,21 @@
 
             <include layout="@layout/view_forest_scene" />
 
+            <ImageButton
+                android:id="@+id/home_heart"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/home_give_heart"
+                android:padding="14dp"
+                android:src="@drawable/ic_mango_heart" />
+
             <TextView
+                android:id="@+id/home_customize"
+                android:clickable="true"
+                android:focusable="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"

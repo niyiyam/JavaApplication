@@ -63,6 +63,15 @@ public class MangoView extends ViewGroup {
 
     public void setFace(MangoFace expression) {
         face.setImageResource(expression.drawable);
+        boolean tears = expression == MangoFace.HAPPY_TEARS;
+        face.setScaleX(tears ? 0.84f : 1f);
+        face.setScaleY(tears ? 1.20f : 1f);
+    }
+
+    public android.graphics.PointF leafAnchor() {
+        float[] bounds = mangoRect(getWidth(), getHeight());
+        return new android.graphics.PointF(bounds[0] + bounds[2] * 0.64f,
+                bounds[1] + bounds[3] * 0.09f);
     }
 
     public void setAppearance(Equipment equipment, int mangoLevel) {

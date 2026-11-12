@@ -53,27 +53,28 @@ public final class GameRepository {
     private final List<Listener> listeners = new ArrayList<>();
     private List<WorkoutRecord> workouts;
     private List<ArchivedMango> mangos;
+    public static final long LOVE_DURATION_MS = 7_000;
     private int reactionMango;
     private long grinUntil;
     private long loveUntil;
 
     public void startWorkoutGrin() {
         reactionMango = getMangoNo();
-        grinUntil = SystemClock.elapsedRealtime() + 60_000;
+        grinUntil = SystemClock.elapsedRealtime() + 120_000;
         loveUntil = 0;
     }
 
-    public void startCustomizeLove() {
+    public void startLove() {
         if (reactionMango != getMangoNo()) grinUntil = 0;
         reactionMango = getMangoNo();
-        loveUntil = SystemClock.elapsedRealtime() + 1_000;
+        loveUntil = SystemClock.elapsedRealtime() + LOVE_DURATION_MS;
     }
 
     public long workoutGrinRemaining() {
         return reactionMango == getMangoNo() ? Math.max(0, grinUntil - SystemClock.elapsedRealtime()) : 0;
     }
 
-    public long customizeLoveRemaining() {
+    public long loveRemaining() {
         return reactionMango == getMangoNo() ? Math.max(0, loveUntil - SystemClock.elapsedRealtime()) : 0;
     }
 

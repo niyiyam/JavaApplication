@@ -44,7 +44,8 @@
     <string name="name_confirm">시작하기</string>
 
     <!-- 홈 -->
-    <string name="home_customize_hint">망고를 누르면 꾸미기</string>
+    <string name="home_customize_hint">꾸미기</string>
+    <string name="home_give_heart">망고에게 하트 주기</string>
     <string name="mango_title">%1$d번째 망고</string>
     <string name="mango_days">함께한 지 %1$d일째 / %2$d일</string>
     <string name="mango_level">망고 Lv.%1$d</string>

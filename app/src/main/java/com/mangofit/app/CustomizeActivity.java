@@ -84,7 +84,7 @@ public class CustomizeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 repo.setEquipment(draft);
-                repo.startCustomizeLove();
+                repo.startLove();
                 finish();
             }
         });
@@ -92,7 +92,7 @@ public class CustomizeActivity extends AppCompatActivity {
         fitMangoToScene();
         render();
         preview.setFace(MangoFace.LOVE);
-        preview.postDelayed(() -> preview.setFace(MangoFace.SMILE), 1_000);
+        preview.postDelayed(() -> preview.setFace(MangoFace.SMILE), GameRepository.LOVE_DURATION_MS);
     }
 
     @Override
