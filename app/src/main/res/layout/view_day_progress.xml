@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 오늘 진행 막대 + 구간 이름. 홈과 운동 탭이 같이 쓴다. 이름 칸 비율은 막대 구간 비율(25:75:50)과 같다 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.mangofit.app.view.DayProgressBar
+        android:id="@+id/day_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="28dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="25"
+            android:maxLines="1"
+            android:text="@string/zone_bonus"
+            android:textSize="12sp" />
+
+        <TextView
+            style="@style/SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="75"
+            android:paddingStart="4dp"
+            android:text="@string/zone_normal"
+            android:textSize="12sp" />
+
+        <TextView
+            style="@style/SubText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:paddingStart="4dp"
+            android:text="@string/zone_over"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 망고집 지붕 모양 헤더 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="360dp"
+    android:height="170dp"
+    android:viewportWidth="360"
+    android:viewportHeight="170">
+    <path
+        android:fillColor="@color/cream_bg"
+        android:pathData="M0,0 L360,0 L360,170 L0,170 Z" />
+    <path
+        android:fillColor="@color/roof"
+        android:pathData="M0,120 L180,0 L360,120 L360,170 L0,170 Z" />
+</vector>

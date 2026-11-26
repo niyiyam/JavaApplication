@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">JavaApplication</string>
+    <string name="app_name">망고핏</string>
     <string name="bottom_nav_home">홈</string>
     <string name="bottom_nav_mango_house">망고집</string>
     <string name="bottom_nav_exercise">운동</string>
@@ -7,4 +7,183 @@
     <string name="bottom_nav_shop">상점</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- 공통 -->
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
+    <string name="close">닫기</string>
+    <string name="menu">메뉴</string>
+    <string name="leaves">이파리</string>
+    <string name="user_icon">유저 아이콘</string>
+    <string name="mango_image">망고</string>
+    <string name="exp_progress">경험치 %1$s / %2$s</string>
+    <string name="top_bar_level">Lv.%1$d - %2$s / %3$s</string>
+
+    <!-- 운동 종류 -->
+    <string name="exercise_walk">걷기</string>
+    <string name="exercise_run">달리기</string>
+    <string name="exercise_bike">자전거</string>
+    <string name="exercise_hike">등산</string>
+    <string name="exercise_gym">헬스</string>
+    <string name="exercise_yoga">요가</string>
+    <string name="exercise_rope">줄넘기</string>
+
+    <!-- 꾸미기 부위, 아이템 색 -->
+    <string name="slot_hat">모자</string>
+    <string name="slot_top">의상</string>
+    <string name="slot_hand">오른손</string>
+    <string name="color_red">빨강</string>
+    <string name="color_blue">파랑</string>
+    <string name="color_green">초록</string>
+    <string name="item_name">%1$s %2$s - %3$s</string>
+
+    <!-- 첫 실행 -->
+    <string name="name_title">망고핏에 오신 걸 환영해요</string>
+    <string name="name_desc">이름을 알려 주세요. 상단 바와 기록에 표시돼요.</string>
+    <string name="name_hint">이름</string>
+    <string name="name_confirm">시작하기</string>
+
+    <!-- 홈 -->
+    <string name="home_customize_hint">꾸미기</string>
+    <string name="home_give_heart">망고에게 하트 주기</string>
+    <string name="mango_title">%1$d번째 망고</string>
+    <string name="mango_days">함께한 지 %1$d일째 / %2$d일</string>
+    <string name="mango_level">망고 Lv.%1$d</string>
+    <string name="today_title">오늘 운동</string>
+    <string name="today_score">%1$s / %2$s점</string>
+    <string name="today_leaves">이파리 +%1$s / 최대 %2$s</string>
+    <string name="today_exp">경험치 +%1$s / 최대 %2$s</string>
+    <string name="zone_bonus">보너스</string>
+    <string name="zone_normal">일반</string>
+    <string name="zone_over">무리</string>
+    <string name="zone_maxed">최대</string>
+    <string name="temp_archive">[임시] 지금 망고를 망고집에 보관</string>
+    <string name="archive_confirm_title">망고 보관</string>
+    <string name="archive_confirm_msg">%1$d번째 망고를 오늘 날짜로 망고집에 보관하고 새 망고를 시작할까요?\n장착한 아이템은 보관된 망고에 남아요.</string>
+    <string name="archive_done">%1$d번째 망고를 망고집에 보관했어요</string>
+    <string name="settled_title">28일이 지났어요</string>
+    <string name="settled_msg">%1$d번째 망고가 망고집에 보관됐어요.\n오늘부터 새 망고를 키워요.</string>
+
+    <!-- 운동 -->
+    <string name="exercise_title">오늘의 운동</string>
+    <string name="exercise_zone">지금 구간: %1$s</string>
+    <string name="tile_score">오늘 점수</string>
+    <string name="tile_minutes">운동 시간</string>
+    <string name="tile_leaves">받은 이파리</string>
+    <string name="tile_exp">받은 경험치</string>
+    <string name="value_score_quota">%1$s / %2$s</string>
+    <string name="value_minutes">%1$s분</string>
+    <string name="value_plus">+%1$s</string>
+    <string name="workout_row_title">%1$s %2$d분</string>
+    <string name="workout_row_detail">%1$s점 | 이파리 +%2$s, 경험치 +%3$s</string>
+    <string name="today_empty">아직 오늘 운동 기록이 없어요</string>
+    <string name="add_title">운동 기록 추가</string>
+    <string name="add_temp_chip">임시 - 직접 입력</string>
+    <string name="add_time">시간</string>
+    <string name="minutes_unit">분</string>
+    <string name="minus">−</string>
+    <string name="plus">+</string>
+    <string name="add_preview">강도 %1$s × %2$d분 = %3$s점\n→ 이파리 +%4$s, 경험치 +%5$s</string>
+    <string name="add_button">기록 추가</string>
+    <string name="add_confirm">%1$s %2$d분을 추가할까요?</string>
+    <string name="add_minutes_invalid">시간은 1~600분 사이로 입력해 주세요</string>
+    <string name="reward_toast">이파리 +%1$s, 경험치 +%2$s</string>
+    <string name="levelup_title">레벨 업!</string>
+    <string name="levelup_mango">망고 Lv.%1$d → Lv.%2$d</string>
+    <string name="levelup_user">유저 Lv.%1$d → Lv.%2$d</string>
+    <string name="temp_reset">테스트용: 오늘 기록 초기화</string>
+    <string name="reset_confirm">오늘 운동 기록을 모두 지우고 받은 이파리와 경험치를 되돌릴까요?</string>
+    <string name="reset_done">오늘 기록을 초기화했어요</string>
+    <string name="temp_dummy">[임시] 더미 데이터 불러오기</string>
+    <string name="dummy_confirm">지금 앱 데이터를 시연용 더미 데이터로 덮어쓸까요?\n되돌릴 수 없어요.</string>
+    <string name="dummy_done">더미 데이터를 불러왔어요</string>
+    <string name="dummy_failed">더미 데이터를 불러오지 못했어요</string>
+
+    <!-- 상점 -->
+    <string name="shop_owned">보유 중</string>
+    <string name="buy_confirm">%1$s을(를) 이파리 %2$s개로 살까요?</string>
+    <string name="buy_done">구매완료!</string>
+    <string name="buy_not_enough">이파리가 부족해요</string>
+
+    <!-- 꾸미기 -->
+    <string name="customize_title">꾸미기</string>
+    <string name="customize_none">해제</string>
+    <string name="customize_apply">적용</string>
+    <string name="customize_empty">보유한 %1$s 아이템이 없어요. 상점에서 사 보세요.</string>
+
+    <!-- 망고집 -->
+    <string name="house_title">망고 집</string>
+    <string name="house_count">보관된 망고 %1$d개</string>
+    <string name="house_empty">아직 보관된 망고가 없어요.\n28일을 함께하면 망고가 이곳에 보관돼요.</string>
+    <string name="house_no">%1$d번째</string>
+    <string name="house_level">Lv.%1$d</string>
+    <string name="house_period">%1$s~%2$s</string>
+    <string name="detail_title">망고 상세</string>
+
+    <!-- 기록, 공용 상세 블록 -->
+    <string name="record_tab_current">이번 망고</string>
+    <string name="record_tab_all">전체 기록</string>
+    <string name="detail_period_current">%1$s ~ 진행 중\n(%2$d일째 / %3$d일)</string>
+    <string name="detail_period_done">%1$s ~ %2$s\n(%3$d일)</string>
+    <string name="detail_period_user">%1$s ~ 오늘\n(%2$d일)</string>
+    <string name="detail_level">Lv.%1$d</string>
+    <string name="detail_exp">\u0020- 경험치 %1$s / %2$s</string>
+    <string name="detail_leaves">모은 이파리\u0020</string>
+    <string name="donut_title">운동 종류별 비율</string>
+    <string name="donut_center">총 운동</string>
+    <string name="donut_legend">%1$s분 | %2$d%%</string>
+    <string name="donut_empty">아직 운동 기록이 없어요</string>
+
+    <string name="slot_left_hand">왼손</string>
+    <string name="shop_title">망고 옷장 상점</string>
+    <string name="shop_hint">아이템 그림을 눌러 착용한 모습을 미리 보세요.</string>
+    <string name="shop_preview">착용 미리보기</string>
+    <string name="shop_buy">구매하기</string>
+    <string name="art_army">군복</string>
+    <string name="art_baseball">야구 유니폼</string>
+    <string name="art_basketball">농구공</string>
+    <string name="art_casual">후드 운동복</string>
+    <string name="art_king">왕의 곤룡포</string>
+    <string name="art_marathon">마라톤복</string>
+    <string name="art_onepiece">모험가 의상</string>
+    <string name="art_soccer">축구 유니폼</string>
+    <string name="art_student">교복</string>
+    <string name="art_suit">정장</string>
+    <string name="art_ak47">AK-47</string>
+    <string name="art_balloon">풍선</string>
+    <string name="art_briefcase">서류가방</string>
+    <string name="art_broom">빗자루</string>
+    <string name="art_bubble_tea">버블티</string>
+    <string name="art_camera">카메라</string>
+    <string name="art_cane">지팡이</string>
+    <string name="art_chicken_leg">치킨</string>
+    <string name="art_dumbbell">덤벨</string>
+    <string name="art_fishing_rod">낚싯대</string>
+    <string name="art_gamepad">게임패드</string>
+    <string name="art_golf_club">골프채</string>
+    <string name="art_lollipop">막대사탕</string>
+    <string name="art_magic_wand">마법 지팡이</string>
+    <string name="art_pistol">권총</string>
+    <string name="art_sword">검</string>
+    <string name="art_tennis_racket">테니스 라켓</string>
+    <string name="art_basketball_outfit">농구 유니폼</string>
+    <string name="tint_rose">로즈 밀크</string>
+    <string name="tint_mint">민트 크림</string>
+    <string name="tint_lavender">라벤더</string>
+    <string name="tint_sky">파우더 블루</string>
+    <string name="tint_peach">피치 크림</string>
+    <string name="tint_cream">바닐라 크림</string>
+    <string name="tint_sage">세이지</string>
+    <string name="tint_cocoa">밀크 코코아</string>
+    <string name="tint_matcha">말차 라떼</string>
+    <string name="tint_taro">타로 밀크</string>
+    <string name="tint_honey">허니 버터</string>
+    <string name="tint_roast">로스트 브라운</string>
+    <string name="tint_original">원본</string>
+    <string name="tint_choose">%1$s 색상 선택</string>
+    <string name="tint_title">어울리는 색 고르기</string>
+    <string name="tint_hint">색을 누르면 미리 볼 수 있어요. 보유 아이템의 색 변경은 무료예요.</string>
+    <string name="tint_apply">이 색으로 선택</string>
+    <string name="tint_named_item">%1$s · %2$s</string>
+    <string name="tint_selected">%1$s 선택됨</string>
 </resources>

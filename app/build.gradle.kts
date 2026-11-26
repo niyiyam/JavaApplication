@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.javaapplication"
+    namespace = "com.mangofit.app"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -11,8 +11,8 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.javaapplication"
-        minSdk = 24
+        applicationId = "com.mangofit.app"
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

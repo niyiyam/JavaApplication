@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [임시] 아이템 그림. item_hat_a.xml 주석 참고 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="211dp"
+    android:height="76dp"
+    android:viewportWidth="211"
+    android:viewportHeight="76">
+    <!-- 목도리 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="5"
+        android:pathData="M13,4L198,4Q207,4 207,13L207,22Q207,31 198,31L165,31L169,72L145,72L141,31L13,31Q4,31 4,22L4,13Q4,4 13,4Z" />
+</vector>

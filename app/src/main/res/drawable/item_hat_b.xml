@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- [임시] 아이템 그림. item_hat_a.xml 주석 참고 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="209dp"
+    android:height="36dp"
+    android:viewportWidth="209"
+    android:viewportHeight="36">
+    <!-- 머리띠 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="5"
+        android:pathData="M16,4L193,4Q205,4 205,16L205,20Q205,32 193,32L16,32Q4,32 4,20L4,16Q4,4 16,4Z" />
+</vector>
