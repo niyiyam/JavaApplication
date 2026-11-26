@@ -599,6 +599,18 @@ public final class GameRepository {
         return true;
     }
 
+    /**
+     * 지금 망고에 경험치를 더한다 (유저 경험치는 망고 경험치의 합이라 같이 오른다).
+     * 하루 보상은 할당량에서 막히므로, 망고 색이 바뀌는 레벨(3·5·7·9)을 바로 보여줄 때 쓴다.
+     * @return 더하기 전과 후의 망고 레벨
+     */
+    public int[] demoAddMangoExp(int amount) {
+        int before = getMangoProgress().level;
+        prefs.setMangoProgress(prefs.getMangoExp() + amount, prefs.getMangoLeavesEarned());
+        notifyChanged();
+        return new int[]{before, getMangoProgress().level};
+    }
+
     public void demoAddLeaves(int amount) {
         prefs.setLeaves(prefs.getLeaves() + amount);
         notifyChanged();

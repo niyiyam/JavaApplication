@@ -24,6 +24,7 @@ public class DemoToolsDialog extends DialogFragment {
     public static final String TAG = "demo_tools";
     private static final long TEN_MINUTES_MS = 10 * 60 * 1000L;
     private static final int LEAVES_BONUS = 1000;
+    private static final int EXP_BONUS = 200;
 
     @NonNull
     @Override
@@ -35,6 +36,7 @@ public class DemoToolsDialog extends DialogFragment {
                 getString(R.string.demo_timer_10),
                 getString(R.string.demo_timer_30),
                 getString(R.string.demo_leaves, LEAVES_BONUS),
+                getString(R.string.demo_exp, EXP_BONUS),
                 getString(R.string.demo_reset_today)
         };
         return new AlertDialog.Builder(requireContext())
@@ -61,6 +63,12 @@ public class DemoToolsDialog extends DialogFragment {
                             case 3:
                                 repo.demoAddLeaves(LEAVES_BONUS);
                                 toast(app, app.getString(R.string.demo_leaves_done, LEAVES_BONUS));
+                                break;
+                            case 4:
+                                int[] levels = repo.demoAddMangoExp(EXP_BONUS);
+                                toast(app, levels[1] > levels[0]
+                                        ? app.getString(R.string.demo_exp_levelup, EXP_BONUS, levels[0], levels[1])
+                                        : app.getString(R.string.demo_exp_done, EXP_BONUS));
                                 break;
                             default:
                                 confirm(R.string.demo_reset_confirm, new Runnable() {
