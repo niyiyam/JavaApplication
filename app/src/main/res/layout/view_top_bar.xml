@@ -18,7 +18,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="?attr/selectableItemBackground"
+        android:background="@drawable/bg_top_bar_user"
         android:contentDescription="@string/profile_open"
         android:gravity="center_vertical"
         android:orientation="horizontal">

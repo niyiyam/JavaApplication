@@ -181,9 +181,9 @@
     <string name="timer_state_idle">종목을 고르고 시작을 누르세요. 앱을 나가도 시간은 계속 흘러요.</string>
     <string name="timer_state_running">운동 중</string>
     <string name="timer_state_paused">일시정지됨</string>
-    <string name="timer_preview">강도 %1$s × %2$s = %3$s점
+    <string name="timer_preview">MET %1$s × %2$s = %3$s점
 → 이파리 +%4$s, 경험치 +%5$s</string>
-    <string name="timer_preview_idle">강도 %1$s, 30분 하면 %2$s점</string>
+    <string name="timer_preview_idle">30분 하면 %2$s점 (MET %1$s × 30분)</string>
     <string name="timer_finish_confirm">%1$s\n%2$s 동안 한 운동을 기록할까요?</string>
     <string name="timer_cancel_confirm">타이머를 끄고 이번 운동은 기록하지 않을까요?</string>
     <string name="timer_too_short">1초 이상 운동해야 기록할 수 있어요</string>
