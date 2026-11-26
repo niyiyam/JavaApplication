@@ -581,6 +581,63 @@ public final class GameRepository {
         notifyChanged();
     }
 
+    // ---------- 시연 도구 ----------
+    // 발표 시연용. 상단 바의 이파리 칸을 길게 누르면 나오는 숨은 메뉴에서만 쓴다.
+
+    /** 지금 망고를 오늘 날짜로 망고집에 보내고 오늘부터 새 망고를 시작한다 (28일을 기다리지 않고) */
+    public ArchivedMango demoArchiveNow(LocalDate today) {
+        ArchivedMango mango = archive(today, today);
+        notifyChanged();
+        return mango;
+    }
+
+    /** 켜진 타이머에 시간을 더한다. 타이머가 꺼져 있으면 false */
+    public boolean demoAddTimerTime(long ms) {
+        if (getTimerType() == null) return false;
+        prefs.setTimer(prefs.getTimerType(), prefs.getTimerStartedAt(), prefs.getTimerAccumMs() + ms);
+        notifyChanged();
+        return true;
+    }
+
+    public void demoAddLeaves(int amount) {
+        prefs.setLeaves(prefs.getLeaves() + amount);
+        notifyChanged();
+    }
+
+    /**
+     * 오늘 기록 초기화. 오늘 날짜 기록을 지우고 그 기록으로 받은 이파리·경험치를 되돌린다.
+     * 이파리를 이미 써서 모자라면 보유량은 0에서 멈춘다.
+     */
+    public void demoResetToday(LocalDate today) {
+        int leavesBack = 0;
+        int mangoExp = prefs.getMangoExp();
+        int mangoLeaves = prefs.getMangoLeavesEarned();
+        boolean mangosChanged = false;
+        Iterator<WorkoutRecord> it = workouts().iterator();
+        while (it.hasNext()) {
+            WorkoutRecord r = it.next();
+            if (!r.date.equals(today)) continue;
+            leavesBack += r.leaves;
+            if (r.mangoNo == prefs.getMangoNo()) {
+                mangoExp -= r.exp;
+                mangoLeaves -= r.leaves;
+            } else {
+                ArchivedMango m = getArchivedMango(r.mangoNo);
+                if (m != null) {
+                    m.exp = Math.max(0, m.exp - r.exp);
+                    m.leavesEarned = Math.max(0, m.leavesEarned - r.leaves);
+                    mangosChanged = true;
+                }
+            }
+            it.remove();
+        }
+        saveWorkouts();
+        if (mangosChanged) saveMangos();
+        prefs.setMangoProgress(Math.max(0, mangoExp), Math.max(0, mangoLeaves));
+        prefs.setLeaves(Math.max(0, prefs.getLeaves() - leavesBack));
+        notifyChanged();
+    }
+
     // ---------- 파일 ----------
 
     private List<WorkoutRecord> workouts() {

@@ -61,6 +61,16 @@ public class MainActivity extends AppCompatActivity {
         expBar = findViewById(R.id.top_bar_exp);
         leavesText = findViewById(R.id.top_bar_leaves_text);
         avatar = findViewById(R.id.top_bar_avatar);
+        // 시연 도구: 이파리 칸을 길게 누르면 열리는 숨은 메뉴
+        findViewById(R.id.top_bar_leaves).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (getSupportFragmentManager().findFragmentByTag(DemoToolsDialog.TAG) == null) {
+                    new DemoToolsDialog().show(getSupportFragmentManager(), DemoToolsDialog.TAG);
+                }
+                return true;
+            }
+        });
         findViewById(R.id.top_bar_user).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
