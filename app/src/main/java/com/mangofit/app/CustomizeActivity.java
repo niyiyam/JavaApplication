@@ -1,17 +1,23 @@
 package com.mangofit.app;
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.mangofit.app.data.Equipment;
 import com.mangofit.app.data.GameRepository;
 import com.mangofit.app.logic.Item;
+import com.mangofit.app.logic.ItemCatalog;
+import com.mangofit.app.logic.ItemPalette;
 import com.mangofit.app.logic.Slot;
 import com.mangofit.app.ui.ItemArt;
 import com.mangofit.app.ui.SystemBars;
@@ -23,6 +29,7 @@ import java.util.List;
 /**
  * 꾸미기 화면. 아이템을 누르면 위 망고에 미리보기로 보이고, "적용"을 눌러야 장착이 저장된다.
  * 닫기를 누르면 저장하지 않는다.
+ * 손 도구는 칸 오른쪽 위 색 버튼으로 색을 바꿀 수 있다 (무료, 바로 저장).
  */
 public class CustomizeActivity extends AppCompatActivity {
 
@@ -30,6 +37,7 @@ public class CustomizeActivity extends AppCompatActivity {
     private static final String STATE_TOP = "top";
     private static final String STATE_HAND = "hand";
     private static final String STATE_SLOT = "slot";
+    private static final String TAG_PALETTE = "item_palette";
 
     private GameRepository repo;
     private MangoView preview;
@@ -88,6 +96,22 @@ public class CustomizeActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // 색 고르기 창에서 고른 색. 보유 아이템을 그 색으로 바꾸고, 미리보기에 끼고 있던 것이면 같이 바꾼다
+        getSupportFragmentManager().setFragmentResultListener(ItemColorDialog.RESULT, this,
+                new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String key, @NonNull Bundle result) {
+                        Item selected = ItemCatalog.get(result.getString("item"));
+                        if (selected == null) return;
+                        Item before = repo.getOwnedVariant(selected.id);
+                        if (before == null || !repo.changeItemColor(selected.id)) return;
+                        if (before.id.equals(draft.get(selected.slot))) {
+                            draft = draft.with(selected.slot, selected.id);
+                        }
+                        render();
+                    }
+                });
 
         fitMangoToScene();
         render();
@@ -168,6 +192,7 @@ public class CustomizeActivity extends AppCompatActivity {
             }
             name.setText(ItemArt.displayName(this, item));
             cell.setSelected(item.id.equals(current));
+            bindColorButton(cell.findViewById(R.id.cell_color), item);
         }
         cell.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,6 +203,31 @@ public class CustomizeActivity extends AppCompatActivity {
         });
 
         grid.addView(cell, cellParams());
+    }
+
+    /** 손 도구이고 고를 색이 있으면 지금 색 견본 버튼을 보여준다 */
+    private void bindColorButton(ImageButton button, Item item) {
+        boolean hand = item.slot == Slot.HAND || item.slot == Slot.LEFT_HAND;
+        if (!hand || ItemPalette.colors(ItemCatalog.get(item.baseId)).isEmpty()) {
+            button.setVisibility(View.GONE);
+            return;
+        }
+        float density = getResources().getDisplayMetrics().density;
+        GradientDrawable swatch = new GradientDrawable();
+        swatch.setShape(GradientDrawable.OVAL);
+        swatch.setColor(item.tint == null ? 0xFFFFFCF4 : item.tint.argb);
+        swatch.setStroke(Math.round(1.5f * density), 0xFF9DB08F);
+        button.setBackground(swatch);
+        button.setContentDescription(getString(R.string.tint_choose, getString(item.label)));
+        button.setVisibility(View.VISIBLE);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getSupportFragmentManager().findFragmentByTag(TAG_PALETTE) == null) {
+                    ItemColorDialog.create(item).show(getSupportFragmentManager(), TAG_PALETTE);
+                }
+            }
+        });
     }
 
     private GridLayout.LayoutParams cellParams() {

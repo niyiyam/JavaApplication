@@ -74,8 +74,7 @@
     <string name="value_score_quota">%1$s / %2$s</string>
     <string name="value_minutes">%1$s분</string>
     <string name="value_plus">+%1$s</string>
-    <string name="workout_row_title">%1$s %2$s</string>
-    <string name="workout_row_detail">%1$s점 | 이파리 +%2$s, 경험치 +%3$s</string>
+    <string name="workout_row_detail">%1$s | %2$s점 | 이파리 +%3$s, 경험치 +%4$s</string>
     <string name="today_empty">아직 오늘 운동 기록이 없어요</string>
     <string name="add_title">운동 기록 추가</string>
     <string name="add_temp_chip">임시 - 직접 입력</string>
@@ -204,7 +203,7 @@
     <string name="timer_preview">강도 %1$s × %2$s = %3$s점
 → 이파리 +%4$s, 경험치 +%5$s</string>
     <string name="timer_preview_idle">강도 %1$s, 30분 하면 %2$s점</string>
-    <string name="timer_finish_confirm">%1$s %2$s을 기록할까요?</string>
+    <string name="timer_finish_confirm">%1$s\n%2$s 동안 한 운동을 기록할까요?</string>
     <string name="timer_cancel_confirm">타이머를 끄고 이번 운동은 기록하지 않을까요?</string>
     <string name="timer_too_short">1초 이상 운동해야 기록할 수 있어요</string>
 

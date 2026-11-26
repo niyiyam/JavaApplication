@@ -264,7 +264,7 @@ public class ExerciseFragment extends Fragment {
         private final List<ExerciseType> all;
 
         ExerciseAdapter(List<ExerciseType> items) {
-            super(requireContext(), android.R.layout.simple_dropdown_item_1line, new ArrayList<>(items));
+            super(requireContext(), R.layout.item_exercise_dropdown, new ArrayList<>(items));
             all = new ArrayList<>(items);
         }
 
@@ -392,7 +392,7 @@ public class ExerciseFragment extends Fragment {
         zone.setText(getString(R.string.exercise_zone, getString(zoneLabel(day.score, day.quota))));
         dayBar.setData(day.score, day.quota);
         scoreValue.setText(getString(R.string.value_score_quota, Fmt.num(day.score), Fmt.num(day.quota)));
-        minutesValue.setText(Fmt.hoursMinutes(day.seconds));
+        minutesValue.setText(Fmt.time(day.seconds));
         leavesValue.setText(getString(R.string.value_plus, Fmt.num(day.leaves)));
         expValue.setText(getString(R.string.value_plus, Fmt.num(day.exp)));
 
@@ -402,10 +402,10 @@ public class ExerciseFragment extends Fragment {
             View row = inflater.inflate(R.layout.item_workout_row, todayList, false);
             ExerciseType type = ExerciseType.fromCode(r.type);
             String name = type == null ? r.type : type.label();
-            ((TextView) row.findViewById(R.id.row_title))
-                    .setText(getString(R.string.workout_row_title, name, Fmt.duration(r.seconds)));
+            // 이름이 길 수 있어 두 줄로: 윗줄 종목, 아랫줄 시간과 보상
+            ((TextView) row.findViewById(R.id.row_title)).setText(name);
             ((TextView) row.findViewById(R.id.row_detail)).setText(getString(R.string.workout_row_detail,
-                    Fmt.num(r.score), Fmt.num(r.leaves), Fmt.num(r.exp)));
+                    Fmt.duration(r.seconds), Fmt.num(r.score), Fmt.num(r.leaves), Fmt.num(r.exp)));
             todayList.addView(row);
         }
         todayEmpty.setVisibility(day.records.isEmpty() ? View.VISIBLE : View.GONE);

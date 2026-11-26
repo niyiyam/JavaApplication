@@ -95,6 +95,11 @@ public class DonutChartView extends View {
 
         float labelY = cy - sp(6);
         canvas.drawText(centerLabel, cx, labelY, labelPaint);
+        // "32시간 10분"처럼 길면 도넛 안쪽 원에 들어가도록 글자를 줄인다
+        float inner = (r - stroke / 2f) * 2f * 0.86f;
+        valuePaint.setTextSize(sp(22));
+        float width = valuePaint.measureText(centerValue);
+        if (width > inner) valuePaint.setTextSize(sp(22) * inner / width);
         canvas.drawText(centerValue, cx, labelY + sp(28), valuePaint);
     }
 

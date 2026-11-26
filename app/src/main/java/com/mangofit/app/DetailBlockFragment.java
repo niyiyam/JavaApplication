@@ -212,13 +212,13 @@ public class DetailBlockFragment extends Fragment {
             ((TextView) row.findViewById(R.id.legend_name)).setText(names.get(i));
             int percent = (int) Math.round(seconds * 100.0 / total);
             ((TextView) row.findViewById(R.id.legend_value))
-                    .setText(getString(R.string.donut_legend, Fmt.hoursMinutes(seconds), percent));
+                    .setText(getString(R.string.donut_legend, Fmt.time(seconds), percent));
             legend.addView(row);
         }
         palette.recycle();
 
         DonutChartView donut = view.findViewById(R.id.detail_donut);
-        donut.setData(slices, getString(R.string.donut_center), Fmt.hoursMinutes(total));
+        donut.setData(slices, getString(R.string.donut_center), Fmt.time(total));
         view.findViewById(R.id.detail_donut_empty).setVisibility(total == 0 ? View.VISIBLE : View.GONE);
     }
 
@@ -228,12 +228,12 @@ public class DetailBlockFragment extends Fragment {
         LinearLayout list = view.findViewById(R.id.detail_stats);
         list.removeAllViews();
 
-        addStat(list, R.string.stat_total_time, Fmt.hoursMinutes(s.seconds), null);
+        addStat(list, R.string.stat_total_time, Fmt.time(s.seconds), null);
         addStat(list, R.string.stat_total_score, getString(R.string.stat_value_score, Fmt.num(s.score)), null);
 
         // 소모 칼로리(kcal) = 체중(kg) × MET × 시간(h). 체중을 모르면 공식 그대로 보여준다
         float weight = repo.getWeightKg();
-        String metHours = Fmt.decimal(Math.round(s.metHours * 10) / 10.0);
+        String metHours = Fmt.decimal(Math.round(s.metHours * 100) / 100.0);
         if (weight > 0) {
             addStat(list, R.string.stat_calories, getString(R.string.stat_value_kcal,
                     Fmt.num((int) Math.round(weight * s.metHours))),
@@ -245,7 +245,7 @@ public class DetailBlockFragment extends Fragment {
 
         addStat(list, R.string.stat_count, getString(R.string.stat_value_count, Fmt.num(s.count)), null);
         int avg = s.seconds / Math.max(1, s.periodDays);
-        addStat(list, R.string.stat_daily_avg, avg < 60 ? Fmt.duration(avg) : Fmt.hoursMinutes(avg),
+        addStat(list, R.string.stat_daily_avg, Fmt.time(avg),
                 getString(R.string.stat_daily_avg_note, s.periodDays));
         addStat(list, R.string.stat_active_days,
                 getString(R.string.stat_value_days_of, s.activeDays, s.periodDays), null);

@@ -56,6 +56,11 @@ public final class Fmt {
         return sb.toString();
     }
 
+    /** 한 시간 미만은 초까지 ("12분 30초"), 그 이상은 시간과 분 ("2시간 5분") */
+    public static String time(int seconds) {
+        return seconds < 3600 ? duration(seconds) : hoursMinutes(seconds);
+    }
+
     /** 분 단위 큰 합계용: "12시간 30분", "45분" (초는 버림) */
     public static String hoursMinutes(int seconds) {
         int h = seconds / 3600, m = seconds % 3600 / 60;

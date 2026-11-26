@@ -24,9 +24,9 @@ import com.mangofit.app.ui.MangoFace;
 public class AvatarView extends ViewGroup {
 
     /** 망고를 틀보다 이만큼 크게 그려서 얼굴만 보이게 한다 */
-    private static final float ZOOM = 1.55f;
+    private static final float ZOOM = 1.2f;
     /** 망고 그림 높이에서 얼굴 중심이 있는 위치 (위에서부터 비율) */
-    private static final float FACE_CENTER = 0.50f;
+    private static final float FACE_CENTER = 0.37f;
 
     private final ImageView person;
     private final MangoView mango;
