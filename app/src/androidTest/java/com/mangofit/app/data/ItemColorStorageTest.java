@@ -35,8 +35,8 @@ public class ItemColorStorageTest {
             GameRepository repo = constructor.newInstance(context);
             LocalDate date = LocalDate.of(2026, 11, 11);
             repo.startNewUser("색상 테스트", date);
-            repo.addWorkout(ExerciseType.RUN, 60, date.atTime(10, 0));
-            repo.addWorkout(ExerciseType.RUN, 60, date.plusDays(1).atTime(10, 0));
+            repo.addWorkout(ExerciseType.fromCode("run"), 60 * 60, date.atTime(10, 0));
+            repo.addWorkout(ExerciseType.fromCode("run"), 60 * 60, date.plusDays(1).atTime(10, 0));
             assertEquals(GameRepository.BuyResult.OK, repo.buy("right_bubble_tea__matcha"));
             repo.setEquipment(Equipment.empty().with(Slot.HAND, "right_bubble_tea__matcha"));
             int leaves = repo.getLeaves();

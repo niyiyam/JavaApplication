@@ -74,7 +74,7 @@
     <string name="value_score_quota">%1$s / %2$s</string>
     <string name="value_minutes">%1$s분</string>
     <string name="value_plus">+%1$s</string>
-    <string name="workout_row_title">%1$s %2$d분</string>
+    <string name="workout_row_title">%1$s %2$s</string>
     <string name="workout_row_detail">%1$s점 | 이파리 +%2$s, 경험치 +%3$s</string>
     <string name="today_empty">아직 오늘 운동 기록이 없어요</string>
     <string name="add_title">운동 기록 추가</string>
@@ -131,7 +131,7 @@
     <string name="detail_leaves">모은 이파리\u0020</string>
     <string name="donut_title">운동 종류별 비율</string>
     <string name="donut_center">총 운동</string>
-    <string name="donut_legend">%1$s분 | %2$d%%</string>
+    <string name="donut_legend">%1$s | %2$d%%</string>
     <string name="donut_empty">아직 운동 기록이 없어요</string>
 
     <string name="slot_left_hand">왼손</string>
@@ -186,4 +186,75 @@
     <string name="tint_apply">이 색으로 선택</string>
     <string name="tint_named_item">%1$s · %2$s</string>
     <string name="tint_selected">%1$s 선택됨</string>
+
+    <!-- 운동 타이머 -->
+    <string name="exercise_category_all">전체 분류</string>
+    <string name="exercise_search_hint">종목 검색 (예: 달리기, 배드민턴)</string>
+    <string name="exercise_selected">%1$s · MET %2$s</string>
+    <string name="exercise_estimated">추정값</string>
+    <string name="timer_zero">00:00</string>
+    <string name="timer_start">운동 시작</string>
+    <string name="timer_pause">일시정지</string>
+    <string name="timer_resume">계속하기</string>
+    <string name="timer_cancel">기록 안 함</string>
+    <string name="timer_finish">운동 종료</string>
+    <string name="timer_state_idle">종목을 고르고 시작을 누르세요. 앱을 나가도 시간은 계속 흘러요.</string>
+    <string name="timer_state_running">운동 중</string>
+    <string name="timer_state_paused">일시정지됨</string>
+    <string name="timer_preview">강도 %1$s × %2$s = %3$s점
+→ 이파리 +%4$s, 경험치 +%5$s</string>
+    <string name="timer_preview_idle">강도 %1$s, 30분 하면 %2$s점</string>
+    <string name="timer_finish_confirm">%1$s %2$s을 기록할까요?</string>
+    <string name="timer_cancel_confirm">타이머를 끄고 이번 운동은 기록하지 않을까요?</string>
+    <string name="timer_too_short">1초 이상 운동해야 기록할 수 있어요</string>
+
+    <!-- 추가 통계 -->
+    <string name="donut_other">기타</string>
+    <string name="stats_title_mango">이 망고 통계</string>
+    <string name="stats_title_all">누적 통계</string>
+    <string name="stat_total_time">총 운동 시간</string>
+    <string name="stat_total_score">총 점수</string>
+    <string name="stat_calories">소모 칼로리</string>
+    <string name="stat_count">운동 횟수</string>
+    <string name="stat_daily_avg">하루 평균 운동 시간</string>
+    <string name="stat_daily_avg_note">기간 %1$d일 기준</string>
+    <string name="stat_active_days">운동한 날</string>
+    <string name="stat_streak">최장 연속 운동</string>
+    <string name="stat_goal_days">목표 달성한 날</string>
+    <string name="stat_over_days">할당량 초과한 날</string>
+    <string name="stat_top_type">가장 많이 한 운동</string>
+    <string name="stat_mango_count">키운 망고</string>
+    <string name="stat_best_mango">최고 레벨 망고</string>
+    <string name="stat_none">-</string>
+    <string name="stat_value_score">%1$s점</string>
+    <string name="stat_value_kcal">약 %1$s kcal</string>
+    <string name="stat_value_kcal_formula">체중 × %1$s kcal</string>
+    <string name="stat_calories_note">체중 %1$skg × %2$s (MET × 시간)</string>
+    <string name="stat_calories_no_weight">프로필에서 체중을 입력하면 kcal로 계산해요</string>
+    <string name="stat_value_count">%1$s회</string>
+    <string name="stat_value_days">%1$d일</string>
+    <string name="stat_value_days_of">%1$d일 / %2$d일</string>
+    <string name="stat_value_mangos">%1$d마리</string>
+    <string name="stat_value_best_mango">%1$s (Lv.%2$d)</string>
+
+    <!-- 프로필 -->
+    <string name="profile_open">프로필 열기</string>
+    <string name="profile_title">프로필</string>
+    <string name="profile_name">이름</string>
+    <string name="profile_name_empty">이름을 입력해 주세요</string>
+    <string name="profile_weight">체중 (kg)</string>
+    <string name="profile_weight_hint">예: 65</string>
+    <string name="profile_weight_help">소모 칼로리 계산에만 써요. 비워 두면 공식으로 보여줘요.</string>
+    <string name="profile_weight_invalid">체중은 %1$s~%2$skg 사이로 입력해 주세요</string>
+    <string name="profile_avatar">프로필 사진</string>
+    <string name="profile_save">저장</string>
+    <string name="avatar_default">기본</string>
+    <string name="avatar_current">지금 망고\n(%1$d번째)</string>
+    <string-array name="avatar_base_names">
+        <item>초록 망고</item>
+        <item>연두 망고</item>
+        <item>노랑 망고</item>
+        <item>황금 망고</item>
+        <item>주황 망고</item>
+    </string-array>
 </resources>

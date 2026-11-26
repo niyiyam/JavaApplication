@@ -41,4 +41,19 @@
     <color name="item_red">#C0392B</color>
     <color name="item_blue">#2E6DB4</color>
     <color name="item_green">#2E7D3E</color>
+
+    <!-- 도넛 차트: 많이 한 순서대로 칠하는 색, 6위부터 묶은 '기타' -->
+    <color name="chart_1">#2E6B3E</color>
+    <color name="chart_2">#F0A93B</color>
+    <color name="chart_3">#4A8BD6</color>
+    <color name="chart_4">#C0392B</color>
+    <color name="chart_5">#8E6CC2</color>
+    <color name="chart_other">#B5AE9E</color>
+    <array name="donut_palette">
+        <item>@color/chart_1</item>
+        <item>@color/chart_2</item>
+        <item>@color/chart_3</item>
+        <item>@color/chart_4</item>
+        <item>@color/chart_5</item>
+    </array>
 </resources>

@@ -144,6 +144,63 @@ final class Prefs {
                 .apply();
     }
 
+    // ---------- 프로필 ----------
+
+    static final String WEIGHT_KG = "weight_kg";
+    static final String AVATAR = "avatar";
+
+    void setUserName(String name) {
+        sp.edit().putString(USER_NAME, name).apply();
+    }
+
+    /** 체중(kg). 입력하지 않았으면 0 */
+    float getWeightKg() {
+        return sp.getFloat(WEIGHT_KG, 0f);
+    }
+
+    void setWeightKg(float kg) {
+        sp.edit().putFloat(WEIGHT_KG, kg).apply();
+    }
+
+    /** 프로필 사진. 빈 문자열이면 기본 아이콘 */
+    String getAvatar() {
+        return sp.getString(AVATAR, "");
+    }
+
+    void setAvatar(String avatar) {
+        sp.edit().putString(AVATAR, avatar).apply();
+    }
+
+    // ---------- 운동 타이머 ----------
+    // 앱을 나가도 시간이 흐르도록, 흐른 시간 대신 '마지막으로 시작한 시각'과 '그 전까지 쌓인 시간'을 저장한다.
+
+    static final String TIMER_TYPE = "timer_type";
+    static final String TIMER_STARTED_AT = "timer_started_at";
+    static final String TIMER_ACCUM_MS = "timer_accum_ms";
+
+    /** 타이머가 켜져 있으면(일시정지 포함) 운동 코드, 아니면 빈 문자열 */
+    String getTimerType() {
+        return sp.getString(TIMER_TYPE, "");
+    }
+
+    /** 지금 흐르는 중이면 마지막 시작 시각(epoch ms), 일시정지면 0 */
+    long getTimerStartedAt() {
+        return sp.getLong(TIMER_STARTED_AT, 0L);
+    }
+
+    long getTimerAccumMs() {
+        return sp.getLong(TIMER_ACCUM_MS, 0L);
+    }
+
+    void setTimer(String type, long startedAt, long accumMs) {
+        sp.edit().putString(TIMER_TYPE, type).putLong(TIMER_STARTED_AT, startedAt)
+                .putLong(TIMER_ACCUM_MS, accumMs).apply();
+    }
+
+    void clearTimer() {
+        sp.edit().remove(TIMER_TYPE).remove(TIMER_STARTED_AT).remove(TIMER_ACCUM_MS).apply();
+    }
+
     /** 전체 값을 JSON 객체 내용으로 덮어쓴다. 할당량은 다시 고정하도록 비운다. */
     void importFrom(JSONObject o) throws JSONException {
         JSONArray owned = o.optJSONArray(OWNED_ITEMS);

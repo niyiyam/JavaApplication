@@ -3,6 +3,7 @@ package com.mangofit.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.mangofit.app.data.GameRepository;
 import com.mangofit.app.logic.Levels;
 import com.mangofit.app.ui.Fmt;
 import com.mangofit.app.ui.SystemBars;
+import com.mangofit.app.view.AvatarView;
 
 import java.time.LocalDate;
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView levelText;
     private ProgressBar expBar;
     private TextView leavesText;
+    private AvatarView avatar;
     private final GameRepository.Listener topBarListener = new GameRepository.Listener() {
         @Override
         public void onDataChanged() {
@@ -57,6 +60,15 @@ public class MainActivity extends AppCompatActivity {
         levelText = findViewById(R.id.top_bar_level);
         expBar = findViewById(R.id.top_bar_exp);
         leavesText = findViewById(R.id.top_bar_leaves_text);
+        avatar = findViewById(R.id.top_bar_avatar);
+        findViewById(R.id.top_bar_user).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getSupportFragmentManager().findFragmentByTag(ProfileDialog.TAG) == null) {
+                    new ProfileDialog().show(getSupportFragmentManager(), ProfileDialog.TAG);
+                }
+            }
+        });
 
         bottomNav = findViewById(R.id.bottom_nav);
 
@@ -141,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 Fmt.num(user.current), Fmt.num(user.needed)));
         expBar.setProgress(Fmt.permille(user.current, user.needed));
         leavesText.setText(Fmt.num(repo.getLeaves()));
+        avatar.bind(repo);
     }
 
     private void replaceFragment(Fragment fragment) {
