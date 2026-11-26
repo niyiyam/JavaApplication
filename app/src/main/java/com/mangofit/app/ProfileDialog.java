@@ -161,20 +161,13 @@ public class ProfileDialog extends DialogFragment {
         cell.setOrientation(LinearLayout.VERTICAL);
         cell.setGravity(Gravity.CENTER_HORIZONTAL);
         cell.setPadding(dp(4), dp(6), dp(4), dp(6));
+        // 이름은 보여주지 않고 화면 읽기용 설명으로만 둔다
         cell.setContentDescription(name);
 
         AvatarView avatarView = new AvatarView(requireContext());
         avatarView.bind(repo, avatar);
         avatarView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         cell.addView(avatarView, new LinearLayout.LayoutParams(dp(54), dp(54)));
-
-        TextView label = text(12, R.color.text_primary);
-        label.setGravity(Gravity.CENTER);
-        label.setMaxLines(2);
-        label.setText(name);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
-        lp.topMargin = dp(4);
-        cell.addView(label, lp);
 
         cell.setOnClickListener(new View.OnClickListener() {
             @Override

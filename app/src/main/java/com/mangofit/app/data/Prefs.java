@@ -201,22 +201,4 @@ final class Prefs {
         sp.edit().remove(TIMER_TYPE).remove(TIMER_STARTED_AT).remove(TIMER_ACCUM_MS).apply();
     }
 
-    /** 전체 값을 JSON 객체 내용으로 덮어쓴다. 할당량은 다시 고정하도록 비운다. */
-    void importFrom(JSONObject o) throws JSONException {
-        JSONArray owned = o.optJSONArray(OWNED_ITEMS);
-        sp.edit().clear()
-                .putString(USER_NAME, o.getString(USER_NAME))
-                .putString(FIRST_START_DATE, o.getString(FIRST_START_DATE))
-                .putInt(LEAVES, o.getInt(LEAVES))
-                .putInt(MANGO_NO, o.getInt(MANGO_NO))
-                .putString(MANGO_START_DATE, o.getString(MANGO_START_DATE))
-                .putInt(MANGO_EXP, o.getInt(MANGO_EXP))
-                .putInt(MANGO_LEAVES_EARNED, o.getInt(MANGO_LEAVES_EARNED))
-                .putString(EQUIP_HAT, o.optString(EQUIP_HAT, ""))
-                .putString(EQUIP_TOP, o.optString(EQUIP_TOP, ""))
-                .putString(EQUIP_HAND, o.optString(EQUIP_HAND, ""))
-                .putString(EQUIP_LEFT_HAND, o.optString(EQUIP_LEFT_HAND, ""))
-                .putString(OWNED_ITEMS, owned == null ? "[]" : owned.toString())
-                .apply();
-    }
 }

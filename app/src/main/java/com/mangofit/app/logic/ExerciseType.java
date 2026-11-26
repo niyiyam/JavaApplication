@@ -248,4 +248,32 @@ public final class ExerciseType {
     public static ExerciseType defaultType() {
         return SELECTABLE.get(0);
     }
+
+    // ---------- 검색 ----------
+
+    /** 한글 첫소리(초성) 19개. 음절 코드에서 (코드 - 0xAC00) / 588 번째 */
+    private static final String CHOSEONG = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ";
+
+    /**
+     * 검색어가 이름(강도 포함, 띄어쓰기 무시) 어딘가에 들어 있으면 true.
+     * 한글 자음만 친 글자는 음절의 첫소리와도 맞춘다. 예: "ㅂㄷ", "배ㄷ" → 배드민턴.
+     * 한글을 치는 도중에는 마지막 글자가 자음만 있는 상태라 이렇게 해야 바로 목록이 뜬다.
+     */
+    public boolean matches(String query) {
+        String q = query == null ? "" : query.replace(" ", "");
+        if (q.isEmpty()) return true;
+        String text = label().replace(" ", "");
+        for (int start = 0; start + q.length() <= text.length(); start++) {
+            int i = 0;
+            while (i < q.length() && charMatches(q.charAt(i), text.charAt(start + i))) i++;
+            if (i == q.length()) return true;
+        }
+        return false;
+    }
+
+    private static boolean charMatches(char q, char c) {
+        if (Character.toLowerCase(q) == Character.toLowerCase(c)) return true;
+        if (CHOSEONG.indexOf(q) < 0 || c < 0xAC00 || c > 0xD7A3) return false;
+        return CHOSEONG.charAt((c - 0xAC00) / 588) == q;
+    }
 }

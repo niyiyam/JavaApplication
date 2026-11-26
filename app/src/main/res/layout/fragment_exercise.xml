@@ -240,23 +240,7 @@
                 android:layout_marginTop="8dp"
                 android:visibility="gone" />
 
-            <!-- [임시] 오늘 기록 초기화 (테스트용) -->
-            <TextView
-                android:id="@+id/exercise_temp_reset"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:padding="8dp"
-                android:text="@string/temp_reset"
-                android:textColor="@color/text_secondary"
-                android:textSize="15sp" />
         </LinearLayout>
 
-        <!-- [임시] 더미 데이터 불러오기 (발표 시연용) -->
-        <TextView
-            android:id="@+id/exercise_temp_dummy"
-            style="@style/TempButton"
-            android:text="@string/temp_dummy" />
     </LinearLayout>
 </ScrollView>

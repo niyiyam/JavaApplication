@@ -32,7 +32,6 @@ import com.mangofit.app.data.GameRepository;
 import com.mangofit.app.data.WorkoutRecord;
 import com.mangofit.app.logic.ExerciseType;
 import com.mangofit.app.logic.RewardCalc;
-import com.mangofit.app.temp.TempTools;
 import com.mangofit.app.ui.Fmt;
 import com.mangofit.app.view.DayProgressBar;
 
@@ -141,18 +140,6 @@ public class ExerciseFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.exercise_temp_reset).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmTempReset();
-            }
-        });
-        view.findViewById(R.id.exercise_temp_dummy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmTempDummy();
-            }
-        });
     }
 
     @Override
@@ -248,18 +235,19 @@ public class ExerciseFragment extends Fragment {
         selectType(selectedType);
     }
 
+    /** 윗줄은 종목 이름만, 아랫줄은 강도·MET·설명 */
     private void selectType(ExerciseType type) {
         selectedType = type;
-        selectedText.setText(getString(R.string.exercise_selected, type.label(), Fmt.decimal(type.met)));
-        String note = type.note;
-        if (type.estimated) {
-            note = note.isEmpty() ? getString(R.string.exercise_estimated)
-                    : note + ", " + getString(R.string.exercise_estimated);
-        }
-        selectedNote.setText(note.isEmpty() ? type.category : type.category + " | " + note);
+        selectedText.setText(type.name);
+        List<String> parts = new ArrayList<>();
+        if (!type.intensity.isEmpty()) parts.add(getString(R.string.exercise_intensity, type.intensity));
+        parts.add(getString(R.string.exercise_met, Fmt.decimal(type.met)));
+        if (!type.note.isEmpty()) parts.add(type.note);
+        if (type.estimated) parts.add(getString(R.string.exercise_estimated));
+        selectedNote.setText(android.text.TextUtils.join(" · ", parts));
     }
 
-    /** 이름의 어느 부분이든 친 글자가 들어 있으면 보여준다 (기본 ArrayAdapter는 단어 앞부분만 맞춘다) */
+    /** 이름의 어느 부분이든 친 글자가 들어 있으면 보여준다. 한글 자음만 쳐도 첫소리로 찾는다 (ExerciseType.matches) */
     private final class ExerciseAdapter extends ArrayAdapter<ExerciseType> {
         private final List<ExerciseType> all;
 
@@ -275,9 +263,9 @@ public class ExerciseFragment extends Fragment {
                 @Override
                 protected FilterResults performFiltering(CharSequence constraint) {
                     List<ExerciseType> matched = new ArrayList<>();
-                    String q = constraint == null ? "" : constraint.toString().replace(" ", "");
+                    String q = constraint == null ? "" : constraint.toString();
                     for (ExerciseType type : all) {
-                        if (q.isEmpty() || type.label().replace(" ", "").contains(q)) matched.add(type);
+                        if (type.matches(q)) matched.add(type);
                     }
                     FilterResults results = new FilterResults();
                     results.values = matched;
@@ -358,7 +346,7 @@ public class ExerciseFragment extends Fragment {
         if (repo.isTimerRunning()) repo.pauseTimer(now);
         updateTimer();
         new AlertDialog.Builder(requireContext())
-                .setMessage(getString(R.string.timer_finish_confirm, selectedType.label(), Fmt.duration(seconds)))
+                .setMessage(getString(R.string.timer_finish_confirm, selectedType.name, Fmt.duration(seconds)))
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -400,8 +388,7 @@ public class ExerciseFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         for (WorkoutRecord r : day.records) {
             View row = inflater.inflate(R.layout.item_workout_row, todayList, false);
-            ExerciseType type = ExerciseType.fromCode(r.type);
-            String name = type == null ? r.type : type.label();
+            String name = GameRepository.nameOf(r);
             // 이름이 길 수 있어 두 줄로: 윗줄 종목, 아랫줄 시간과 보상
             ((TextView) row.findViewById(R.id.row_title)).setText(name);
             ((TextView) row.findViewById(R.id.row_detail)).setText(getString(R.string.workout_row_detail,
@@ -480,37 +467,6 @@ public class ExerciseFragment extends Fragment {
         }
         dialog.setView(panel);
         dialog.show();
-    }
-
-    /** [임시] 오늘 기록 초기화 */
-    private void confirmTempReset() {
-        new AlertDialog.Builder(requireContext())
-                .setMessage(R.string.reset_confirm)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        repo.tempResetToday(LocalDate.now());
-                        Toast.makeText(requireContext(), R.string.reset_done, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .show();
-    }
-
-    /** [임시] 더미 데이터 불러오기 */
-    private void confirmTempDummy() {
-        new AlertDialog.Builder(requireContext())
-                .setMessage(R.string.dummy_confirm)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        boolean ok = TempTools.loadDummyData(requireContext(), LocalDate.now());
-                        Toast.makeText(requireContext(), ok ? R.string.dummy_done : R.string.dummy_failed,
-                                Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .show();
     }
 
     private int dp(int value) {

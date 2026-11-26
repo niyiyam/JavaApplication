@@ -17,16 +17,16 @@ import com.mangofit.app.logic.MangoStage;
 import com.mangofit.app.ui.MangoFace;
 
 /**
- * 프로필 사진. 동그란 틀 안에 망고의 얼굴 부분만 크게 보여준다 (입은 옷 포함).
+ * 프로필 사진. 동그란 틀 안에 망고를 보여준다 (입은 옷 포함).
  * 표정은 지금 망고의 표정을 따라간다 (하트 반응 중이면 하트, 운동 직후면 활짝 웃음).
  * 고른 사진이 없으면 기본 사람 아이콘.
  */
 public class AvatarView extends ViewGroup {
 
-    /** 망고를 틀보다 이만큼 크게 그려서 얼굴만 보이게 한다 */
-    private static final float ZOOM = 1.2f;
-    /** 망고 그림 높이에서 얼굴 중심이 있는 위치 (위에서부터 비율) */
-    private static final float FACE_CENTER = 0.37f;
+    /** 망고 그림(정사각형)을 틀보다 이만큼 크게 그린다. 잎부터 발까지 다 보이는 크기 */
+    private static final float ZOOM = 1.05f;
+    /** 틀 가운데에 올 망고 그림의 높이 위치 (위에서부터 비율). 그림 속 망고의 세로 중심 */
+    private static final float FACE_CENTER = 0.49f;
 
     private final ImageView person;
     private final MangoView mango;

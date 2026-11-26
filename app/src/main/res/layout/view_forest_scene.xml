@@ -46,10 +46,11 @@
         android:layout_marginBottom="64dp"
         android:background="@drawable/bg_stump_top" />
 
+    <!-- 망고 그림은 정사각형 안 아래 8%가 비어 있다. 발이 그루터기 윗면(바닥에서 64~84dp)에 닿도록 내린다 -->
     <com.mangofit.app.view.MangoView
         android:id="@+id/scene_mango"
         android:layout_width="150dp"
         android:layout_height="215dp"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="52dp" />
+        android:layout_marginBottom="30dp" />
 </merge>

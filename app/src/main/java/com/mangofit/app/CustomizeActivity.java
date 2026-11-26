@@ -139,8 +139,11 @@ public class CustomizeActivity extends AppCompatActivity {
                 float available = scene.getHeight() - scene.getPaddingTop() - 70 * density - 64 * density;
                 float scale = Math.min(1f, available / preview.getHeight());
                 if (scale <= 0) return;
+                // 줄여도 발이 그루터기에 붙어 있도록 발 위치를 기준으로 줄인다
+                // (망고 그림은 가운데 정사각형, 발은 그 정사각형 위에서 92% 지점)
+                float side = Math.min(preview.getWidth(), preview.getHeight());
                 preview.setPivotX(preview.getWidth() / 2f);
-                preview.setPivotY(preview.getHeight());
+                preview.setPivotY(preview.getHeight() / 2f + side * 0.42f);
                 preview.setScaleX(scale);
                 preview.setScaleY(scale);
             }

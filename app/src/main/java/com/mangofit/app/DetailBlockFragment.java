@@ -16,18 +16,20 @@ import androidx.fragment.app.Fragment;
 
 import com.mangofit.app.data.ArchivedMango;
 import com.mangofit.app.data.GameRepository;
-import com.mangofit.app.logic.ExerciseType;
 import com.mangofit.app.logic.Levels;
 import com.mangofit.app.logic.MangoCycle;
 import com.mangofit.app.ui.Fmt;
 import com.mangofit.app.view.AvatarView;
+import com.mangofit.app.view.BarChartView;
 import com.mangofit.app.view.DonutChartView;
 import com.mangofit.app.view.MangoView;
 
 import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -116,7 +118,7 @@ public class DetailBlockFragment extends Fragment {
             bindMango(view, no);
             mangoNo = no;
         }
-        bindDonut(view, repo.getSecondsByType(mangoNo));
+        bindDonut(view, repo.getSecondsByName(mangoNo));
         bindStats(view, repo.getPeriodStats(mangoNo, LocalDate.now()), mangoNo == null);
     }
 
@@ -166,17 +168,17 @@ public class DetailBlockFragment extends Fragment {
         ((TextView) view.findViewById(R.id.detail_leaves)).setText(Fmt.num(leaves));
     }
 
-    private void bindDonut(View view, Map<ExerciseType, Integer> secondsByType) {
+    private void bindDonut(View view, Map<String, Integer> secondsByType) {
         // 많이 한 운동부터
-        List<Map.Entry<ExerciseType, Integer>> entries = new ArrayList<>(secondsByType.entrySet());
-        entries.sort(new Comparator<Map.Entry<ExerciseType, Integer>>() {
+        List<Map.Entry<String, Integer>> entries = new ArrayList<>(secondsByType.entrySet());
+        entries.sort(new Comparator<Map.Entry<String, Integer>>() {
             @Override
-            public int compare(Map.Entry<ExerciseType, Integer> a, Map.Entry<ExerciseType, Integer> b) {
+            public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b) {
                 return b.getValue() - a.getValue();
             }
         });
         int total = 0;
-        for (Map.Entry<ExerciseType, Integer> e : entries) total += e.getValue();
+        for (Map.Entry<String, Integer> e : entries) total += e.getValue();
 
         // 종목이 많으므로 색은 종목마다 정하지 않고 순위 순서로 칠한다. 6위부터는 '기타' 한 조각
         TypedArray palette = getResources().obtainTypedArray(R.array.donut_palette);
@@ -185,7 +187,7 @@ public class DetailBlockFragment extends Fragment {
         int other = 0;
         for (int i = 0; i < entries.size(); i++) {
             if (i < DONUT_TOP || entries.size() == DONUT_TOP + 1) {
-                names.add(entries.get(i).getKey().label());
+                names.add(entries.get(i).getKey());
                 values.add(entries.get(i).getValue());
             } else {
                 other += entries.get(i).getValue();
@@ -222,42 +224,138 @@ public class DetailBlockFragment extends Fragment {
         view.findViewById(R.id.detail_donut_empty).setVisibility(total == 0 ? View.VISIBLE : View.GONE);
     }
 
+    private static final int CHART_DAYS = 7;
+    private static final int CHART_WEEKS = 8;
+
+    /**
+     * 추가 통계. 위에서부터 큰 숫자 4칸, 최근 7일 막대 그래프, 비율 막대, 나머지 항목.
+     */
     private void bindStats(View view, GameRepository.PeriodStats s, boolean allTime) {
         ((TextView) view.findViewById(R.id.detail_stats_title))
                 .setText(allTime ? R.string.stats_title_all : R.string.stats_title_mango);
         LinearLayout list = view.findViewById(R.id.detail_stats);
         list.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(requireContext());
 
-        addStat(list, R.string.stat_total_time, Fmt.time(s.seconds), null);
-        addStat(list, R.string.stat_total_score, getString(R.string.stat_value_score, Fmt.num(s.score)), null);
-
+        // 1) 큰 숫자 4칸: 시간, 점수, 칼로리, 횟수
         // 소모 칼로리(kcal) = 체중(kg) × MET × 시간(h). 체중을 모르면 공식 그대로 보여준다
         float weight = repo.getWeightKg();
         String metHours = Fmt.decimal(Math.round(s.metHours * 100) / 100.0);
-        if (weight > 0) {
-            addStat(list, R.string.stat_calories, getString(R.string.stat_value_kcal,
-                    Fmt.num((int) Math.round(weight * s.metHours))),
-                    getString(R.string.stat_calories_note, Fmt.decimal(Math.round(weight * 10) / 10.0), metHours));
-        } else {
-            addStat(list, R.string.stat_calories, getString(R.string.stat_value_kcal_formula, metHours),
-                    getString(R.string.stat_calories_no_weight));
-        }
+        String kcal = weight > 0 ? getString(R.string.stat_value_kcal, Fmt.num((int) Math.round(weight * s.metHours)))
+                : getString(R.string.stat_value_kcal_formula, metHours);
+        list.addView(tileRow(inflater, list,
+                R.string.stat_total_time, Fmt.time(s.seconds),
+                R.string.stat_total_score, getString(R.string.stat_value_score, Fmt.num(s.score))));
+        list.addView(tileRow(inflater, list,
+                R.string.stat_calories, kcal,
+                R.string.stat_count, getString(R.string.stat_value_count, Fmt.num(s.count))));
+        TextView kcalNote = new TextView(requireContext());
+        kcalNote.setTextAppearance(R.style.SubText);
+        kcalNote.setTextSize(12);
+        kcalNote.setPadding(dp(4), dp(6), dp(4), 0);
+        kcalNote.setText(weight > 0
+                ? getString(R.string.stat_calories_note, Fmt.decimal(Math.round(weight * 10) / 10.0), metHours)
+                : getString(R.string.stat_calories_no_weight));
+        list.addView(kcalNote);
 
-        addStat(list, R.string.stat_count, getString(R.string.stat_value_count, Fmt.num(s.count)), null);
-        int avg = s.seconds / Math.max(1, s.periodDays);
-        addStat(list, R.string.stat_daily_avg, Fmt.time(avg),
+        // 2) 막대 그래프: 망고는 최근 7일(일별), 전체 기록은 최근 8주(주별). 기간 마지막 날까지
+        list.addView(sectionTitle(allTime ? R.string.stat_chart_weeks_title : R.string.stat_chart_title));
+        int bars = allTime ? CHART_WEEKS : CHART_DAYS;
+        int days = allTime ? 7 : 1;
+        int[] secs = new int[bars];
+        String[] values = new String[bars];
+        String[] labels = new String[bars];
+        boolean[] goals = new boolean[bars];
+        for (int i = 0; i < bars; i++) {
+            LocalDate last = s.end.minusDays((long) (bars - 1 - i) * days);
+            int sc = 0;
+            for (int k = 0; k < days; k++) {
+                Integer sec = s.daySeconds.get(last.minusDays(k));
+                if (sec != null) sc += sec;
+            }
+            secs[i] = sc;
+            values[i] = sc < 60 ? getString(R.string.stat_chart_seconds, sc)
+                    : sc < 6000 ? getString(R.string.stat_chart_minutes, Math.round(sc / 60f))
+                    : getString(R.string.stat_chart_hours, Math.round(sc / 3600f));
+            labels[i] = allTime ? Fmt.shortDate(last.minusDays(days - 1))
+                    : last.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREAN);
+            goals[i] = !allTime && s.goalDates.contains(last);
+        }
+        BarChartView chart = new BarChartView(requireContext());
+        chart.setData(secs, values, labels, goals);
+        list.addView(chart, new LinearLayout.LayoutParams(-1, dp(150)));
+        TextView legend = new TextView(requireContext());
+        legend.setTextAppearance(R.style.SubText);
+        legend.setTextSize(12);
+        legend.setText(allTime ? R.string.stat_chart_weeks_legend : R.string.stat_chart_legend);
+        list.addView(legend);
+
+        // 3) 비율 막대
+        list.addView(sectionTitle(R.string.stat_ratio_title));
+        addRatio(list, inflater, R.string.stat_active_days, s.activeDays, s.periodDays);
+        addRatio(list, inflater, R.string.stat_goal_of_active, s.goalDays, s.activeDays);
+
+        // 4) 나머지 항목
+        list.addView(sectionTitle(R.string.stat_more_title));
+        addStat(list, R.string.stat_daily_avg, Fmt.time(s.seconds / Math.max(1, s.periodDays)),
                 getString(R.string.stat_daily_avg_note, s.periodDays));
-        addStat(list, R.string.stat_active_days,
-                getString(R.string.stat_value_days_of, s.activeDays, s.periodDays), null);
         addStat(list, R.string.stat_streak, getString(R.string.stat_value_days, s.longestStreak), null);
-        addStat(list, R.string.stat_goal_days, getString(R.string.stat_value_days, s.goalDays), null);
         addStat(list, R.string.stat_over_days, getString(R.string.stat_value_days, s.overDays), null);
-        addStat(list, R.string.stat_top_type, s.topType == null ? getString(R.string.stat_none) : s.topType.label(), null);
+        addStat(list, R.string.stat_top_type, s.topName == null ? getString(R.string.stat_none) : s.topName, null);
         if (allTime) {
             addStat(list, R.string.stat_mango_count, getString(R.string.stat_value_mangos, s.mangoCount), null);
             addStat(list, R.string.stat_best_mango, getString(R.string.stat_value_best_mango,
                     getString(R.string.mango_title, s.bestMangoNo), s.bestMangoLevel), null);
         }
+    }
+
+    private View tileRow(LayoutInflater inflater, ViewGroup parent, int label1, String value1,
+                         int label2, String value2) {
+        LinearLayout row = new LinearLayout(requireContext());
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setPadding(0, dp(6), 0, 0);
+        row.addView(tile(inflater, row, label1, value1), tileParams(0, dp(6)));
+        row.addView(tile(inflater, row, label2, value2), tileParams(dp(6), 0));
+        return row;
+    }
+
+    private View tile(LayoutInflater inflater, ViewGroup parent, int label, String value) {
+        View tile = inflater.inflate(R.layout.view_stat_tile, parent, false);
+        ((TextView) tile.findViewById(R.id.stat_label)).setText(label);
+        TextView v = tile.findViewById(R.id.stat_value);
+        v.setText(value);
+        v.setTextSize(19);
+        return tile;
+    }
+
+    private LinearLayout.LayoutParams tileParams(int start, int end) {
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+        lp.setMarginStart(start);
+        lp.setMarginEnd(end);
+        return lp;
+    }
+
+    private TextView sectionTitle(int res) {
+        TextView t = new TextView(requireContext());
+        t.setTextAppearance(R.style.BodyText);
+        t.setTypeface(null, android.graphics.Typeface.BOLD);
+        t.setText(res);
+        t.setPadding(0, dp(20), 0, dp(6));
+        return t;
+    }
+
+    private void addRatio(LinearLayout list, LayoutInflater inflater, int labelRes, int part, int whole) {
+        View row = inflater.inflate(R.layout.item_stat_ratio, list, false);
+        ((TextView) row.findViewById(R.id.ratio_label)).setText(labelRes);
+        int percent = whole <= 0 ? 0 : Math.round(part * 100f / whole);
+        ((TextView) row.findViewById(R.id.ratio_value))
+                .setText(getString(R.string.stat_value_ratio, part, whole, percent));
+        ((ProgressBar) row.findViewById(R.id.ratio_bar)).setProgress(Fmt.permille(part, whole));
+        list.addView(row);
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
     }
 
     private void addStat(LinearLayout list, int labelRes, String value, @Nullable String note) {
