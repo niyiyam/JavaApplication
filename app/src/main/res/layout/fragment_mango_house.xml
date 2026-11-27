@@ -48,16 +48,31 @@
         </LinearLayout>
     </FrameLayout>
 
-    <ScrollView
+    <!-- 지붕 아래 벽: 나무 틀 벽 그림 위에 망고 칸 -->
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/house_wall" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:paddingStart="20dp"
+            android:paddingTop="22dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="28dp">
 
             <!-- 보관된 망고 그리드, 보관 순서대로 (코드에서 채움) -->
             <GridLayout
@@ -77,4 +92,5 @@
                 android:text="@string/house_empty" />
         </LinearLayout>
     </ScrollView>
+    </FrameLayout>
 </LinearLayout>
