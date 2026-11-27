@@ -15,6 +15,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="-14dp"
+            android:layout_marginEnd="-14dp"
             android:adjustViewBounds="true"
             android:contentDescription="@null"
             android:scaleType="fitXY"
