@@ -12,10 +12,23 @@
     android:paddingTop="16dp"
     android:paddingBottom="14dp">
 
-    <com.mangofit.app.view.MangoView
-        android:id="@+id/house_mango"
-        android:layout_width="84dp"
-        android:layout_height="120dp" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!-- 발밑 그림자: 망고가 판 위에 서 있는 느낌 -->
+        <View
+            android:layout_width="62dp"
+            android:layout_height="12dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_mango_ground_shadow" />
+
+        <com.mangofit.app.view.MangoView
+            android:id="@+id/house_mango"
+            android:layout_width="84dp"
+            android:layout_height="120dp" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/house_no"

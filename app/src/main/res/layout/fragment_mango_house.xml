@@ -61,18 +61,26 @@
         android:scaleType="fitXY"
         android:src="@drawable/house_wall" />
 
+    <!-- 스크롤 영역을 나무 틀 안쪽으로 한정: 카드가 틀 밑으로 들어가며 잘린다 -->
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="18dp"
+        android:fadingEdgeLength="16dp"
+        android:requiresFadingEdge="vertical"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingTop="22dp"
-            android:paddingEnd="20dp"
-            android:paddingBottom="28dp">
+            android:paddingStart="4dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="4dp"
+            android:paddingBottom="10dp">
 
             <!-- 보관된 망고 그리드, 보관 순서대로 (코드에서 채움) -->
             <GridLayout
