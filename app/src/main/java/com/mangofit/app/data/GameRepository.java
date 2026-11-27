@@ -18,11 +18,16 @@ import org.json.JSONObject;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumMap;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -62,12 +67,14 @@ public final class GameRepository {
         reactionMango = getMangoNo();
         grinUntil = SystemClock.elapsedRealtime() + 120_000;
         loveUntil = 0;
+        notifyChanged();
     }
 
     public void startLove() {
         if (reactionMango != getMangoNo()) grinUntil = 0;
         reactionMango = getMangoNo();
         loveUntil = SystemClock.elapsedRealtime() + LOVE_DURATION_MS;
+        notifyChanged();
     }
 
     public long workoutGrinRemaining() {
@@ -211,31 +218,31 @@ public final class GameRepository {
     }
 
     public DaySummary getDaySummary(LocalDate day) {
-        int score = 0, minutes = 0, leaves = 0, exp = 0;
+        int score = 0, seconds = 0, leaves = 0, exp = 0;
         List<WorkoutRecord> records = getWorkoutsOn(day);
         for (WorkoutRecord r : records) {
             score += r.score;
-            minutes += r.minutes;
+            seconds += r.seconds;
             leaves += r.leaves;
             exp += r.exp;
         }
-        return new DaySummary(getQuota(day), score, minutes, leaves, exp, records);
+        return new DaySummary(getQuota(day), score, seconds, leaves, exp, records);
     }
 
-    /** 지금 기록하면 받을 보상 (저장하지 않음) */
-    public RewardCalc.Reward previewWorkout(ExerciseType type, int minutes, LocalDate today) {
+    /** 지금 기록하면 받을 보상 (저장하지 않음). 운동 시간은 초 */
+    public RewardCalc.Reward previewWorkout(ExerciseType type, int seconds, LocalDate today) {
         return RewardCalc.calc(getQuota(today), getDaySummary(today).score,
-                RewardCalc.rawScore(type.met, minutes));
+                RewardCalc.rawScoreSeconds(type.met, seconds));
     }
 
-    public AddResult addWorkout(ExerciseType type, int minutes, LocalDateTime now) {
+    public AddResult addWorkout(ExerciseType type, int seconds, LocalDateTime now) {
         LocalDate today = now.toLocalDate();
-        RewardCalc.Reward reward = previewWorkout(type, minutes, today);
+        RewardCalc.Reward reward = previewWorkout(type, seconds, today);
         int mangoLevelBefore = getMangoProgress().level;
         int userLevelBefore = getUserProgress().level;
 
         WorkoutRecord record = new WorkoutRecord(nextWorkoutId(), now.format(CREATED_AT), today,
-                type.code, minutes, reward.score, reward.leaves, reward.exp, prefs.getMangoNo());
+                type.code, seconds, reward.score, reward.leaves, reward.exp, prefs.getMangoNo());
         workouts().add(record);
         saveWorkouts();
 
@@ -247,6 +254,64 @@ public final class GameRepository {
                 userLevelBefore, getUserProgress().level);
         notifyChanged();
         return result;
+    }
+
+    // ---------- 운동 타이머 ----------
+    // 직접 입력은 없고, 타이머로 잰 시간만 기록한다. 앱을 꺼도 시간이 흐르도록 시작 시각을 저장한다.
+
+    /** 한 번에 기록할 수 있는 최대 시간 (10시간). 타이머를 잊고 둔 경우를 막는다 */
+    public static final int MAX_WORKOUT_SECONDS = 600 * 60;
+
+    /** 켜져 있는(일시정지 포함) 타이머의 운동, 없으면 null */
+    public ExerciseType getTimerType() {
+        String code = prefs.getTimerType();
+        return code.isEmpty() ? null : ExerciseType.fromCode(code);
+    }
+
+    public boolean isTimerRunning() {
+        return getTimerType() != null && prefs.getTimerStartedAt() > 0;
+    }
+
+    /** 지금까지 잰 시간(ms). 흐르는 중이면 마지막 시작 이후 시간까지 더한다 */
+    public long getTimerElapsedMs(long nowMs) {
+        if (getTimerType() == null) return 0;
+        long started = prefs.getTimerStartedAt();
+        long running = started > 0 ? Math.max(0, nowMs - started) : 0;
+        return prefs.getTimerAccumMs() + running;
+    }
+
+    public void startTimer(ExerciseType type, long nowMs) {
+        prefs.setTimer(type.code, nowMs, 0);
+        notifyChanged();
+    }
+
+    public void pauseTimer(long nowMs) {
+        if (!isTimerRunning()) return;
+        prefs.setTimer(prefs.getTimerType(), 0, getTimerElapsedMs(nowMs));
+        notifyChanged();
+    }
+
+    public void resumeTimer(long nowMs) {
+        if (getTimerType() == null || isTimerRunning()) return;
+        prefs.setTimer(prefs.getTimerType(), nowMs, prefs.getTimerAccumMs());
+        notifyChanged();
+    }
+
+    public void cancelTimer() {
+        prefs.clearTimer();
+        notifyChanged();
+    }
+
+    /** 타이머를 끝내고 잰 시간만큼 기록한다. 1초 미만이면 기록하지 않고 null */
+    public AddResult finishTimer(long nowMs, LocalDateTime now) {
+        ExerciseType type = getTimerType();
+        int seconds = (int) Math.min(MAX_WORKOUT_SECONDS, getTimerElapsedMs(nowMs) / 1000);
+        prefs.clearTimer();
+        if (type == null || seconds < 1) {
+            notifyChanged();
+            return null;
+        }
+        return addWorkout(type, seconds, now);
     }
 
     private int nextWorkoutId() {
@@ -363,26 +428,199 @@ public final class GameRepository {
 
     // ---------- 통계 ----------
 
-    /** 운동 종류별 시간(분). mangoNo가 null이면 전체 기록. 0분인 종류는 빠진다. */
-    public Map<ExerciseType, Integer> getMinutesByType(Integer mangoNo) {
-        Map<ExerciseType, Integer> result = new EnumMap<>(ExerciseType.class);
+    /**
+     * 운동 종목별 시간(초). mangoNo가 null이면 전체 기록. 기록이 없는 종목은 빠진다.
+     * 강도(약/강)는 나누지 않고 종목 이름으로 합친다.
+     */
+    public Map<String, Integer> getSecondsByName(Integer mangoNo) {
+        Map<String, Integer> result = new LinkedHashMap<>();
         for (WorkoutRecord r : workouts()) {
             if (mangoNo != null && r.mangoNo != mangoNo) continue;
-            ExerciseType type = ExerciseType.fromCode(r.type);
-            if (type == null) continue;
-            Integer before = result.get(type);
-            result.put(type, (before == null ? 0 : before) + r.minutes);
+            String name = nameOf(r);
+            Integer before = result.get(name);
+            result.put(name, (before == null ? 0 : before) + r.seconds);
         }
         return result;
     }
 
-    // ---------- [임시] 프로토타입 전용: 최종에서 이 구역을 지운다 ----------
+    /** 기록에 보여줄 종목 이름 (강도 제외). 모르는 코드면 코드 그대로 */
+    public static String nameOf(WorkoutRecord r) {
+        ExerciseType type = ExerciseType.fromCode(r.type);
+        return type == null ? r.type : type.name;
+    }
 
     /**
-     * [임시] 오늘 기록 초기화. 오늘 날짜 기록을 지우고 그 기록으로 받은 이파리·경험치를 되돌린다.
+     * 기간 통계. mangoNo가 null이면 전체 기록(첫날 ~ 오늘), 아니면 그 망고의 기간.
+     * 그날의 할당량은 저장하지 않으므로, 그날 첫 기록 전까지의 유저 경험치로 다시 계산한다.
+     * (할당량은 하루 시작에 고정되고 하루 중 레벨이 올라도 바뀌지 않는다는 규칙과 같다.)
+     */
+    public PeriodStats getPeriodStats(Integer mangoNo, LocalDate today) {
+        LocalDate start;
+        LocalDate end;
+        if (mangoNo == null) {
+            start = prefs.getFirstStartDate();
+            end = today;
+        } else if (mangoNo == prefs.getMangoNo()) {
+            start = prefs.getMangoStartDate();
+            end = today;
+        } else {
+            ArchivedMango m = getArchivedMango(mangoNo);
+            start = m == null ? today : m.startDate;
+            end = m == null ? today : m.endDate;
+        }
+
+        List<WorkoutRecord> sorted = new ArrayList<>(workouts());
+        Collections.sort(sorted, new Comparator<WorkoutRecord>() {
+            @Override
+            public int compare(WorkoutRecord a, WorkoutRecord b) {
+                int c = a.date.compareTo(b.date);
+                return c != 0 ? c : Integer.compare(a.id, b.id);
+            }
+        });
+
+        PeriodStats s = new PeriodStats();
+        s.periodDays = Math.max(1, (int) ChronoUnit.DAYS.between(start, end) + 1);
+        s.end = end;
+        Map<LocalDate, Integer> dayScore = new LinkedHashMap<>();
+        Map<LocalDate, Integer> dayQuota = new LinkedHashMap<>();
+        Map<String, Integer> secondsByName = new LinkedHashMap<>();
+        int cumExp = 0;
+        LocalDate curDay = null;
+        int dayStartExp = 0;
+        for (WorkoutRecord r : sorted) {
+            if (!r.date.equals(curDay)) {
+                curDay = r.date;
+                dayStartExp = cumExp;
+            }
+            cumExp += r.exp;
+            if (mangoNo != null && r.mangoNo != mangoNo) continue;
+            s.seconds += r.seconds;
+            Integer daySec = s.daySeconds.get(r.date);
+            s.daySeconds.put(r.date, (daySec == null ? 0 : daySec) + r.seconds);
+            s.score += r.score;
+            s.count++;
+            s.metHours += metOf(r) * r.seconds / 3600.0;
+            Integer before = dayScore.get(r.date);
+            dayScore.put(r.date, (before == null ? 0 : before) + r.score);
+            if (!dayQuota.containsKey(r.date)) {
+                dayQuota.put(r.date, Levels.quotaFor(Levels.levelForExp(dayStartExp)));
+            }
+            String name = nameOf(r);
+            Integer sec = secondsByName.get(name);
+            secondsByName.put(name, (sec == null ? 0 : sec) + r.seconds);
+        }
+        s.activeDays = dayScore.size();
+        for (Map.Entry<LocalDate, Integer> e : dayScore.entrySet()) {
+            int quota = dayQuota.get(e.getKey());
+            if (e.getValue() >= quota) {
+                s.goalDays++;
+                s.goalDates.add(e.getKey());
+            }
+            if (e.getValue() > quota) s.overDays++;
+        }
+        LocalDate prev = null;
+        int run = 0;
+        for (LocalDate d : dayScore.keySet()) {
+            run = (prev != null && prev.plusDays(1).equals(d)) ? run + 1 : 1;
+            s.longestStreak = Math.max(s.longestStreak, run);
+            prev = d;
+        }
+        int best = -1;
+        for (Map.Entry<String, Integer> e : secondsByName.entrySet()) {
+            if (e.getValue() > best) {
+                best = e.getValue();
+                s.topName = e.getKey();
+            }
+        }
+        if (mangoNo == null) {
+            s.mangoCount = mangos().size() + 1;
+            s.bestMangoNo = prefs.getMangoNo();
+            s.bestMangoLevel = getMangoProgress().level;
+            for (ArchivedMango m : mangos()) {
+                int level = Levels.levelForExp(m.getExp());
+                if (level > s.bestMangoLevel) {
+                    s.bestMangoLevel = level;
+                    s.bestMangoNo = m.no;
+                }
+            }
+        }
+        return s;
+    }
+
+    private static double metOf(WorkoutRecord r) {
+        ExerciseType type = ExerciseType.fromCode(r.type);
+        return type == null ? 0 : type.met;
+    }
+
+    // ---------- 프로필 ----------
+
+    public void setUserName(String name) {
+        prefs.setUserName(name);
+        notifyChanged();
+    }
+
+    /** 체중(kg). 입력하지 않았으면 0 */
+    public float getWeightKg() {
+        return prefs.getWeightKg();
+    }
+
+    public void setWeightKg(float kg) {
+        prefs.setWeightKg(kg);
+        notifyChanged();
+    }
+
+    /**
+     * 프로필 사진. 형식: "" (기본 아이콘), "base:GREEN" (기본 망고 색), "current" (지금 망고), "mango:3" (보관된 3번째 망고)
+     */
+    public String getAvatar() {
+        return prefs.getAvatar();
+    }
+
+    public void setAvatar(String avatar) {
+        prefs.setAvatar(avatar);
+        notifyChanged();
+    }
+
+    // ---------- 시연 도구 ----------
+    // 발표 시연용. 상단 바의 이파리 칸을 길게 누르면 나오는 숨은 메뉴에서만 쓴다.
+
+    /** 지금 망고를 오늘 날짜로 망고집에 보내고 오늘부터 새 망고를 시작한다 (28일을 기다리지 않고) */
+    public ArchivedMango demoArchiveNow(LocalDate today) {
+        ArchivedMango mango = archive(today, today);
+        notifyChanged();
+        return mango;
+    }
+
+    /** 켜진 타이머에 시간을 더한다. 타이머가 꺼져 있으면 false */
+    public boolean demoAddTimerTime(long ms) {
+        if (getTimerType() == null) return false;
+        prefs.setTimer(prefs.getTimerType(), prefs.getTimerStartedAt(), prefs.getTimerAccumMs() + ms);
+        notifyChanged();
+        return true;
+    }
+
+    /**
+     * 지금 망고에 경험치를 더한다 (유저 경험치는 망고 경험치의 합이라 같이 오른다).
+     * 하루 보상은 할당량에서 막히므로, 망고 색이 바뀌는 레벨(3·5·7·9)을 바로 보여줄 때 쓴다.
+     * @return 더하기 전과 후의 망고 레벨
+     */
+    public int[] demoAddMangoExp(int amount) {
+        int before = getMangoProgress().level;
+        prefs.setMangoProgress(prefs.getMangoExp() + amount, prefs.getMangoLeavesEarned());
+        notifyChanged();
+        return new int[]{before, getMangoProgress().level};
+    }
+
+    public void demoAddLeaves(int amount) {
+        prefs.setLeaves(prefs.getLeaves() + amount);
+        notifyChanged();
+    }
+
+    /**
+     * 오늘 기록 초기화. 오늘 날짜 기록을 지우고 그 기록으로 받은 이파리·경험치를 되돌린다.
      * 이파리를 이미 써서 모자라면 보유량은 0에서 멈춘다.
      */
-    public void tempResetToday(LocalDate today) {
+    public void demoResetToday(LocalDate today) {
         int leavesBack = 0;
         int mangoExp = prefs.getMangoExp();
         int mangoLeaves = prefs.getMangoLeavesEarned();
@@ -409,33 +647,6 @@ public final class GameRepository {
         if (mangosChanged) saveMangos();
         prefs.setMangoProgress(Math.max(0, mangoExp), Math.max(0, mangoLeaves));
         prefs.setLeaves(Math.max(0, prefs.getLeaves() - leavesBack));
-        notifyChanged();
-    }
-
-    /** [임시] 홈의 보관 버튼. 오늘을 종료일로 보관하고 오늘부터 새 망고를 시작한다. */
-    public ArchivedMango tempArchiveNow(LocalDate today) {
-        ArchivedMango mango = archive(today, today);
-        notifyChanged();
-        return mango;
-    }
-
-    /** [임시] 더미 데이터 불러오기. 앱 데이터를 통째로 덮어쓴다. */
-    public void tempImportAll(JSONObject prefsJson, JSONArray workoutsJson, JSONArray mangosJson,
-                              LocalDate today) throws JSONException {
-        List<WorkoutRecord> newWorkouts = new ArrayList<>();
-        for (int i = 0; i < workoutsJson.length(); i++) {
-            newWorkouts.add(WorkoutRecord.fromJson(workoutsJson.getJSONObject(i)));
-        }
-        List<ArchivedMango> newMangos = new ArrayList<>();
-        for (int i = 0; i < mangosJson.length(); i++) {
-            newMangos.add(ArchivedMango.fromJson(mangosJson.getJSONObject(i)));
-        }
-        prefs.importFrom(prefsJson);
-        workouts = newWorkouts;
-        mangos = newMangos;
-        saveWorkouts();
-        saveMangos();
-        ensureQuota(today);
         notifyChanged();
     }
 
@@ -493,18 +704,47 @@ public final class GameRepository {
 
     // ---------- 결과 타입 ----------
 
+    /** 기간 통계 (공용 상세 블록의 추가 통계) */
+    public static final class PeriodStats {
+        public int periodDays;
+        /** 기간 마지막 날 (진행 중이면 오늘) */
+        public LocalDate end;
+        /** 날짜별 운동 시간(초). 운동한 날만 들어 있다 */
+        public final Map<LocalDate, Integer> daySeconds = new HashMap<>();
+        /** 할당량을 채운 날 */
+        public final Set<LocalDate> goalDates = new HashSet<>();
+        public int seconds;
+        public int score;
+        public int count;
+        /** 기록마다 MET × 시간(시간 단위)을 더한 값. 소모 칼로리(kcal) = 체중(kg) × 이 값 */
+        public double metHours;
+        public int activeDays;
+        public int longestStreak;
+        public int goalDays;
+        public int overDays;
+        /** 가장 오래 한 종목 이름 (강도 제외). 기록이 없으면 null */
+        public String topName;
+        /** 아래는 전체 기록에서만 채운다 */
+        public int mangoCount;
+        public int bestMangoNo;
+        public int bestMangoLevel;
+    }
+
     public static final class DaySummary {
         public final int quota;
         public final int score;
+        public final int seconds;
+        /** 분 단위 표시용 (반올림) */
         public final int minutes;
         public final int leaves;
         public final int exp;
         public final List<WorkoutRecord> records;
 
-        DaySummary(int quota, int score, int minutes, int leaves, int exp, List<WorkoutRecord> records) {
+        DaySummary(int quota, int score, int seconds, int leaves, int exp, List<WorkoutRecord> records) {
             this.quota = quota;
             this.score = score;
-            this.minutes = minutes;
+            this.seconds = seconds;
+            this.minutes = Math.round(seconds / 60f);
             this.leaves = leaves;
             this.exp = exp;
             this.records = records;

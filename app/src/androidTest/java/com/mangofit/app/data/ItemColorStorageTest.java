@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.mangofit.app.logic.ExerciseType;
+import com.mangofit.app.logic.MangoCycle;
 import com.mangofit.app.logic.Slot;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +36,8 @@ public class ItemColorStorageTest {
             GameRepository repo = constructor.newInstance(context);
             LocalDate date = LocalDate.of(2026, 11, 11);
             repo.startNewUser("색상 테스트", date);
-            repo.addWorkout(ExerciseType.RUN, 60, date.atTime(10, 0));
-            repo.addWorkout(ExerciseType.RUN, 60, date.plusDays(1).atTime(10, 0));
+            repo.addWorkout(ExerciseType.fromCode("run"), 60 * 60, date.atTime(10, 0));
+            repo.addWorkout(ExerciseType.fromCode("run"), 60 * 60, date.plusDays(1).atTime(10, 0));
             assertEquals(GameRepository.BuyResult.OK, repo.buy("right_bubble_tea__matcha"));
             repo.setEquipment(Equipment.empty().with(Slot.HAND, "right_bubble_tea__matcha"));
             int leaves = repo.getLeaves();
@@ -48,7 +49,8 @@ public class ItemColorStorageTest {
             repo = constructor.newInstance(context);
             assertEquals("right_bubble_tea__taro", repo.getEquipment().hand);
             assertEquals("right_bubble_tea__taro", repo.getOwnedVariant("right_bubble_tea").id);
-            ArchivedMango archived = repo.tempArchiveNow(date.plusDays(1));
+            ArchivedMango archived = repo.onAppOpen(date.plusDays(MangoCycle.DAYS));
+            assertNotNull(archived);
             assertEquals("right_bubble_tea__taro", archived.equipped.hand);
             assertFalse(repo.isOwned("right_bubble_tea"));
             assertFalse(repo.changeItemColor("right_bubble_tea__rose"));

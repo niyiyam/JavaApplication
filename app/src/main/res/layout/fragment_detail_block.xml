@@ -30,20 +30,11 @@
                     android:layout_height="98dp"
                     android:layout_gravity="center" />
 
-                <FrameLayout
+                <com.mangofit.app.view.AvatarView
                     android:id="@+id/detail_avatar"
                     android:layout_width="110dp"
                     android:layout_height="110dp"
-                    android:background="@drawable/bg_avatar"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/user_icon"
-                        android:src="@drawable/ic_person" />
-                </FrameLayout>
+                    android:visibility="gone" />
             </FrameLayout>
 
             <LinearLayout
@@ -157,6 +148,22 @@
                 android:text="@string/donut_empty" />
         </LinearLayout>
 
-        <!-- [예정] 추가 통계: 항목 목록이 정해지면 이 아래에 붙인다 -->
+        <!-- 추가 통계: 망고 모드는 그 망고 기간, 유저 모드는 전체 기록 -->
+        <LinearLayout style="@style/Card">
+
+            <TextView
+                android:id="@+id/detail_stats_title"
+                style="@style/CardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- 항목 줄 (코드에서 채움) -->
+            <LinearLayout
+                android:id="@+id/detail_stats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

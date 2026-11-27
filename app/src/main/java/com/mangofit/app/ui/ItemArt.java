@@ -1,13 +1,8 @@
 package com.mangofit.app.ui;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.widget.ImageView;
 
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
 
 import com.mangofit.app.R;
 import com.mangofit.app.logic.Item;
@@ -17,46 +12,11 @@ public final class ItemArt {
 
     private ItemArt() { }
 
-    @DrawableRes
-    public static int drawableFor(Item item) {
-        if (item.artwork != 0) return item.artwork;
-        boolean a = "a".equals(item.shape);
-        switch (item.slot) {
-            case HAT: return a ? R.drawable.item_hat_a : R.drawable.item_hat_b;
-            case TOP: return a ? R.drawable.item_top_a : R.drawable.item_top_b;
-            default: return a ? R.drawable.item_hand_a : R.drawable.item_hand_b;
-        }
-    }
-
-    @ColorRes
-    public static int colorRes(Item item) {
-        switch (item.color) {
-            case "red": return R.color.item_red;
-            case "blue": return R.color.item_blue;
-            default: return R.color.item_green;
-        }
-    }
-
-    @StringRes
-    private static int colorLabel(Item item) {
-        switch (item.color) {
-            case "red": return R.string.color_red;
-            case "blue": return R.string.color_blue;
-            default: return R.string.color_green;
-        }
-    }
-
-    /** "모자 A - 빨강" */
+    /** "풍선" 또는 색을 바꾼 경우 "풍선 · 민트 크림" */
     public static String displayName(Context context, Item item) {
-        if (item.label != 0) {
-            String name = context.getString(item.label);
-            return item.tint == null ? name : context.getString(R.string.tint_named_item,
-                    name, context.getString(item.tint.label));
-        }
-        return context.getString(R.string.item_name,
-                context.getString(item.slot.labelRes),
-                item.shape.toUpperCase(),
-                context.getString(colorLabel(item)));
+        String name = context.getString(item.label);
+        return item.tint == null ? name : context.getString(R.string.tint_named_item,
+                name, context.getString(item.tint.label));
     }
 
     /** 이미지뷰에 아이템 그림을 넣고 색을 입힌다. item이 null이면 비운다. */
@@ -71,11 +31,6 @@ public final class ItemArt {
             view.setImageBitmap(MaterialTint.bitmap(view.getResources(), item));
             return;
         }
-        view.setImageResource(drawableFor(item));
-        if (item.artwork != 0) {
-            view.clearColorFilter();
-            return;
-        }
-        view.setColorFilter(ContextCompat.getColor(view.getContext(), colorRes(item)), PorterDuff.Mode.MULTIPLY);
+        view.setImageResource(item.artwork);
     }
 }

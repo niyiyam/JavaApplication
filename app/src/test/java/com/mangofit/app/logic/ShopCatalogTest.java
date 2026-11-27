@@ -17,11 +17,11 @@ public class ShopCatalogTest {
         assertEquals(18, ItemCatalog.shopItems(Slot.LEFT_HAND).size());
     }
 
-    @Test public void oldPurchasesRemainResolvableButAreNotSoldAsNewArt() {
-        Item old = ItemCatalog.get("top_a_red");
-        assertNotNull(old);
-        assertTrue(ItemCatalog.bySlot(Slot.TOP).contains(old));
-        assertFalse(ItemCatalog.shopItems(Slot.TOP).contains(old));
-        assertEquals(Slot.HAND, ItemCatalog.get("hand_b_green").slot);
+    @Test public void oldPlaceholderItemsAreRemoved() {
+        // 옛 임시 아이템(모자/상의/손 a·b × 빨강·파랑·초록)은 합성 이미지로 바꾸면서 지웠다
+        assertNull(ItemCatalog.get("top_a_red"));
+        assertNull(ItemCatalog.get("hand_b_green"));
+        assertNull(ItemCatalog.get("hat_a_red"));
+        assertTrue(ItemCatalog.bySlot(Slot.HAT).isEmpty());
     }
 }

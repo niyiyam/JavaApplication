@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- [임시] 앱 색상 톤: 숲 초록 + 크림 + 망고 주황. 디자인 확정 후 바뀜 -->
+    <!-- 앱 색상 톤: 숲 초록 + 크림 + 망고 주황 -->
     <color name="forest_dark">#2E4A33</color>
     <color name="forest_darker">#1E2E22</color>
     <color name="green_primary">#2E6B3E</color>
@@ -26,9 +26,6 @@
     <color name="zone_empty">#E3E8DC</color>
     <color name="zone_empty_over">#F0DAD5</color>
 
-    <color name="temp_border">#D49A2A</color>
-    <color name="temp_bg">#FBE3C3</color>
-    <color name="temp_text">#8A5A10</color>
 
     <color name="sky">#DCE7D2</color>
     <color name="hill">#8FB27E</color>
@@ -38,7 +35,19 @@
     <color name="roof">#9A5A30</color>
     <color name="house_bg">#E9DFC8</color>
 
-    <color name="item_red">#C0392B</color>
-    <color name="item_blue">#2E6DB4</color>
-    <color name="item_green">#2E7D3E</color>
+
+    <!-- 도넛 차트: 많이 한 순서대로 칠하는 색, 6위부터 묶은 '기타' -->
+    <color name="chart_1">#2E6B3E</color>
+    <color name="chart_2">#F0A93B</color>
+    <color name="chart_3">#4A8BD6</color>
+    <color name="chart_4">#C0392B</color>
+    <color name="chart_5">#8E6CC2</color>
+    <color name="chart_other">#B5AE9E</color>
+    <array name="donut_palette">
+        <item>@color/chart_1</item>
+        <item>@color/chart_2</item>
+        <item>@color/chart_3</item>
+        <item>@color/chart_4</item>
+        <item>@color/chart_5</item>
+    </array>
 </resources>

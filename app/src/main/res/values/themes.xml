@@ -58,20 +58,6 @@
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="TempButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/bg_temp_dashed</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingTop">18dp</item>
-        <item name="android:paddingBottom">18dp</item>
-        <item name="android:textColor">@color/temp_text</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:layout_marginTop">14dp</item>
-    </style>
 
     <style name="SegmentTab">
         <item name="android:layout_width">0dp</item>

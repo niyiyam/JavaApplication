@@ -11,7 +11,7 @@ public final class ArchivedMango {
     public final LocalDate startDate;
     public final LocalDate endDate;
     public final Equipment equipped;
-    // [임시] 오늘 기록 초기화가 보관된 망고의 기록을 되돌릴 때만 바뀐다
+    // 시연 도구의 오늘 기록 초기화가 보관된 망고의 기록을 되돌릴 때만 바뀐다
     int exp;
     int leavesEarned;
 

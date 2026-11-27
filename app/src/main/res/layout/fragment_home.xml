@@ -152,10 +152,5 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- [임시] 망고집 보관 버튼. 최종에는 28일 자동 정산만 있다 -->
-        <TextView
-            android:id="@+id/home_temp_archive"
-            style="@style/TempButton"
-            android:text="@string/temp_archive" />
     </LinearLayout>
 </ScrollView>

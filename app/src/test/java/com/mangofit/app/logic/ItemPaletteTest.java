@@ -25,7 +25,6 @@ public class ItemPaletteTest {
 
     @Test public void hiddenHatsCannotBeSoldAndFoodUsesSuitablePalette() {
         assertTrue(ItemCatalog.shopItems(Slot.HAT).isEmpty());
-        assertNotNull(ItemCatalog.get("hat_a_red"));
         for (ItemPalette.ColorOption color : ItemPalette.colors(ItemCatalog.get("right_chicken_leg"))) {
             assertNotEquals("sky", color.code);
             assertNotEquals("mint", color.code);

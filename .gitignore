@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# JVM 비정상 종료 로그
+hs_err_pid*.log

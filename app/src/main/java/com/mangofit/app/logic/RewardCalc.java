@@ -19,6 +19,11 @@ public final class RewardCalc {
         return met * minutes;
     }
 
+    /** 타이머 기록용: 초는 분의 소수로 계산한다. 예: 12분 30초 = 12.5분 */
+    public static double rawScoreSeconds(double met, int seconds) {
+        return met * seconds / 60.0;
+    }
+
     /**
      * @param quota       오늘 고정된 할당량
      * @param scoreBefore 이 기록 전까지의 오늘 누적 점수

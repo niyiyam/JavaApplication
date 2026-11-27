@@ -1,17 +1,20 @@
 package com.mangofit.app;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.GridLayout;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Filter;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
 import com.mangofit.app.logic.MangoStage;
 import com.mangofit.app.data.Equipment;
 import com.mangofit.app.view.MangoView;
@@ -23,14 +26,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.mangofit.app.data.GameRepository;
 import com.mangofit.app.data.WorkoutRecord;
 import com.mangofit.app.logic.ExerciseType;
 import com.mangofit.app.logic.RewardCalc;
-import com.mangofit.app.temp.TempTools;
 import com.mangofit.app.ui.Fmt;
 import com.mangofit.app.view.DayProgressBar;
 
@@ -42,9 +43,7 @@ import java.util.List;
 
 public class ExerciseFragment extends Fragment {
 
-    private static final int MIN_MINUTES = 1;
-    private static final int MAX_MINUTES = 600;
-    private static final int STEP_MINUTES = 5;
+    private static final long TICK_MS = 1000;
 
     private GameRepository repo;
     private TextView zone;
@@ -55,10 +54,23 @@ public class ExerciseFragment extends Fragment {
     private TextView expValue;
     private LinearLayout todayList;
     private TextView todayEmpty;
-    private final List<TextView> typeButtons = new ArrayList<>();
-    private EditText minutesInput;
+    private Spinner categorySpinner;
+    private AutoCompleteTextView search;
+    private TextView selectedText;
+    private TextView selectedNote;
+    private TextView timerText;
+    private TextView timerState;
+    private TextView timerMain;
+    private View timerActions;
     private TextView preview;
-    private TextView addButton;
+    private final Handler ticker = new Handler(Looper.getMainLooper());
+    private final Runnable tick = new Runnable() {
+        @Override
+        public void run() {
+            updateTimer();
+            ticker.postDelayed(this, TICK_MS);
+        }
+    };
     private MangoView workoutMango;
     private final Runnable updateWorkoutFace = this::refreshWorkoutFace;
 
@@ -72,7 +84,7 @@ public class ExerciseFragment extends Fragment {
             workoutMango.postDelayed(updateWorkoutFace, remaining);
         }
     }
-    private ExerciseType selectedType = ExerciseType.WALK;
+    private ExerciseType selectedType = ExerciseType.defaultType();
     private final GameRepository.Listener listener = new GameRepository.Listener() {
         @Override
         public void onDataChanged() {
@@ -102,53 +114,32 @@ public class ExerciseFragment extends Fragment {
         todayList = view.findViewById(R.id.exercise_today_list);
         todayEmpty = view.findViewById(R.id.exercise_today_empty);
 
-        setupTypeGrid(view.findViewById(R.id.exercise_type_grid));
+        setupPicker(view);
 
-        minutesInput = view.findViewById(R.id.exercise_minutes);
-        minutesInput.setText("30");
-        minutesInput.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                updatePreview();
-            }
-        });
-        view.findViewById(R.id.exercise_minus).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stepMinutes(-STEP_MINUTES);
-            }
-        });
-        view.findViewById(R.id.exercise_plus).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stepMinutes(STEP_MINUTES);
-            }
-        });
-
+        timerText = view.findViewById(R.id.exercise_timer);
+        timerState = view.findViewById(R.id.exercise_timer_state);
+        timerMain = view.findViewById(R.id.exercise_timer_main);
+        timerActions = view.findViewById(R.id.exercise_timer_actions);
         preview = view.findViewById(R.id.exercise_preview);
-        addButton = view.findViewById(R.id.exercise_add);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        timerMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmAdd();
+                onTimerMain();
+            }
+        });
+        view.findViewById(R.id.exercise_timer_finish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmFinish();
+            }
+        });
+        view.findViewById(R.id.exercise_timer_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmCancel();
             }
         });
 
-        view.findViewById(R.id.exercise_temp_reset).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmTempReset();
-            }
-        });
-        view.findViewById(R.id.exercise_temp_dummy).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmTempDummy();
-            }
-        });
     }
 
     @Override
@@ -162,11 +153,13 @@ public class ExerciseFragment extends Fragment {
         super.onResume();
         refreshWorkoutFace();
         refresh();
+        ticker.post(tick);
     }
 
     @Override
     public void onPause() {
         workoutMango.removeCallbacks(updateWorkoutFace);
+        ticker.removeCallbacks(tick);
         super.onPause();
     }
 
@@ -182,74 +175,202 @@ public class ExerciseFragment extends Fragment {
         return tile.findViewById(R.id.stat_value);
     }
 
-    private void setupTypeGrid(GridLayout grid) {
-        int margin = dp(4);
-        for (ExerciseType type : ExerciseType.values()) {
-            TextView button = new TextView(requireContext());
-            button.setText(type.labelRes);
-            button.setGravity(Gravity.CENTER);
-            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-            button.setTypeface(button.getTypeface(), android.graphics.Typeface.BOLD);
-            button.setTextColor(ContextCompat.getColorStateList(requireContext(), R.color.chip_text));
-            button.setBackgroundResource(R.drawable.bg_chip);
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectType(type);
-                }
-            });
+    // ---------- 종목 고르기 ----------
+    // 분류 드롭다운으로 목록을 좁히고, 검색창에 글자를 치면 이름에 그 글자가 들어간 종목을 보여준다.
 
-            GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
-                    GridLayout.spec(GridLayout.UNDEFINED),
-                    GridLayout.spec(GridLayout.UNDEFINED, 1f));
-            lp.width = 0;
-            lp.height = dp(52);
-            lp.setMargins(margin, margin, margin, margin);
-            grid.addView(button, lp);
-            typeButtons.add(button);
-        }
+    private void setupPicker(View view) {
+        categorySpinner = view.findViewById(R.id.exercise_category);
+        search = view.findViewById(R.id.exercise_search);
+        selectedText = view.findViewById(R.id.exercise_selected);
+        selectedNote = view.findViewById(R.id.exercise_selected_note);
+
+        final List<String> categories = new ArrayList<>();
+        categories.add(getString(R.string.exercise_category_all));
+        categories.addAll(ExerciseType.categories());
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_spinner_item, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(categoryAdapter);
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
+                List<ExerciseType> list = position == 0 ? ExerciseType.selectable()
+                        : ExerciseType.inCategory(categories.get(position));
+                search.setAdapter(new ExerciseAdapter(list));
+                if (position > 0 && search.isEnabled()) {
+                    search.requestFocus();
+                    search.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isAdded()) search.showDropDown();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+        search.setAdapter(new ExerciseAdapter(ExerciseType.selectable()));
+        search.setThreshold(1);
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                search.showDropDown();
+            }
+        });
+        search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                selectType((ExerciseType) parent.getItemAtPosition(position));
+                search.setText("", false);
+                search.clearFocus();
+                InputMethodManager imm = (InputMethodManager) requireContext()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) imm.hideSoftInputFromWindow(search.getWindowToken(), 0);
+                updateTimer();
+            }
+        });
         selectType(selectedType);
     }
 
+    /** 윗줄은 종목 이름만, 아랫줄은 강도·MET·설명 */
     private void selectType(ExerciseType type) {
         selectedType = type;
-        ExerciseType[] types = ExerciseType.values();
-        for (int i = 0; i < types.length; i++) {
-            typeButtons.get(i).setSelected(types[i] == type);
+        selectedText.setText(type.name);
+        List<String> parts = new ArrayList<>();
+        if (!type.intensity.isEmpty()) parts.add(getString(R.string.exercise_intensity, type.intensity));
+        parts.add(getString(R.string.exercise_met, Fmt.decimal(type.met)));
+        if (!type.note.isEmpty()) parts.add(type.note);
+        if (type.estimated) parts.add(getString(R.string.exercise_estimated));
+        selectedNote.setText(android.text.TextUtils.join(" · ", parts));
+    }
+
+    /** 이름의 어느 부분이든 친 글자가 들어 있으면 보여준다. 한글 자음만 쳐도 첫소리로 찾는다 (ExerciseType.matches) */
+    private final class ExerciseAdapter extends ArrayAdapter<ExerciseType> {
+        private final List<ExerciseType> all;
+
+        ExerciseAdapter(List<ExerciseType> items) {
+            super(requireContext(), R.layout.item_exercise_dropdown, new ArrayList<>(items));
+            all = new ArrayList<>(items);
         }
-        updatePreview();
-    }
 
-    /** 입력값이 1~600분이 아니면 -1 */
-    private int readMinutes() {
-        try {
-            int minutes = Integer.parseInt(minutesInput.getText().toString().trim());
-            return (minutes < MIN_MINUTES || minutes > MAX_MINUTES) ? -1 : minutes;
-        } catch (NumberFormatException e) {
-            return -1;
+        @NonNull
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    List<ExerciseType> matched = new ArrayList<>();
+                    String q = constraint == null ? "" : constraint.toString();
+                    for (ExerciseType type : all) {
+                        if (type.matches(q)) matched.add(type);
+                    }
+                    FilterResults results = new FilterResults();
+                    results.values = matched;
+                    results.count = matched.size();
+                    return results;
+                }
+
+                @Override
+                @SuppressWarnings("unchecked")
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    clear();
+                    if (results.values != null) addAll((List<ExerciseType>) results.values);
+                    notifyDataSetChanged();
+                }
+
+                @Override
+                public CharSequence convertResultToString(Object resultValue) {
+                    return ((ExerciseType) resultValue).label();
+                }
+            };
         }
     }
 
-    private void stepMinutes(int delta) {
-        int current = readMinutes();
-        if (current < 0) current = 30;
-        int next = Math.max(MIN_MINUTES, Math.min(MAX_MINUTES, current + delta));
-        minutesInput.setText(String.valueOf(next));
-        minutesInput.setSelection(minutesInput.length());
+    // ---------- 타이머 ----------
+    // 시작 시각을 저장해 두므로 앱을 나가도 시간이 흐른다. 화면은 1초마다 다시 그리기만 한다.
+
+    private int elapsedSeconds(long nowMs) {
+        return (int) Math.min(GameRepository.MAX_WORKOUT_SECONDS, repo.getTimerElapsedMs(nowMs) / 1000);
     }
 
-    private void updatePreview() {
-        if (preview == null) return;
-        int minutes = readMinutes();
-        if (minutes < 0) {
-            preview.setText(R.string.add_minutes_invalid);
-            addButton.setEnabled(false);
+    private void onTimerMain() {
+        long now = System.currentTimeMillis();
+        if (repo.getTimerType() == null) {
+            repo.startTimer(selectedType, now);
+        } else if (repo.isTimerRunning()) {
+            repo.pauseTimer(now);
+        } else {
+            repo.resumeTimer(now);
+        }
+        updateTimer();
+    }
+
+    /** 타이머가 켜져 있으면 그 종목으로 고정하고 종목 고르기를 막는다 */
+    private void updateTimer() {
+        if (timerText == null) return;
+        ExerciseType active = repo.getTimerType();
+        boolean on = active != null;
+        boolean running = repo.isTimerRunning();
+        if (on && active != selectedType) selectType(active);
+
+        int seconds = elapsedSeconds(System.currentTimeMillis());
+        timerText.setText(Fmt.clock(seconds));
+        timerState.setText(!on ? R.string.timer_state_idle
+                : running ? R.string.timer_state_running : R.string.timer_state_paused);
+        timerMain.setText(!on ? R.string.timer_start : running ? R.string.timer_pause : R.string.timer_resume);
+        timerActions.setVisibility(on ? View.VISIBLE : View.GONE);
+        categorySpinner.setEnabled(!on);
+        search.setEnabled(!on);
+
+        if (on) {
+            RewardCalc.Reward r = repo.previewWorkout(selectedType, seconds, LocalDate.now());
+            preview.setText(getString(R.string.timer_preview, Fmt.decimal(selectedType.met),
+                    Fmt.duration(seconds), Fmt.num(r.score), Fmt.num(r.leaves), Fmt.num(r.exp)));
+        } else {
+            preview.setText(getString(R.string.timer_preview_idle, Fmt.decimal(selectedType.met),
+                    Fmt.num((int) Math.round(selectedType.met * 30))));
+        }
+    }
+
+    private void confirmFinish() {
+        long now = System.currentTimeMillis();
+        int seconds = elapsedSeconds(now);
+        if (seconds < 1) {
+            Toast.makeText(requireContext(), R.string.timer_too_short, Toast.LENGTH_SHORT).show();
             return;
         }
-        RewardCalc.Reward r = repo.previewWorkout(selectedType, minutes, LocalDate.now());
-        preview.setText(getString(R.string.add_preview, Fmt.decimal(selectedType.met), minutes,
-                Fmt.num(r.score), Fmt.num(r.leaves), Fmt.num(r.exp)));
-        addButton.setEnabled(true);
+        // 확인창을 보는 동안 시간이 더 쌓이지 않도록 먼저 멈춘다
+        if (repo.isTimerRunning()) repo.pauseTimer(now);
+        updateTimer();
+        new AlertDialog.Builder(requireContext())
+                .setMessage(getString(R.string.timer_finish_confirm, selectedType.name, Fmt.duration(seconds)))
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        GameRepository.AddResult result = repo.finishTimer(System.currentTimeMillis(),
+                                LocalDateTime.now());
+                        if (result != null) onWorkoutAdded(result);
+                    }
+                })
+                .show();
+    }
+
+    private void confirmCancel() {
+        new AlertDialog.Builder(requireContext())
+                .setMessage(R.string.timer_cancel_confirm)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface d, int w) {
+                        repo.cancelTimer();
+                        updateTimer();
+                    }
+                })
+                .show();
     }
 
     private void refresh() {
@@ -259,7 +380,7 @@ public class ExerciseFragment extends Fragment {
         zone.setText(getString(R.string.exercise_zone, getString(zoneLabel(day.score, day.quota))));
         dayBar.setData(day.score, day.quota);
         scoreValue.setText(getString(R.string.value_score_quota, Fmt.num(day.score), Fmt.num(day.quota)));
-        minutesValue.setText(getString(R.string.value_minutes, Fmt.num(day.minutes)));
+        minutesValue.setText(Fmt.time(day.seconds));
         leavesValue.setText(getString(R.string.value_plus, Fmt.num(day.leaves)));
         expValue.setText(getString(R.string.value_plus, Fmt.num(day.exp)));
 
@@ -267,17 +388,16 @@ public class ExerciseFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(requireContext());
         for (WorkoutRecord r : day.records) {
             View row = inflater.inflate(R.layout.item_workout_row, todayList, false);
-            ExerciseType type = ExerciseType.fromCode(r.type);
-            String name = type == null ? r.type : getString(type.labelRes);
-            ((TextView) row.findViewById(R.id.row_title))
-                    .setText(getString(R.string.workout_row_title, name, r.minutes));
+            String name = GameRepository.nameOf(r);
+            // 이름이 길 수 있어 두 줄로: 윗줄 종목, 아랫줄 시간과 보상
+            ((TextView) row.findViewById(R.id.row_title)).setText(name);
             ((TextView) row.findViewById(R.id.row_detail)).setText(getString(R.string.workout_row_detail,
-                    Fmt.num(r.score), Fmt.num(r.leaves), Fmt.num(r.exp)));
+                    Fmt.duration(r.seconds), Fmt.num(r.score), Fmt.num(r.leaves), Fmt.num(r.exp)));
             todayList.addView(row);
         }
         todayEmpty.setVisibility(day.records.isEmpty() ? View.VISIBLE : View.GONE);
 
-        updatePreview();
+        updateTimer();
     }
 
     private int zoneLabel(int score, int quota) {
@@ -289,27 +409,7 @@ public class ExerciseFragment extends Fragment {
         }
     }
 
-    private void confirmAdd() {
-        int minutes = readMinutes();
-        if (minutes < 0) {
-            Toast.makeText(requireContext(), R.string.add_minutes_invalid, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        ExerciseType type = selectedType;
-        new AlertDialog.Builder(requireContext())
-                .setMessage(getString(R.string.add_confirm, getString(type.labelRes), minutes))
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        addWorkout(type, minutes);
-                    }
-                })
-                .show();
-    }
-
-    private void addWorkout(ExerciseType type, int minutes) {
-        GameRepository.AddResult result = repo.addWorkout(type, minutes, LocalDateTime.now());
+    private void onWorkoutAdded(GameRepository.AddResult result) {
         Toast.makeText(requireContext(), getString(R.string.reward_toast,
                 Fmt.num(result.reward.leaves), Fmt.num(result.reward.exp)), Toast.LENGTH_SHORT).show();
 
@@ -367,37 +467,6 @@ public class ExerciseFragment extends Fragment {
         }
         dialog.setView(panel);
         dialog.show();
-    }
-
-    /** [임시] 오늘 기록 초기화 */
-    private void confirmTempReset() {
-        new AlertDialog.Builder(requireContext())
-                .setMessage(R.string.reset_confirm)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        repo.tempResetToday(LocalDate.now());
-                        Toast.makeText(requireContext(), R.string.reset_done, Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .show();
-    }
-
-    /** [임시] 더미 데이터 불러오기 */
-    private void confirmTempDummy() {
-        new AlertDialog.Builder(requireContext())
-                .setMessage(R.string.dummy_confirm)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        boolean ok = TempTools.loadDummyData(requireContext(), LocalDate.now());
-                        Toast.makeText(requireContext(), ok ? R.string.dummy_done : R.string.dummy_failed,
-                                Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .show();
     }
 
     private int dp(int value) {

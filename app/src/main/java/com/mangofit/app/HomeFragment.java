@@ -155,12 +155,6 @@ public class HomeFragment extends Fragment {
         todayLeaves = view.findViewById(R.id.home_today_leaves);
         todayExp = view.findViewById(R.id.home_today_exp);
 
-        view.findViewById(R.id.home_temp_archive).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmTempArchive();
-            }
-        });
     }
 
     @Override
@@ -208,20 +202,4 @@ public class HomeFragment extends Fragment {
         todayExp.setText(getString(R.string.today_exp, Fmt.num(day.exp), Fmt.num(max)));
     }
 
-    /** [임시] 지금 망고를 오늘 날짜로 보관하고 새 망고를 시작한다 */
-    private void confirmTempArchive() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle(R.string.archive_confirm_title)
-                .setMessage(getString(R.string.archive_confirm_msg, repo.getMangoNo()))
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int w) {
-                        ArchivedMango archived = repo.tempArchiveNow(LocalDate.now());
-                        Toast.makeText(requireContext(), getString(R.string.archive_done, archived.no),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .show();
-    }
 }

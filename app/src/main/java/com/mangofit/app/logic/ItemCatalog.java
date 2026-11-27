@@ -7,25 +7,15 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 판매할 원본 이미지 아이템과 기존 구매 데이터의 호환 목록.
- * 임시 가격: 의상 500(곤룡포 800), 좌우 손 아이템 각각 300 이파리.
+ * 판매할 아이템 목록. 의상 10종(망고 색 5단계 × 의상 합성 이미지)과 좌우 손 아이템 18종씩.
+ * 가격: 의상 500(곤룡포 800), 좌우 손 아이템 각각 300 이파리.
  */
 public final class ItemCatalog {
-
-    public static final String[] SHAPES = {"a", "b"};
-    public static final String[] COLORS = {"red", "blue", "green"};
 
     private static final List<Item> ALL;
 
     static {
         List<Item> items = new ArrayList<>();
-        for (Slot slot : new Slot[]{Slot.HAT, Slot.TOP, Slot.HAND}) {
-            for (String shape : SHAPES) {
-                for (String color : COLORS) {
-                    items.add(new Item(slot, shape, color, priceFor(shape), placementFor(slot, shape)));
-                }
-            }
-        }
         items.add(new Item("outfit_army", Slot.TOP, R.drawable.mangofit_yellow_army, R.string.art_army, 500, new Placement(0f, 0f, 1f), true));
         items.add(new Item("outfit_baseball", Slot.TOP, R.drawable.mangofit_yellow_baseball, R.string.art_baseball, 500, new Placement(0f, 0f, 1f), true));
         items.add(new Item("outfit_basketball", Slot.TOP, R.drawable.mangofit_yellow_basketball, R.string.art_basketball_outfit, 500, new Placement(0f, 0f, 1f), true));
@@ -83,23 +73,6 @@ public final class ItemCatalog {
 
     private ItemCatalog() { }
 
-    private static int priceFor(String shape) {
-        return "a".equals(shape) ? 200 : 500;
-    }
-
-    /**
-     * 모양별 위치·크기. 망고 이미지 정중앙 (0, 0), 아래쪽 +y, 망고 너비 = 1.0.
-     * [임시] 값은 임시 아이템 그림에 맞춘 것이라 실제 에셋이 나오면 다시 맞춘다.
-     */
-    private static Placement placementFor(Slot slot, String shape) {
-        boolean a = "a".equals(shape);
-        switch (slot) {
-            case HAT: return a ? new Placement(0f, -0.277f, 0.704f) : new Placement(0f, -0.206f, 0.694f);
-            case TOP: return a ? new Placement(0f, 0.349f, 0.767f) : new Placement(0f, 0.266f, 0.701f);
-            default: return a ? new Placement(0.417f, 0.279f, 0.159f) : new Placement(-0.390f, 0.312f, 0.219f);
-        }
-    }
-
     public static List<Item> all() {
         return ALL;
     }
@@ -112,7 +85,7 @@ public final class ItemCatalog {
         return result;
     }
 
-    /** 기존 상의·손 아이템은 보유 목록에서 유지하고 새 판매 목록에서는 제외한다. */
+    /** 상점에 파는 원본 아이템 (색 바꾼 것은 보유한 뒤에만 생긴다) */
     public static List<Item> shopItems(Slot slot) {
         List<Item> result = new ArrayList<>();
         if (slot == Slot.HAT) return result;
