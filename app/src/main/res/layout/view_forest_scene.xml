@@ -2,51 +2,25 @@
 <!-- 숲 배경 + 그루터기 + 망고. 홈과 꾸미기 화면이 같이 쓴다. 부모 FrameLayout 안에 merge 된다 -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <View
-        android:layout_width="150dp"
-        android:layout_height="220dp"
-        android:layout_gravity="bottom|start"
-        android:layout_marginStart="-30dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/bg_hill" />
-
-    <View
-        android:layout_width="160dp"
-        android:layout_height="260dp"
-        android:layout_gravity="bottom|start"
-        android:layout_marginStart="60dp"
-        android:layout_marginBottom="70dp"
-        android:background="@drawable/bg_hill" />
-
-    <View
-        android:layout_width="200dp"
-        android:layout_height="250dp"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="-40dp"
-        android:layout_marginBottom="40dp"
-        android:background="@drawable/bg_hill" />
-
-    <View
+    <!-- 숲 배경 그림. 칸 비율이 달라도 빈틈 없이 채우도록 가운데 기준으로 잘라 쓴다 -->
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="bottom"
-        android:background="@color/ground" />
+        android:layout_height="match_parent"
+        android:importantForAccessibility="no"
+        android:scaleType="centerCrop"
+        android:src="@drawable/home_forest_bg" />
 
-    <View
-        android:layout_width="130dp"
-        android:layout_height="46dp"
+    <!-- 그루터기. 높이는 그림 비율대로 정해진다 (180dp 너비 → 약 70dp) -->
+    <ImageView
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="28dp"
-        android:background="@drawable/bg_stump" />
+        android:layout_marginBottom="20dp"
+        android:adjustViewBounds="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/home_stump" />
 
-    <View
-        android:layout_width="140dp"
-        android:layout_height="20dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="64dp"
-        android:background="@drawable/bg_stump_top" />
-
-    <!-- 망고 그림은 정사각형 안 아래 8%가 비어 있다. 발이 그루터기 윗면(바닥에서 64~84dp)에 닿도록 내린다 -->
+    <!-- 망고 그림은 정사각형 안 아래 8%가 비어 있다. 발이 그루터기 윗면 가운데에 닿도록 내린다 -->
     <com.mangofit.app.view.MangoView
         android:id="@+id/scene_mango"
         android:layout_width="150dp"
