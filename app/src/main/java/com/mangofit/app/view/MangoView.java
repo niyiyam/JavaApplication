@@ -84,8 +84,11 @@ public class MangoView extends ViewGroup {
                 transition.setCrossFadeEnabled(true);
                 base.setImageDrawable(transition);
                 transition.startTransition(320);
-                base.postDelayed(() -> {
-                    if (base.getDrawable() == transition) base.setImageDrawable(next);
+                base.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (base.getDrawable() == transition) base.setImageDrawable(next);
+                    }
                 }, 320);
             } else {
                 base.setImageDrawable(next);

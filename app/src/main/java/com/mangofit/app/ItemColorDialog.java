@@ -1,6 +1,7 @@
 package com.mangofit.app;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -95,7 +96,13 @@ public class ItemColorDialog extends DialogFragment {
             swatch.addView(label, new LinearLayout.LayoutParams(-1, -2));
             swatch.setContentDescription(label.getText());
             swatch.setFocusable(true);
-            swatch.setOnClickListener(v -> { selected = option; refresh(); });
+            swatch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    selected = option;
+                    refresh();
+                }
+            });
             GridLayout.LayoutParams lp = new GridLayout.LayoutParams(
                     GridLayout.spec(GridLayout.UNDEFINED), GridLayout.spec(GridLayout.UNDEFINED, 1f));
             lp.width = 0; lp.height = dp(84);
@@ -115,10 +122,13 @@ public class ItemColorDialog extends DialogFragment {
                 .setTitle(R.string.tint_title)
                 .setView(scroll)
                 .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.tint_apply, (dialog, which) -> {
-                    Bundle result = new Bundle();
-                    result.putString("item", selected.id);
-                    getParentFragmentManager().setFragmentResult(RESULT, result);
+                .setPositiveButton(R.string.tint_apply, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Bundle result = new Bundle();
+                        result.putString("item", selected.id);
+                        getParentFragmentManager().setFragmentResult(RESULT, result);
+                    }
                 }).create();
     }
 

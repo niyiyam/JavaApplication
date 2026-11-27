@@ -72,7 +72,12 @@ public class ExerciseFragment extends Fragment {
         }
     };
     private MangoView workoutMango;
-    private final Runnable updateWorkoutFace = this::refreshWorkoutFace;
+    private final Runnable updateWorkoutFace = new Runnable() {
+        @Override
+        public void run() {
+            refreshWorkoutFace();
+        }
+    };
 
     private void refreshWorkoutFace() {
         workoutMango.removeCallbacks(updateWorkoutFace);
@@ -244,7 +249,7 @@ public class ExerciseFragment extends Fragment {
         parts.add(getString(R.string.exercise_met, Fmt.decimal(type.met)));
         if (!type.note.isEmpty()) parts.add(type.note);
         if (type.estimated) parts.add(getString(R.string.exercise_estimated));
-        selectedNote.setText(android.text.TextUtils.join(" · ", parts));
+        selectedNote.setText(android.text.TextUtils.join(" | ", parts));
     }
 
     /** 이름의 어느 부분이든 친 글자가 들어 있으면 보여준다. 한글 자음만 쳐도 첫소리로 찾는다 (ExerciseType.matches) */
@@ -338,7 +343,7 @@ public class ExerciseFragment extends Fragment {
     private void confirmFinish() {
         long now = System.currentTimeMillis();
         int seconds = elapsedSeconds(now);
-        if (seconds < 1) {
+        if (seconds < GameRepository.MIN_WORKOUT_SECONDS) {
             Toast.makeText(requireContext(), R.string.timer_too_short, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -429,8 +434,13 @@ public class ExerciseFragment extends Fragment {
         } else {
             repo.startWorkoutGrin();
             refreshWorkoutFace();
-            workoutMango.post(() -> workoutMango.requestRectangleOnScreen(
-                    new android.graphics.Rect(0, 0, workoutMango.getWidth(), workoutMango.getHeight())));
+            workoutMango.post(new Runnable() {
+                @Override
+                public void run() {
+                    workoutMango.requestRectangleOnScreen(
+                            new android.graphics.Rect(0, 0, workoutMango.getWidth(), workoutMango.getHeight()));
+                }
+            });
         }
     }
 
@@ -461,8 +471,11 @@ public class ExerciseFragment extends Fragment {
         preview.setFace(growth == null ? MangoFace.HAPPY_TEARS : MangoFace.PARTY);
         preview.setAppearance(equipped, changesColor ? growth.mangoLevelBefore : level);
         if (changesColor) {
-            preview.postDelayed(() -> {
-                if (preview.isShown()) preview.setAppearance(equipped, level);
+            preview.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (preview.isShown()) preview.setAppearance(equipped, level);
+                }
             }, 250);
         }
         dialog.setView(panel);

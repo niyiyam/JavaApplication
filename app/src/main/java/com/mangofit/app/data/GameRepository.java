@@ -262,6 +262,13 @@ public final class GameRepository {
     /** 한 번에 기록할 수 있는 최대 시간 (10시간). 타이머를 잊고 둔 경우를 막는다 */
     public static final int MAX_WORKOUT_SECONDS = 600 * 60;
 
+    /**
+     * 한 번에 기록할 수 있는 최소 시간 (1분).
+     * 점수·이파리·경험치를 기록마다 따로 반올림하므로, 몇 초짜리 기록을 반복하면
+     * 점수는 0점인데 이파리만 1개씩 쌓일 수 있다. 이를 막는다.
+     */
+    public static final int MIN_WORKOUT_SECONDS = 60;
+
     /** 켜져 있는(일시정지 포함) 타이머의 운동, 없으면 null */
     public ExerciseType getTimerType() {
         String code = prefs.getTimerType();
@@ -302,12 +309,12 @@ public final class GameRepository {
         notifyChanged();
     }
 
-    /** 타이머를 끝내고 잰 시간만큼 기록한다. 1초 미만이면 기록하지 않고 null */
+    /** 타이머를 끝내고 잰 시간만큼 기록한다. 1분 미만이면 기록하지 않고 null */
     public AddResult finishTimer(long nowMs, LocalDateTime now) {
         ExerciseType type = getTimerType();
         int seconds = (int) Math.min(MAX_WORKOUT_SECONDS, getTimerElapsedMs(nowMs) / 1000);
         prefs.clearTimer();
-        if (type == null || seconds < 1) {
+        if (type == null || seconds < MIN_WORKOUT_SECONDS) {
             notifyChanged();
             return null;
         }

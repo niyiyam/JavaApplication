@@ -38,7 +38,12 @@ public class HomeFragment extends Fragment {
     private GameRepository repo;
     private MangoView mango;
     private long lastInteraction;
-    private final Runnable updateFace = this::refreshFace;
+    private final Runnable updateFace = new Runnable() {
+        @Override
+        public void run() {
+            refreshFace();
+        }
+    };
 
     void onUserInteraction() {
         lastInteraction = android.os.SystemClock.elapsedRealtime();
@@ -89,13 +94,16 @@ public class HomeFragment extends Fragment {
             pop.setStartDelay(i * 95L);
             pop.setDuration(560);
             pop.setInterpolator(new android.view.animation.LinearInterpolator());
-            pop.addUpdateListener(animation -> {
-                float t = (float) animation.getAnimatedValue();
-                heart.setTranslationX(drift * t);
-                heart.setTranslationY(-52 * density * (2 * t - t * t));
-                heart.setScaleX(Math.min(1f, 0.35f + t * 5f));
-                heart.setScaleY(heart.getScaleX());
-                heart.setAlpha(Math.min(t * 12f, Math.min(1f, (1f - t) * 3f)));
+            pop.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    float t = (float) animation.getAnimatedValue();
+                    heart.setTranslationX(drift * t);
+                    heart.setTranslationY(-52 * density * (2 * t - t * t));
+                    heart.setScaleX(Math.min(1f, 0.35f + t * 5f));
+                    heart.setScaleY(heart.getScaleX());
+                    heart.setAlpha(Math.min(t * 12f, Math.min(1f, (1f - t) * 3f)));
+                }
             });
             pop.addListener(new android.animation.AnimatorListenerAdapter() {
                 @Override public void onAnimationEnd(android.animation.Animator animation) {
@@ -137,13 +145,25 @@ public class HomeFragment extends Fragment {
         FrameLayout scene = view.findViewById(R.id.home_scene);
         scene.setClipToOutline(true);
         mango = view.findViewById(R.id.scene_mango);
-        mango.setOnClickListener(v -> reactWithLove());
-        view.findViewById(R.id.home_heart).setOnClickListener(v -> {
-            reactWithLove();
-            popHearts(scene);
+        mango.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reactWithLove();
+            }
         });
-        view.findViewById(R.id.home_customize).setOnClickListener(v ->
-                startActivity(new Intent(requireContext(), CustomizeActivity.class)));
+        view.findViewById(R.id.home_heart).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reactWithLove();
+                popHearts(scene);
+            }
+        });
+        view.findViewById(R.id.home_customize).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(requireContext(), CustomizeActivity.class));
+            }
+        });
 
         title = view.findViewById(R.id.home_mango_title);
         days = view.findViewById(R.id.home_mango_days);

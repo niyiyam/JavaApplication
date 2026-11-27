@@ -116,7 +116,12 @@ public class CustomizeActivity extends AppCompatActivity {
         fitMangoToScene();
         render();
         preview.setFace(MangoFace.LOVE);
-        preview.postDelayed(() -> preview.setFace(MangoFace.SMILE), GameRepository.LOVE_DURATION_MS);
+        preview.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                preview.setFace(MangoFace.SMILE);
+            }
+        }, GameRepository.LOVE_DURATION_MS);
     }
 
     @Override

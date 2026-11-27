@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 
 import com.mangofit.app.data.GameRepository;
 import com.mangofit.app.logic.Item;
@@ -63,12 +64,15 @@ public class ShopFragment extends Fragment {
             colorChoices = savedInstanceState.getBundle("colors");
         }
         getParentFragmentManager().setFragmentResultListener(ItemColorDialog.RESULT, getViewLifecycleOwner(),
-                (key, result) -> {
-                    Item selected = ItemCatalog.get(result.getString("item"));
-                    if (selected == null) return;
-                    colorChoices.putString(selected.baseId, selected.id);
-                    repo.changeItemColor(selected.id);
-                    render();
+                new FragmentResultListener() {
+                    @Override
+                    public void onFragmentResult(@NonNull String key, @NonNull Bundle result) {
+                        Item selected = ItemCatalog.get(result.getString("item"));
+                        if (selected == null) return;
+                        colorChoices.putString(selected.baseId, selected.id);
+                        repo.changeItemColor(selected.id);
+                        render();
+                    }
                 });
         if (slot == Slot.HAT) slot = Slot.TOP;
         grid = view.findViewById(R.id.shop_grid);
@@ -141,14 +145,22 @@ public class ShopFragment extends Fragment {
             swatch.setStroke(dp(1), 0xFFC4D1BC);
             colorButton.setBackground(swatch);
             colorButton.setContentDescription(getString(R.string.tint_choose, getString(item.label)));
-            colorButton.setOnClickListener(v -> {
-                if (getParentFragmentManager().findFragmentByTag("item_palette") == null) {
-                    ItemColorDialog.create(item).show(getParentFragmentManager(), "item_palette");
+            colorButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (getParentFragmentManager().findFragmentByTag("item_palette") == null) {
+                        ItemColorDialog.create(item).show(getParentFragmentManager(), "item_palette");
+                    }
                 }
             });
             card.setContentDescription(ItemArt.displayName(requireContext(), item)
                     + ", " + getString(R.string.shop_preview));
-            card.setOnClickListener(v -> showPreview(item));
+            card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showPreview(item);
+                }
+            });
 
             View button = card.findViewById(R.id.shop_item_button);
             View leaf = card.findViewById(R.id.shop_item_leaf);
@@ -158,7 +170,12 @@ public class ShopFragment extends Fragment {
                 leaf.setVisibility(View.GONE);
                 price.setText(R.string.shop_owned);
                 price.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
-                button.setOnClickListener(v -> startActivity(new Intent(requireContext(), CustomizeActivity.class)));
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(requireContext(), CustomizeActivity.class));
+                    }
+                });
                 button.setContentDescription(getString(R.string.shop_owned) + ", " + getString(R.string.shop_preview));
             } else {
                 price.setText(Fmt.num(item.price));
@@ -209,7 +226,12 @@ public class ShopFragment extends Fragment {
         if (repo.isOwned(item.id)) {
             description.setText(R.string.shop_owned);
         } else {
-            dialog.setPositiveButton(R.string.shop_buy, (d, w) -> confirmBuy(item));
+            dialog.setPositiveButton(R.string.shop_buy, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface d, int w) {
+                    confirmBuy(item);
+                }
+            });
         }
         dialog.show();
     }

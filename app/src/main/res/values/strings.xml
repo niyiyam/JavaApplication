@@ -163,7 +163,7 @@
     <string name="tint_title">어울리는 색 고르기</string>
     <string name="tint_hint">색을 누르면 미리 볼 수 있어요. 보유 아이템의 색 변경은 무료예요.</string>
     <string name="tint_apply">이 색으로 선택</string>
-    <string name="tint_named_item">%1$s · %2$s</string>
+    <string name="tint_named_item">%1$s - %2$s</string>
     <string name="tint_selected">%1$s 선택됨</string>
 
     <!-- 운동 타이머 -->
@@ -186,7 +186,7 @@
     <string name="timer_preview_idle">30분 하면 %2$s점 (MET %1$s × 30분)</string>
     <string name="timer_finish_confirm">%1$s\n%2$s 동안 한 운동을 기록할까요?</string>
     <string name="timer_cancel_confirm">타이머를 끄고 이번 운동은 기록하지 않을까요?</string>
-    <string name="timer_too_short">1초 이상 운동해야 기록할 수 있어요</string>
+    <string name="timer_too_short">1분 이상 운동해야 기록할 수 있어요</string>
 
     <!-- 추가 통계 -->
     <string name="donut_other">기타</string>
